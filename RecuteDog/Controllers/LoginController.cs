@@ -17,12 +17,12 @@ namespace RecuteDog.Controllers
         public IActionResult SingUp(User user)
         {
             
-            return RedirectToAction("Home", "Index");
+            return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         public IActionResult SingIn(User user)
         {
-            return RedirectToAction("Home", "Index");
+            return RedirectToAction("Index", "Home");
         }
 
     }

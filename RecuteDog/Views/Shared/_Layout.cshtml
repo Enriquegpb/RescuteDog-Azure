@@ -3,7 +3,8 @@
     <head>
         <link rel="stylesheet" href="~/css/materialize.min.css" />
         <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/StickyFooter.css" />
+        <meta name="author" content="Enrique García-Palacios Blasco" />
+        <meta charset="utf-8" />
     </head>
     <body>
         <header>
@@ -37,8 +38,10 @@
                 </div>
             </nav>
             </header>
-        <main>
+        <main class="container">
+            <div id="principal">
             @RenderBody()
+            </div>
         </main>
     <footer class="page-footer">
         <div class="container">
@@ -60,7 +63,7 @@
         </div>
         <div class="footer-copyright">
             <div class="container">
-                © 2014 Copyright Text
+                © 2023 Copyright Text
                 <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
             </div>
         </div>
@@ -68,10 +71,5 @@
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/materialize.min.js"></script>
     <script src="~/js/jquery-3.6.3.js"></script>
-    <script>
-        $(document).ready(function(){
-            $(".dropdown-trigger").dropdown({hover:false});
-        })
-    </script>
     </body>
 </html>

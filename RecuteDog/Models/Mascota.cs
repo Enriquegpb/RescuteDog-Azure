@@ -2,7 +2,7 @@
 
 namespace RecuteDog.Models
 {
-    [Table("Mascota")]
+    [Table("Mascotas")]
     public class Mascota
     {
         [Column("ID")]

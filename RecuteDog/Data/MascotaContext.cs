@@ -7,7 +7,7 @@ namespace RecuteDog.Data
     {
         public MascotaContext(DbContextOptions<MascotaContext> options)
             : base(options) { }
-        DbSet<Mascota> Mascotas { get; set;}
-        DbSet<User> Users { get; set;}
+        public DbSet<Mascota> Mascotas { get; set;}
+        public DbSet<User> Users { get; set;}
     }
 }

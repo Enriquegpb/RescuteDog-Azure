@@ -10,15 +10,16 @@ namespace RecuteDog.Models
         [Column("ID")]
         public int Id { get; set; }
         [Column("NAME")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Column("EMAIL")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Column("BIRDTHDAY")]
-        public string  Birdthday { get; set; }
+        public string? Birdthday { get; set; }
         [Column("PHONE")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [Column("USERNAME")]
         public string Username { get; set; }
+        [DataType(DataType.Password)]
         [Column("PASSWORD")]
         public string Password { get; set; }
     }

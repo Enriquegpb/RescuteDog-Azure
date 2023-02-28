@@ -1,0 +1,23 @@
+﻿#mascotascontainer {
+    width: 1250px;
+    margin: auto;
+    height: auto;
+    position:relative;
+    
+}
+#mascotacontainerPar {
+    width: 650px;
+    margin-top: 25px;
+    /*position: relative;
+    left: 1px;*/
+    background-color: bisque;
+    border: 2px solid brown;
+}
+#mascotacontainer {
+    width: 650px;
+    margin-top: 25px;
+    /*position: relative;
+    right: 1px;*/
+    background-color: bisque;
+    border: 2px solid brown;
+}

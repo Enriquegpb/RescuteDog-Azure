@@ -3,81 +3,34 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Index</h1>
+@{
+    int contador = 0;
+    //string dogId = "";
+}
+<h1>Home</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-dark">Nueva Mascota en ResCuteDog</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Raza)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Edad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ancho)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Alto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Peso)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Peligrosidad)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Raza)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Edad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ancho)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Alto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Peso)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Peligrosidad)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div id="containerMascotas">
+    @foreach (Mascota mascota in Model)
+    {
+        <div class="card" style="background-color:moccasin;width:450px;">
+            <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
+            <div class="card-body">
+                <h1 class="card-title">Nombre: @mascota.Nombre</h1>
+                <p class="card-text"> Descripcion: @mascota.Descripcion</p>
+                @*Utilizar list-group list-group-flush para los items*@
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Raza: @mascota.Raza</li>
+                <li class="list-group-item">Peso: @mascota.Peso</li>
+                <li class="list-group-item">Ancho: @mascota.Ancho</li>
+            </ul>
+            <div class="card-body">
+                <a class="btn btn-dark" asp-controller="Login" asp-action="Index">Adoptar</a>
+            </div>
+        </div>
+    }
+</div>

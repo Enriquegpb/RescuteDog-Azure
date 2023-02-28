@@ -45,7 +45,7 @@ namespace RecuteDog.Controllers
             if(ModelState.IsValid)
             {
                 var usercredentials = this.repo.FindUser(user);
-               if(usercredentials != null)
+               if(usercredentials != null && usercredentials.Password == user.Password)
                 {
                     return RedirectToAction("Index", "Home");
                 }

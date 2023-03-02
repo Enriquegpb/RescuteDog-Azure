@@ -17,7 +17,7 @@
     @foreach (Mascota mascota in Model)
     {
         <div class="card" style="background-color:moccasin;width:450px;">
-            <img src="https://img.freepik.com/foto-gratis/adorable-perro-basenji-marron-blanco-sonriendo-dando-maximo-cinco-aislado-blanco_346278-1657.jpg" class="card-img-top" alt="TextoAlternativo" />
+            <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
             <div class="card-body">
                 <h1 class="card-title">Nombre: @mascota.Nombre</h1>
                 <p class="card-text"> Descripcion: @mascota.Descripcion</p>

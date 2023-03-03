@@ -1,0 +1,25 @@
+﻿@model Mascota
+<form method="post">
+    <label>Nombre</label>
+    <input type="text" value="@Model.Nombre" disabled class="form-control" />
+    <label>Raza</label>
+    <input type="text" value="@Model.Raza" disabled class="form-control" />
+    <label>Edad</label>
+    <input type="text" value="@Model.Edad" disabled class="form-control" /> 
+    <label>Peso</label>
+    <input type="text" value="@Model.Peso" disabled class="form-control" />
+    @if (Model.Peligrosidad)
+    {
+        <input type="text" value="Peligrosa" disabled class="form-control" />
+    }else{
+        <input type="text" value=":No Peligrosa" disabled class="form-control" />
+    }
+    <input type="text" disabled class="form-control" />
+    <button class="btn btn-large">
+        Adoptar
+    </button>
+   
+</form>
+<br/>
+
+<a class="btn btn-light" asp-asp-controller="Mascotas" asp-action="Index">Volver</a>

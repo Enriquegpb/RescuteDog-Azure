@@ -17,5 +17,10 @@ namespace RecuteDog.Controllers
             List<Mascota> mascotas = this.repo.GetMascotas();
             return View(mascotas);
         }
+        public IActionResult FormularioAdopcion(int idmascota)
+        {
+            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            return View(mascota);
+        }
     }
 }

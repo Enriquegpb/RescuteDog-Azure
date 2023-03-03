@@ -11,6 +11,7 @@ namespace RecuteDog.Repositories
     //AS
     //    DELETE FROM MASCOTAS WHERE ID = @ID
     //GO
+
     //    CREATE PROCEDURE SP_INGRESO_MASCOTA_RESCATADA(@NOMBRE NVARCHAR(50), @RAZA NVARCHAR(50), @EDAD INT, @ANCHO FLOAT, @ALTO FLOAT, @PESO FLOAT, @DESCRIPCION NVARCHAR(200), @PELIGROSIDAD BIT, @IMAGEN NVARCHAR(600))
     //AS
 
@@ -21,10 +22,10 @@ namespace RecuteDog.Repositories
     //    INSERT INTO MASCOTAS VALUES(@ID, @NOMBRE, @RAZA, @EDAD, @ANCHO, @ALTO, @PESO, @DESCRIPCION, @PELIGROSIDAD, @IMAGEN)
     //GO
 
-    //    CREATE PROCEDURE SP_DETALLES_MASCOTA(@ID INT)
+    //CREATE PROCEDURE SP_DETALLES_MASCOTA(@ID INT)
     //AS
 
-    //    SELECT* FROM MASCOTAS WHERE ID = @ID
+    //    SELECT* FROM MASCOTAS WHERE IDMASCOTA = @ID
     //GO
     #endregion
     public class RepositoryRefugioAnimales
@@ -41,10 +42,10 @@ namespace RecuteDog.Repositories
             return consulta.ToList();
         }
 
-        public Mascota DetailsMascota(int id)
+        public Mascota DetailsMascota(int idmascota)
         {
-            string sql = "SP_DETALLES_MASCOTA";
-            SqlParameter pamidanimal = new SqlParameter("@ID", id);
+            string sql = "SP_DETALLES_MASCOTA @ID";
+            SqlParameter pamidanimal = new SqlParameter("@ID", idmascota);
             var consulta = this.context.Mascotas.FromSqlRaw(sql, pamidanimal);
             Mascota mascota = consulta.AsEnumerable().FirstOrDefault();
             return mascota;

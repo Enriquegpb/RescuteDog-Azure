@@ -10,7 +10,7 @@
     </head>
     <body>
         <header>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <nav class="navbar navbar-expand-sm navbar-dark" style="background-color:burlywood">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">Logo</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
@@ -45,31 +45,70 @@
             @RenderBody()
             </div>
         </main>
-    <footer class="page-footer" style="background-color:burlywood">
-        <div class="container">
-            <div class="row">
-                <div class="col l6 s12">
-                    <h5 class="white-text">RescuteDog</h5>
-                    <p class="grey-text text-lighten-4">Esta página web está hecha para aunar los refugios y protectos de la comunidad de madrid y promover la adopcion de animales. Para más información visite la página web de la comunidad de madrid</p>
+    <section class="">
+        <!-- Footer -->
+        <footer class=" text-white" style="background-color: burlywood">
+            <!-- Grid container -->
+            <div class="container p-4">
+                <!--Grid row-->
+                <div class="row">
+                    <!--Grid column-->
+                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Footer Content</h5>
+
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iste atque ea quis
+                            molestias. Fugiat pariatur maxime quis culpa corporis vitae repudiandae
+                            aliquam voluptatem veniam, est atque cumque eum delectus sint!
+                        </p>
+                    </div>
+                    <!--Grid column-->
+                    <!--Grid column-->
+                    <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase mb-0">Links</h5>
+
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="#!" class="text-white"><img src="~/images/instasvg.svg" /></a>
+                            </li>
+                            <li>
+                                <a href="#!" class="text-white"><img src="~/images/twittersvg.svg" /></a>
+                            </li>
+                            <li>
+                                <a href="#!" class="text-white"><img src="~/images/facebooksvg.svg" /></a>
+                            </li>
+                            <li>
+                                <a href="#!" class="text-white"><img src="~/images/linkedinsvg.svg" /></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--Grid column-->
+                    <!--Grid column-->
+                    <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Más Enlaces</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <a href="https://www.comunidad.madrid/centros/centro-integral-acogida-animales-comunidad-madrid-ciaam " class="text-white"><img src="~/images/camflag.svg" style="width:48px; height:auto" /></a>
+                            </li>
+                            <li>
+                                <a href="https://voluntariospormadrid.madrid.es/" class="text-white">Voluntarios Madrid<br /><img src="~/images/ayuntamiento-de-madrid.svg" style="width:48px; height:auto" /></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--Grid column-->
                 </div>
-                <div class="col l4 offset-l2 s12">
-                    <h5 class="white-text">Redes Sociales</h5>
-                    <ul>
-                        <li><a class="grey-text text-lighten-3" href="#!">Instagram</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Facebook</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Twitter</a></li>
-                        <li><a class="grey-text text-lighten-3" href="#!">Linkedin</a></li>
-                    </ul>
-                </div>
+                <!--Grid row-->
             </div>
-        </div>
-        <div class="footer-copyright">
-            <div class="container">
-                © 2023 Copyright Text
-                <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            <!-- Grid container -->
+            <!-- Copyright -->
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                © 2023 Copyright:
+                <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
             </div>
-        </div>
-    </footer>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer -->
+    </section>
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/materialize.min.js"></script>
     <script src="~/js/jquery-3.6.3.js"></script>

@@ -5,7 +5,7 @@ namespace RecuteDog.Models
     [Table("Mascotas")]
     public class Mascota
     {
-        [Column("ID")]
+        [Column("IDMASCOTA")]
         public int Id { get; set; }
         [Column("NOMBRE")]
         public string Nombre { get; set; }

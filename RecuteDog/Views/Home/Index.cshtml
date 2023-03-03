@@ -8,7 +8,6 @@
     //string dogId = "";
 }
 
-
 <div id="containerMascotas">
     @foreach (Mascota mascota in Model)
     {
@@ -22,7 +21,12 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Raza: @mascota.Raza</li>
                 <li class="list-group-item">Peso: @mascota.Peso</li>
-                <li class="list-group-item">Ancho: @mascota.Ancho</li>
+                @if (mascota.Peligrosidad)
+                {
+                    <li class="list-group-item"> Raza: Peligrosa</li>
+                }else{
+                    <li class="list-group-item"> Raza: No Peligrosa</li>
+                }
             </ul>
             <div class="card-body">
                 <a class="btn btn-dark" asp-controller="Login" asp-action="Index">Adoptar</a>

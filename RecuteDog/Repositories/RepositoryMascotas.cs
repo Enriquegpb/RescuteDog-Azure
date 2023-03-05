@@ -2,10 +2,30 @@
 using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
 using RecuteDog.Models;
+using System.Diagnostics.Metrics;
 
 namespace RecuteDog.Repositories
 {
     #region PROCEDURESMASCOTAS
+
+    //    alter PROCEDURE SP_OBTENER_MASCOTAS_REFUGIOS(@IDREFUGIO INT)
+    //AS
+
+    //    SELECT* FROM MASCOTAS
+    //    WHERE IDREFUGIO = @IDREFUGIO
+    //GO
+
+    //EXEC SP_OBTENER_MASCOTAS_REFUGIOS 2
+
+    //CREATE VIEW V_MASCOTAS_REFUGIOS
+    //AS
+
+    //    SELECT MASCOTAS.* FROM MASCOTAS
+
+    //    INNER JOIN REFUGIOS
+    //    ON REFUGIOS.IDREFUGIO = MASCOTAS.IDREFUGIO
+    //GO
+    //SELECT * FROM V_MASCOTAS_REFUGIOS
 
     //    CREATE PROCEDURE SP_SALIDA_MASCOTA_ADOPTADA(@ID INT)
     //AS
@@ -28,18 +48,21 @@ namespace RecuteDog.Repositories
     //    SELECT* FROM MASCOTAS WHERE IDMASCOTA = @ID
     //GO
     #endregion
-    public class RepositoryAnimales: IRepoAnimales
+    public class RepositoryMascotas: IRepoAnimales
     {
         private MascotaContext context;
-        public RepositoryAnimales(MascotaContext context)
+        
+        public RepositoryMascotas(MascotaContext context)
         {
             this.context = context;
         }
-        public List<Mascota> GetMascotas()
+        public List<Mascota> GetMascotas(int idrefugio)
         {
-            var consulta = from datos in this.context.Mascotas
-                           select datos;
-            return consulta.ToList();
+            string sql = "SP_OBTENER_MASCOTAS_REFUGIOS @IDREFUGIO";
+            SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", idrefugio);
+            var consulta = this.context.Mascotas.FromSqlRaw(sql, pamidrefugio);
+            List <Mascota> mascotas = consulta.ToList();
+            return mascotas;
         }
 
         public Mascota DetailsMascota(int idmascota)

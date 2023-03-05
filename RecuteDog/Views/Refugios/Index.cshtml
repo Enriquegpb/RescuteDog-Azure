@@ -1,0 +1,22 @@
+﻿@model List<Refugio>
+
+@if(Model != null)
+{
+    @foreach(Refugio refugio in Model)
+    {
+         <div id="container">
+                    <div id="portadarefugio">
+                        <img id="imagenrefugio" src="https://diario.madrid.es/wp-content/uploads/2017/04/edificio-y-jard%C2%A1n-011-1333x1000.jpg" alt="mensaje" />
+                    </div>
+                    <div id="cajainformacion">
+                        <h1>@refugio.Nombre</h1>
+                        <h2>Ubicacion:</h2>
+                        <h3>Paseo Abrantes, 54</h3>
+                        <h5>Nuestra valoracion en aspectos relacionados a rescate de animales, cuidado  y adopcion</h5>
+                        <p>Este refugio es el mas grande de la comunidad de Madrid</p>
+                        <a class="btn btn-info" asp-controller="Home" asp-action="Index" asp-route-idrefugio="@refugio.IdRefugio">Ver Animales</a>
+                    </div>
+                    
+                </div>
+    }
+}

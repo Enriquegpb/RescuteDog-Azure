@@ -6,5 +6,7 @@ namespace RecuteDog.Repositories
     {
         List<Voluntario> Getvoluntarios();
         void NewVoluntario(Voluntario voluntario, string refugio);
+        void ModificarDatosRefugio(Voluntario voluntario);
+        void BajaVoluntario(int idvoluntario);
     }
 }

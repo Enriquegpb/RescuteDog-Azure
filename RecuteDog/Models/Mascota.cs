@@ -30,7 +30,5 @@ namespace RecuteDog.Models
         [Column("IDREFUGIO")]
         public int IdRefugio { get; set; }
 
-        
-
     }
 }

@@ -12,9 +12,9 @@ namespace RecuteDog.Controllers
             this.repo = repo;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int idrefugio)
         {
-            List<Mascota> mascotas = this.repo.GetMascotas();
+            List<Mascota> mascotas = this.repo.GetMascotas(idrefugio);
             return View(mascotas);
         }
         public IActionResult FormularioAdopcion(int idmascota)

@@ -27,11 +27,21 @@ namespace RecuteDog.Repositories
             this.context = context;
         }
 
+        public void BajaVoluntario(int idvoluntario)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<Voluntario> Getvoluntarios()
         {
             var consulta = from datos in this.context.Voluntarios
                            select datos;
             return consulta.ToList();
+        }
+
+        public void ModificarDatosRefugio(Voluntario voluntario)
+        {
+            throw new NotImplementedException();
         }
 
         public void NewVoluntario(Voluntario voluntario, string refugio)

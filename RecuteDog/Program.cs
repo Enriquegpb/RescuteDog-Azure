@@ -4,8 +4,9 @@ using RecuteDog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
-builder.Services.AddTransient<RepositoryRefugioAnimales>();
-builder.Services.AddTransient<RepositoryAutentication>();
+builder.Services.AddTransient<IRepoAnimales,RepositoryAnimales>();
+builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
+builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();
 builder.Services.AddDbContext<MascotaContext>
     (options => options.UseSqlServer(connectionString));
 builder.Services.AddControllersWithViews();

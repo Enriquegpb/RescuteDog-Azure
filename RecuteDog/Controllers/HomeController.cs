@@ -6,8 +6,8 @@ namespace RecuteDog.Controllers
 {
     public class HomeController : Controller
     {
-        private RepositoryRefugioAnimales repo;
-        public HomeController(RepositoryRefugioAnimales repo)
+        private IRepoAnimales repo;
+        public HomeController(IRepoAnimales repo)
         {
             this.repo = repo;
         }

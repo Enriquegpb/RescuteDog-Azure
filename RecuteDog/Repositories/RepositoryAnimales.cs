@@ -28,10 +28,10 @@ namespace RecuteDog.Repositories
     //    SELECT* FROM MASCOTAS WHERE IDMASCOTA = @ID
     //GO
     #endregion
-    public class RepositoryRefugioAnimales
+    public class RepositoryAnimales: IRepoAnimales
     {
         private MascotaContext context;
-        public RepositoryRefugioAnimales(MascotaContext context)
+        public RepositoryAnimales(MascotaContext context)
         {
             this.context = context;
         }
@@ -51,12 +51,14 @@ namespace RecuteDog.Repositories
             return mascota;
         }
 
-        public void DeleteAnimal(int id)
-        {
-            string sql = "SP_SALIDA_MASCOTA_ADOPTADA";
-            SqlParameter pamidanimal = new SqlParameter("@ID", id);
-            this.context.Database.ExecuteSqlRaw(sql, pamidanimal);
-        }
+        //public void DeleteAnimal(int id)
+        //{
+        //    string sql = "SP_SALIDA_MASCOTA_ADOPTADA";
+        //    SqlParameter pamidanimal = new SqlParameter("@ID", id);
+        //    this.context.Database.ExecuteSqlRaw(sql, pamidanimal);
+        //}
+        /*Al final no voy a necesitar este metodo ya que el resultado que se pretende es mostrar o no mostrar una mascota dependiendo del estado de adopcion*/
+
 
         public void IngresoAnimal(Mascota mascota)
         {

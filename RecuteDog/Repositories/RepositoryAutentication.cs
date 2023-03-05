@@ -4,7 +4,7 @@ using RecuteDog.Models;
 
 namespace RecuteDog.Repositories
 {
-    public class RepositoryAutentication
+    public class RepositoryAutentication: IRepoAutentication
     {
         private MascotaContext context;
         public RepositoryAutentication(MascotaContext context)
@@ -28,9 +28,6 @@ namespace RecuteDog.Repositories
         }
         public async Task NewUser(User user)
         {
-            
-            
-
             User newUser = new User
             {
                 Username = user.Username,

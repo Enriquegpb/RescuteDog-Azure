@@ -7,8 +7,8 @@ namespace RecuteDog.Controllers
 {
     public class LoginController : Controller
     {
-        private RepositoryAutentication repo;
-        public LoginController(RepositoryAutentication repo)
+        private IRepoAutentication repo;
+        public LoginController(IRepoAutentication repo)
         {
             this.repo = repo;
         }

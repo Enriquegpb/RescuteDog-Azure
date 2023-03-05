@@ -25,6 +25,12 @@ namespace RecuteDog.Models
         public bool Peligrosidad { get; set; }
         [Column("IMAGEN")]
         public string Imagen { get; set; }
+        [Column("ADOPTADO")]
+        public bool Adopdatado { get; set; }
+        [Column("IDREFUGIO")]
+        public int IdRefugio { get; set; }
+
+        
 
     }
 }

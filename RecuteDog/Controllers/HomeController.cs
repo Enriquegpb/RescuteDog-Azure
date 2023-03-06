@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
 using System.Net;
@@ -10,12 +11,12 @@ namespace RecuteDog.Controllers
     {
         private IRepoAnimales repo;
         private IRepoAdopciones repoAdopciones;
-        private IConfiguration configuration;
-        public HomeController(IRepoAnimales repo, IRepoAdopciones repoAdopciones, IConfiguration configuration)
+        private HelperMail helperMail;
+        public HomeController(IRepoAnimales repo, IRepoAdopciones repoAdopciones, HelperMail helperMail)
         {
             this.repo = repo;
             this.repoAdopciones = repoAdopciones;
-            this.configuration = configuration;
+            this.helperMail = helperMail;
         }
 
         public IActionResult Index(int idrefugio)
@@ -29,41 +30,29 @@ namespace RecuteDog.Controllers
             return View(mascota);
         }
         [HttpPost]
-        public async Task <IActionResult> FormularioAdopcion(int idmascota, int iduser)
+        public async Task <IActionResult> FormularioAdopcion(int idmascota, int iduser, string para, string asunto, string mensaje)
         {
             iduser = 2;
             Mascota mascota = this.repo.DetailsMascota(idmascota);
             /*
              * Creacion del correo
              */
-            MailMessage mail =new MailMessage();
-            string user = this.configuration.GetValue<string>("MailSettings:Credentials:User");
-            mail.From = new MailAddress(user);
-            mail.To.Add(new MailAddress("enriquegpb5@gmail.com"));
-            mail.Subject = "Has adoptado a "+ mascota.Nombre;
-            mail.Body = "Has aadoptado a nuestra mascota preferiado, no!!!";
-            mail.IsBodyHtml = true;
-            mail.Priority = MailPriority.Normal;
+
 
             /**
              * Configuracion del correo
              */
+            
 
-            string password = this.configuration.GetValue<string>("MailSettings:Credentials:Password");  
-            string hostName = this.configuration.GetValue<string>("MailSettings:Smtp:Host");  
-            int port = this.configuration.GetValue<int>("MailSettings:Smtp:Port");  
-            bool enableSsl = this.configuration.GetValue<bool>("MailSettings:Smtp:EnableSSL");  
-            bool defaultCredentials = this.configuration.GetValue<bool>("MailSettings:Smtp:DefaultCredentials");  
+            asunto = "Has adoptado a " + mascota.Nombre;
+            para = "rescutedogkw@gmail.com";
+            mensaje = "Gracias por la solicitud de adopcion de"+ mascota.Nombre +" Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion";
 
-            SmtpClient client = new SmtpClient();
-            client.Host = hostName;
-            client.Port = port;
-            client.EnableSsl = enableSsl;
-            client.UseDefaultCredentials = defaultCredentials;
-            NetworkCredential credentials  = new NetworkCredential(user, password);
-            client.Credentials = credentials;
-            await client.SendMailAsync(mail);
-
+            await this.helperMail.SendMailAsync(para, asunto, mensaje);
+            /**
+             * Ahora el siguiente paso es crear el servicio de 
+             * mensajería para utilizarlo en toda la app
+             */
             this.repoAdopciones.NuevaAdopcion(idmascota, iduser);
             return RedirectToAction("Index", "Refugios");
         }

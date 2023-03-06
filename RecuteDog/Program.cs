@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
+using RecuteDog.Helpers;
 using RecuteDog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
+builder.Services.AddSingleton<HelperMail>();
 builder.Services.AddTransient<IRepoAnimales,RepositoryMascotas>();
 builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
 builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();

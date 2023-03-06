@@ -1,6 +1,7 @@
 ﻿@model Mascota
 <form method="post">
     <label>Nombre</label>
+    <input type="hidden" value="@Model.Id" name="idmascota" />
     <input type="text" value="@Model.Nombre" disabled class="form-control" />
     <label>Raza</label>
     <input type="text" value="@Model.Raza" disabled class="form-control" />
@@ -12,7 +13,7 @@
     {
         <input type="text" value="Peligrosa" disabled class="form-control" />
     }else{
-        <input type="text" value=":No Peligrosa" disabled class="form-control" />
+        <input type="text" value="No Peligrosa" disabled class="form-control" />
     }
     <label>Alto</label>
     <input type="text" value="@Model.Alto" disabled class="form-control" />

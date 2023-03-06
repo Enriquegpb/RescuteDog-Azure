@@ -8,6 +8,7 @@ builder.Services.AddTransient<IRepoAnimales,RepositoryMascotas>();
 builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
 builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();
 builder.Services.AddTransient<IRepoRefugios, RepositoryRefugios>();
+builder.Services.AddTransient<IRepoAdopciones, RepositoryAdopciones>();
 builder.Services.AddDbContext<MascotaContext>
     (options => options.UseSqlServer(connectionString));
 builder.Services.AddControllersWithViews();

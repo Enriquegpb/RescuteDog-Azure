@@ -1,0 +1,27 @@
+
+#contenedorvoluntario {
+    font-weight: bold;
+    margin-top: 25px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    width: 1000px;
+    margin: 0 auto;
+}
+
+#imagenvoluntario{
+    width: 300px; 
+    height: auto;
+    border-radius: 300px;
+    
+}
+
+#presentacion {
+    background-color: antiquewhite;
+    border-radius: 25px;
+    width: 700px;
+}
+
+#contenedorvoluntario {
+    width:700px;
+}

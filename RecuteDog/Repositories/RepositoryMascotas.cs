@@ -47,6 +47,24 @@ namespace RecuteDog.Repositories
 
     //    SELECT* FROM MASCOTAS WHERE IDMASCOTA = @ID
     //GO
+
+    /**
+     * CREAMOS UNA VISTA PARA VER TODAS LAS MASCOTAS PARA DESPUES RECUPERARLOS EN INFORME MEDIANTE UN PROCEDURE
+     */
+
+    //    CREATE VIEW V_VER_MASCOTAS_ADOPTADAS
+    //    AS
+    //SELECT MASCOTAS.* FROM MASCOTAS
+    //INNER JOIN ADOPCIONES
+    //ON MASCOTAS.IDMASCOTA = ADOPCIONES.IDMASCOTA
+    //INNER JOIN USERS
+    //ON ADOPCIONES.IDUSER = USERS.IDUSER
+    //GO
+
+    //    CREATE PROCEDURE SP_GENERAR_INFORME_ADOPCIONES
+    //AS
+    //SELECT* FROM V_VER_MASCOTAS_ADOPTADAS
+    //GO
     #endregion
     public class RepositoryMascotas: IRepoAnimales
     {
@@ -97,6 +115,16 @@ namespace RecuteDog.Repositories
             SqlParameter pampeligrosidad = new SqlParameter("@PELIGROSIDAD", mascota.Peligrosidad);
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", mascota.Imagen);
             this.context.Database.ExecuteSqlRaw(sql, pamidanimal, pamnombre, pamraza, pamedad, pamancho, pamalto, pampeso, pamdescripcion, pampeligrosidad, pamimagen);
+        }
+
+        public List<Mascota> GenerarInformeAdopciones()
+        {
+            string sql = "SP_GENERAR_INFORME_ADOPCIONES";
+
+            var consulta = this.context.Mascotas.FromSqlRaw(sql);
+            List<Mascota> mascotasadoptadas = consulta.ToList();
+            return mascotasadoptadas;
+
         }
     }
 }

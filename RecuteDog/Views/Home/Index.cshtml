@@ -3,12 +3,14 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<div class="text-right">
+    <a class="btn btn-primary" asp-controller="Home" asp-action="InformeAdopcion" style="margin-right:0px">Generar Informe</a>
+</div>
 <div id="containerMascotas">
     @foreach (Mascota mascota in Model)
     {
         
-        <div class="card" style="background-color:moccasin;width:450px;">
+        <div class="card" style="background-color:moccasin;width:450px; margin: 0 auto">
             <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
             <div class="card-body">
                 <h1 class="card-title">Nombre: @mascota.Nombre</h1>

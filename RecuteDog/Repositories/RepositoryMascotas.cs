@@ -97,8 +97,9 @@ namespace RecuteDog.Repositories
         //    string sql = "SP_SALIDA_MASCOTA_ADOPTADA";
         //    SqlParameter pamidanimal = new SqlParameter("@ID", id);
         //    this.context.Database.ExecuteSqlRaw(sql, pamidanimal);
+         //TAMPOCO VOY A NECESITAR ESTE METODO PORQUE SE OCULTARÁ LA VISUALIZACION DE LAS MASCOTAS
         //}
-        /*Al final no voy a necesitar este metodo ya que el resultado que se pretende es mostrar o no mostrar una mascota dependiendo del estado de adopcion*/
+
 
 
         public void IngresoAnimal(Mascota mascota)

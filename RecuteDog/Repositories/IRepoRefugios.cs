@@ -5,8 +5,10 @@ namespace RecuteDog.Repositories
     public interface IRepoRefugios
     {
         List<Refugio> GetRefugios();
-        void ModificarRefugio(Refugio refugio);
+        Refugio DetailsRefugio(int idrefugio);
         void ModificarDatosRefugio(Refugio refugio);
+        void AgregarRefugio(Refugio refugio);
+        void BajaRefugio(int idrefugio);
         
     }
 }

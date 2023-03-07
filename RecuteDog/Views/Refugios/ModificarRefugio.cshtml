@@ -1,0 +1,62 @@
+﻿@model RecuteDog.Models.Refugio
+
+@{
+    ViewData["Title"] = "ModificarRefugio";
+}
+
+<h1>ModificarRefugio</h1>
+
+<h4>Refugio</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ModificarRefugio" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="IdRefugio" name="IdRefugio" type="hidden" value="@Model.IdRefugio" class="form-control" />
+                <span asp-validation-for="IdRefugio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" name="Nombre" type="text" value="@Model.Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Localidad" class="control-label"></label>
+                <input asp-for="Localidad" name="Localidad" type="text" value="@Model.Localidad" class="form-control" />
+                <span asp-validation-for="Localidad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ubicacion" class="control-label"></label>
+                <input asp-for="Ubicacion" name="Ubicacion" type="text" value="@Model.Ubicacion" class="form-control" />
+                <span asp-validation-for="Ubicacion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Imagen" class="control-label"></label>
+                <input asp-for="Imagen" name="Imagen" type="text" value="@Model.Imagen" class="form-control" />
+                <span asp-validation-for="Imagen" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Valoracion" class="control-label"></label>
+                <input asp-for="Valoracion" name="Valoracion" type="text" value="@Model.Valoracion" class="form-control" />
+                <span asp-validation-for="Valoracion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" name="Descripcion" type="text" value="@Model.Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

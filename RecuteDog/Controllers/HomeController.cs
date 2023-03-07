@@ -68,6 +68,19 @@ namespace RecuteDog.Controllers
             this.repoAdopciones.DevolverAnimalAlRefugio(idmascota);
             return RedirectToAction("Index","Refugios");
         }
-       
+
+        public IActionResult NuevaMascota()
+        {
+            /**
+             * Aqui necesitaría un metodo para recuperar el id del refugio de la mascota
+             */
+            return View();
+        }
+        [HttpPost]
+        public IActionResult NuevaMascota(Mascota mascota)
+        {
+            this.repo.IngresoAnimal(mascota);
+            return RedirectToAction("Index", "Refugios");
+        }
     }
 }

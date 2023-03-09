@@ -7,10 +7,8 @@ namespace RecuteDog.Models
     public class User
     {
         [Key]
-        [Column("ID")]
+        [Column("IDUSER")]
         public int Id { get; set; }
-        [Column("NAME")]
-        public string? Name { get; set; }
         [Column("EMAIL")]
         public string? Email { get; set; }
         [Column("BIRDTHDAY")]
@@ -19,8 +17,14 @@ namespace RecuteDog.Models
         public string? Phone { get; set; }
         [Column("USERNAME")]
         public string Username { get; set; }
-        [DataType(DataType.Password)]
+        //[DataType(DataType.Password)]
         [Column("PASSWORD")]
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
+        [Column("CONTRASENA")]
+        public string Contrasena { get; set; }
+        [Column("SALT")]
+        public string Salt { get; set; }
+        [Column("IMAGEN")]
+        public string Imagen { get; set; }
     }
 }

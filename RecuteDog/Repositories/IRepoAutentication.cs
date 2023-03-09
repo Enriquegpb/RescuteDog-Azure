@@ -4,7 +4,7 @@ namespace RecuteDog.Repositories
 {
     public interface IRepoAutentication
     {
-        User FindUser(User user);
-        Task NewUser(User user);
+        User LogIn(string email, string password);
+        Task NewUser(string username, string password, string email, string phone, string imagen, string cumple);
     }
 }

@@ -21,60 +21,27 @@ namespace RecuteDog.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SingUp(User user)
+        public async Task<IActionResult> SingUp(string username, string password, string email, string phone, string imagen, string birdthday)
         {
-            if (ModelState.IsValid)
-            {
-                var usercredentials = this.repo.FindUser(user);
-                if (usercredentials == null)
-                {
-                    await this.repo.NewUser(user);
-                    var mensaje = new MailMessage
-                    {
-                        Subject = "Nuevo Usario",
-                        Body = "Se ha registrado el usuario" + user.Username, 
-                        IsBodyHtml = true,
-                    };
-                    mensaje.From = new MailAddress("enriquegpb5@gmail.com","RecuteDog");
-                    mensaje.To.Add("enriquegpb5@gmail.com");
-
-                    var client = new SmtpClient
-                    {
-                        EnableSsl = true
-                    };
-                    client.Send(mensaje);
-                    mensaje.Dispose();
-                    client.Dispose();
-
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "El nombre de usuario ya está escogido");
-
-                }
-            }
+           
+                 await this.repo.NewUser(username, password, email, phone, imagen, birdthday);
             
-            return View(user);
+            
+            return RedirectToAction("Index","Refugios");
         }
         [HttpPost]
-        public IActionResult SingIn(User user)
+        public IActionResult SingIn(string email, string password)
         {
-            if(ModelState.IsValid)
-            {
-                var usercredentials = this.repo.FindUser(user);
-               if(usercredentials != null && usercredentials.Password == user.Password)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    ModelState.AddModelError("", "El nombre o la contraseña son incorretcas, inténtelo de nuevo");
-
-                }
-            }
-            return View(user);
             
+            User user = this.repo.LogIn(email, password);
+            if(user == null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index","Refugios");
+            }
         }
         public IActionResult LogOut()
         {

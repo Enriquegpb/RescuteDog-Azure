@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
+using RecuteDog.Helpers;
 using RecuteDog.Models;
 
 namespace RecuteDog.Repositories
@@ -12,9 +13,29 @@ namespace RecuteDog.Repositories
             this.context = context;
         }
 
-        public User FindUser(User user)
+        public User LogIn(string email, string password)
         {
-            return this.context.Users.FirstOrDefault(u => u.Username == user.Username && u.Password == user.Password);
+            User user =
+                this.context.Users.FirstOrDefault(z => z.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+            else
+            {
+                byte[] passUsuario = user.Password;
+                string salt = user.Salt;
+                byte[] temp = HelperCryptography.EncryptPassword(password, salt);
+                bool respuesta = HelperCryptography.CompareArrays(passUsuario, temp);
+                if(respuesta == true)
+                {
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
         public int GetMaximoUser()
         {
@@ -26,19 +47,19 @@ namespace RecuteDog.Repositories
             }
             return maximo;
         }
-        public async Task NewUser(User user)
+        public async Task NewUser(string username, string password, string email, string phone, string imagen,string birdthday)
         {
-            User newUser = new User
-            {
-                Username = user.Username,
-                Name = user.Name,
-                Email = user.Email,
-                Birdthday = user.Birdthday,
-                Id = this.GetMaximoUser(),
-                Password = user.Password,
-                Phone = user.Phone,
-            };
-            this.context.Users.Add(newUser);
+            User user = new User();
+            user.Id = this.GetMaximoUser();
+            user.Username = username;
+            user.Email = email;
+            user.Phone = phone;
+            user.Imagen = imagen;
+            user.Contrasena = password;
+            user.Birdthday = birdthday;
+            user.Salt = HelperCryptography.GenerateSalt();
+            user.Password = HelperCryptography.EncryptPassword(password, user.Salt);
+            this.context.Users.Add(user);
             await this.context.SaveChangesAsync();
         }
     }

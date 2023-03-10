@@ -2,6 +2,7 @@
 using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
+using System.Diagnostics.Metrics;
 using System.Net;
 using System.Net.Mail;
 
@@ -33,27 +34,32 @@ namespace RecuteDog.Controllers
         public async Task <IActionResult> FormularioAdopcion(int idmascota, int iduser, string para, string asunto, string mensaje)
         {
             iduser = 2;
-            Mascota mascota = this.repo.DetailsMascota(idmascota);
-            /*
-             * Creacion del correo
-             */
+            //Mascota mascota = this.repo.DetailsMascota(idmascota);
+            ///*
+            // * Creacion del correo
+            // */
 
 
-            /**
-             * Configuracion del correo
-             */
+            ///**
+            // * Configuracion del correo
+            // */
             
 
-            asunto = "Has adoptado a " + mascota.Nombre;
-            para = "rescutedogkw@gmail.com";
-            mensaje = "Gracias por la solicitud de adopcion de"+ mascota.Nombre +" Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion";
+            //asunto = "Has adoptado a " + mascota.Nombre;
+            //para = "rescutedogkw@gmail.com";
+            //mensaje = "Gracias por la solicitud de adopcion de"+ mascota.Nombre +" Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion";
 
-            await this.helperMail.SendMailAsync(para, asunto, mensaje);
-            /**
-             * Ahora el siguiente paso es crear el servicio de 
-             * mensajería para utilizarlo en toda la app
-             */
+            //await this.helperMail.SendMailAsync(para, asunto, mensaje);
+            ///**
+            // * Ahora el siguiente paso es crear el servicio de 
+            // * mensajería para utilizarlo en toda la app
+            // */
+
             this.repoAdopciones.NuevaAdopcion(idmascota, iduser);
+            //NECESITO UN METODO EN MASCOTAS PARA ACTUALIZAR EL ESTADO DE LA MASCOTA A TRUE O FALSE
+            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            mascota.Adopdatado = true;
+            this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adopdatado);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
             return RedirectToAction("Index", "Refugios");
         }
 
@@ -66,6 +72,9 @@ namespace RecuteDog.Controllers
         public IActionResult InformeAdopcion(int idmascota)
         {
             this.repoAdopciones.DevolverAnimalAlRefugio(idmascota);
+            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            mascota.Adopdatado = false;
+            this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adopdatado);
             return RedirectToAction("Index","Refugios");
         }
 

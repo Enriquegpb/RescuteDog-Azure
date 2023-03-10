@@ -26,7 +26,7 @@ namespace RecuteDog.Models
         [Column("IMAGEN")]
         public string Imagen { get; set; }
         [Column("ADOPTADO")]
-        public bool Adopdatado { get; set; }
+        public bool Adoptado { get; set; }
         [Column("IDREFUGIO")]
         public int IdRefugio { get; set; }
 

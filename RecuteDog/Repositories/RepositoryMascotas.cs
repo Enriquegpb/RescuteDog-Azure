@@ -65,6 +65,11 @@ namespace RecuteDog.Repositories
     //AS
     //SELECT* FROM V_VER_MASCOTAS_ADOPTADAS
     //GO
+
+    //    CREATE PROCEDURE SP_UPDATE_STATE_ADOPCION(@IDMASCOTA INT, @ESTADO BIT)
+    //AS
+    //    UPDATE MASCOTAS SET ADOPTADO = @ESTADO WHERE IDMASCOTA = @IDMASCOTA
+    //GO
     #endregion
     public class RepositoryMascotas: IRepoAnimales
     {
@@ -92,14 +97,13 @@ namespace RecuteDog.Repositories
             return mascota;
         }
 
-        //public void DeleteAnimal(int id)
-        //{
-        //    string sql = "SP_SALIDA_MASCOTA_ADOPTADA";
-        //    SqlParameter pamidanimal = new SqlParameter("@ID", id);
-        //    this.context.Database.ExecuteSqlRaw(sql, pamidanimal);
-         //TAMPOCO VOY A NECESITAR ESTE METODO PORQUE SE OCULTARÁ LA VISUALIZACION DE LAS MASCOTAS
-        //}
-
+        public void UpdateEstadoAdopcion(int idmascota,bool estado)
+        {
+            string sql = "SP_UPDATE_STATE_ADOPCION @IDMASCOTA, @ESTADO";
+            SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", idmascota);
+            SqlParameter pamestado = new SqlParameter("@ESTADO", estado);
+            this.context.Database.ExecuteSqlRaw(sql, pamidmascota, pamestado);
+        }
 
 
         public void IngresoAnimal(Mascota mascota)

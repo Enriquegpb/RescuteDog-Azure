@@ -12,29 +12,35 @@
 <div id="containerMascotas">
     @foreach (Mascota mascota in Model)
     {
-        
-        <div class="card" style="background-color:moccasin;width:450px; margin: 0 auto">
-            <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
-            <div class="card-body">
-                <h1 class="card-title">Nombre: @mascota.Nombre</h1>
-                <p class="card-text"> Descripcion: @mascota.Descripcion</p>
-                @*Utilizar list-group list-group-flush para los items*@
+        if(mascota.Adopdatado == false)
+        {
+            <div class="card" style="background-color:moccasin;width:450px; margin: 0 auto">
+                <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
+                <div class="card-body">
+                    <h1 class="card-title">Nombre: @mascota.Nombre</h1>
+                    <p class="card-text"> Descripcion: @mascota.Descripcion</p>
+                    @*Utilizar list-group list-group-flush para los items*@
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Raza: @mascota.Raza</li>
+                    <li class="list-group-item">Edad: @mascota.Edad</li>
+                    <li class="list-group-item">Peso: @mascota.Peso Kg</li>
+                    @if (mascota.Peligrosidad)
+                    {
+                        <li class="list-group-item"> Raza: Peligrosa</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item"> Raza: No Peligrosa</li>
+                    }
+                </ul>
+                <div class="card-body">
+                    <a class="btn btn-dark" asp-controller="Home" asp-action="FormularioAdopcion" asp-route-idmascota="@mascota.Id">Adoptar</a>
+                </div>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Raza: @mascota.Raza</li>
-                <li class="list-group-item">Edad: @mascota.Edad</li>
-                <li class="list-group-item">Peso: @mascota.Peso Kg</li>
-                @if (mascota.Peligrosidad)
-                {
-                    <li class="list-group-item"> Raza: Peligrosa</li>
-                }else{
-                    <li class="list-group-item"> Raza: No Peligrosa</li>
-                }
-            </ul>
-            <div class="card-body">
-                <a class="btn btn-dark" asp-controller="Home" asp-action="FormularioAdopcion" asp-route-idmascota="@mascota.Id">Adoptar</a>
-            </div>
-        </div>
+        }
+
+       
     }
 </div>
 

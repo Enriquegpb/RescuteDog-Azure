@@ -8,6 +8,8 @@ namespace RecuteDog.Repositories
         List<Mascota> GenerarInformeAdopciones();
         Mascota DetailsMascota(int idmascota);
         void IngresoAnimal(Mascota mascota);
+        //void AdoptarMascota(int idmascota);
+        void UpdateEstadoAdopcion(int idmascota, bool estado);
 
     }
 }

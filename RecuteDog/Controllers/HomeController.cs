@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
@@ -31,9 +32,9 @@ namespace RecuteDog.Controllers
             return View(mascota);
         }
         [HttpPost]
-        public async Task <IActionResult> FormularioAdopcion(int idmascota, int iduser, string para, string asunto, string mensaje)
+        public async Task <IActionResult> FormularioAdopcion(int idmascota, string para, string asunto, string mensaje)
         {
-            iduser = 2;
+            User user = HttpContext.Session.GetObject<User>("LOGSESSION");
             //Mascota mascota = this.repo.DetailsMascota(idmascota);
             ///*
             // * Creacion del correo
@@ -55,11 +56,11 @@ namespace RecuteDog.Controllers
             // * mensajería para utilizarlo en toda la app
             // */
 
-            this.repoAdopciones.NuevaAdopcion(idmascota, iduser);
+            this.repoAdopciones.NuevaAdopcion(idmascota, user.Id);
             //NECESITO UN METODO EN MASCOTAS PARA ACTUALIZAR EL ESTADO DE LA MASCOTA A TRUE O FALSE
             Mascota mascota = this.repo.DetailsMascota(idmascota);
-            mascota.Adopdatado = true;
-            this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adopdatado);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
+            mascota.Adoptado = true;
+            this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
             return RedirectToAction("Index", "Refugios");
         }
 
@@ -73,8 +74,8 @@ namespace RecuteDog.Controllers
         {
             this.repoAdopciones.DevolverAnimalAlRefugio(idmascota);
             Mascota mascota = this.repo.DetailsMascota(idmascota);
-            mascota.Adopdatado = false;
-            this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adopdatado);
+            mascota.Adoptado = false;
+            this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);
             return RedirectToAction("Index","Refugios");
         }
 

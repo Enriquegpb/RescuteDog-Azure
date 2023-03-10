@@ -4,6 +4,10 @@ using RecuteDog.Helpers;
 using RecuteDog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(15);
+});
 string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
 builder.Services.AddSingleton<HelperMail>();
 builder.Services.AddTransient<IRepoAnimales,RepositoryMascotas>();
@@ -16,6 +20,7 @@ builder.Services.AddDbContext<MascotaContext>
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
 app.UseStaticFiles();
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Refugios}/{action=Index}"

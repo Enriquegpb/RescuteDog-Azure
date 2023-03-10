@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RecuteDog.Extensions;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
 using System.Net.Mail;
@@ -23,10 +24,8 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> SingUp(string username, string password, string email, string phone, string imagen, string birdthday)
         {
-           
-                 await this.repo.NewUser(username, password, email, phone, imagen, birdthday);
-            
-            
+            await this.repo.NewUser(username, password, email, phone, imagen, birdthday);
+
             return RedirectToAction("Index","Refugios");
         }
         [HttpPost]
@@ -40,6 +39,7 @@ namespace RecuteDog.Controllers
             }
             else
             {
+                HttpContext.Session.SetObject("LOGSESSION", user);
                 return RedirectToAction("Index","Refugios");
             }
         }

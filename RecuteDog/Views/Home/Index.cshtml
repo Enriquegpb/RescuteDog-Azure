@@ -12,7 +12,7 @@
 <div id="containerMascotas">
     @foreach (Mascota mascota in Model)
     {
-        if(mascota.Adopdatado == false)
+        if(mascota.Adoptado == false)
         {
             <div class="card" style="background-color:moccasin;width:450px; margin: 0 auto">
                 <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />

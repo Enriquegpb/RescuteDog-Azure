@@ -27,7 +27,7 @@ namespace RecuteDog.Repositories
             this.context = context;
         }
 
-        public void BajaVoluntario(int idvoluntario)
+        public async Task BajaVoluntario(int idvoluntario)
         {
             throw new NotImplementedException();
         }
@@ -39,12 +39,12 @@ namespace RecuteDog.Repositories
             return consulta.ToList();
         }
 
-        public void ModificarDatosRefugio(Voluntario voluntario)
+        public async Task ModificarDatosRefugio(Voluntario voluntario)
         {
             throw new NotImplementedException();
         }
 
-        public void NewVoluntario(Voluntario voluntario, string refugio)
+        public async Task NewVoluntario(Voluntario voluntario, string refugio)
         {
             string sql = "SP_NEWVOLUNTARIO @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @REFUGIO";
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", voluntario.Nombre);
@@ -54,7 +54,7 @@ namespace RecuteDog.Repositories
             SqlParameter pammunicipio = new SqlParameter("@MUNICIPIO", voluntario.Municipio);
             SqlParameter pamfechanac = new SqlParameter("@FECHANAC", voluntario.Fecha_Nacimiento);
             SqlParameter pamrefugio = new SqlParameter("@REFUGIO", refugio);
-            this.context.Database.ExecuteSqlRaw(sql, pamnombre, pammensaje, pamimagen, pamcorreo, pammunicipio, pamfechanac, pamrefugio);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamnombre, pammensaje, pamimagen, pamcorreo, pammunicipio, pamfechanac, pamrefugio);
 
             /*
              * 1. Se debería recuperar el municipio de un tabla de municipios??

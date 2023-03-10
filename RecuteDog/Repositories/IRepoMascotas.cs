@@ -2,14 +2,14 @@
 
 namespace RecuteDog.Repositories
 {
-    public interface IRepoAnimales
+    public interface IRepoMascotas
     {
         List<Mascota> GetMascotas(int idrefugio);
         List<Mascota> GenerarInformeAdopciones();
         Mascota DetailsMascota(int idmascota);
-        void IngresoAnimal(Mascota mascota);
+        Task IngresoAnimal(Mascota mascota);
         //void AdoptarMascota(int idmascota);
-        void UpdateEstadoAdopcion(int idmascota, bool estado);
+        Task UpdateEstadoAdopcion(int idmascota, bool estado);
 
     }
 }

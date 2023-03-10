@@ -29,19 +29,19 @@ namespace RecuteDog.Repositories
             this.context = context;
         }
 
-        public void DevolverAnimalAlRefugio(int idmascota)
+        public async Task DevolverAnimalAlRefugio(int idmascota)
         {
             string sql = "SP_DEVOLVER_ANIMAL_AL_REFUGIGO @IDMASCOTA";
             SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", idmascota);
-            this.context.Database.ExecuteSqlRaw(sql, pamidmascota);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidmascota);
         }
 
-        public void NuevaAdopcion(int idmascota, int iduser)
+        public async Task NuevaAdopcion(int idmascota, int iduser)
         {
             string sql = "SP_NUEVA_ADOPCION @IDMASCOTA, @IDUSER";
             SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", idmascota);
             SqlParameter pamiduser = new SqlParameter("@IDUSER", iduser);
-            this.context.Database.ExecuteSqlRaw(sql, pamidmascota, pamiduser);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidmascota, pamiduser);
         }
     }
 }

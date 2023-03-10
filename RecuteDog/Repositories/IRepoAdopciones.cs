@@ -2,7 +2,7 @@
 {
     public interface IRepoAdopciones
     {
-        void NuevaAdopcion(int idmascota, int iduser);
-        void DevolverAnimalAlRefugio(int idmascota);
+        Task NuevaAdopcion(int idmascota, int iduser);
+        Task DevolverAnimalAlRefugio(int idmascota);
     }
 }

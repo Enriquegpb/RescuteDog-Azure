@@ -71,7 +71,7 @@ namespace RecuteDog.Repositories
     //    UPDATE MASCOTAS SET ADOPTADO = @ESTADO WHERE IDMASCOTA = @IDMASCOTA
     //GO
     #endregion
-    public class RepositoryMascotas: IRepoAnimales
+    public class RepositoryMascotas: IRepoMascotas
     {
         private MascotaContext context;
         
@@ -97,16 +97,16 @@ namespace RecuteDog.Repositories
             return mascota;
         }
 
-        public void UpdateEstadoAdopcion(int idmascota,bool estado)
+        public async Task UpdateEstadoAdopcion(int idmascota,bool estado)
         {
             string sql = "SP_UPDATE_STATE_ADOPCION @IDMASCOTA, @ESTADO";
             SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", idmascota);
             SqlParameter pamestado = new SqlParameter("@ESTADO", estado);
-            this.context.Database.ExecuteSqlRaw(sql, pamidmascota, pamestado);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidmascota, pamestado);
         }
 
 
-        public void IngresoAnimal(Mascota mascota)
+        public async Task IngresoAnimal(Mascota mascota)
         {
             string sql = "SP_INGRESO_MASCOTA_RESCATADA";
             SqlParameter pamidanimal = new SqlParameter("@ID", mascota.Id);
@@ -119,13 +119,12 @@ namespace RecuteDog.Repositories
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", mascota.Descripcion);
             SqlParameter pampeligrosidad = new SqlParameter("@PELIGROSIDAD", mascota.Peligrosidad);
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", mascota.Imagen);
-            this.context.Database.ExecuteSqlRaw(sql, pamidanimal, pamnombre, pamraza, pamedad, pamancho, pamalto, pampeso, pamdescripcion, pampeligrosidad, pamimagen);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidanimal, pamnombre, pamraza, pamedad, pamancho, pamalto, pampeso, pamdescripcion, pampeligrosidad, pamimagen);
         }
 
         public List<Mascota> GenerarInformeAdopciones()
         {
             string sql = "SP_GENERAR_INFORME_ADOPCIONES";
-
             var consulta = this.context.Mascotas.FromSqlRaw(sql);
             List<Mascota> mascotasadoptadas = consulta.ToList();
             return mascotasadoptadas;

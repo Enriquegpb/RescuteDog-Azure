@@ -11,10 +11,10 @@ namespace RecuteDog.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepoAnimales repo;
+        private IRepoMascotas repo;
         private IRepoAdopciones repoAdopciones;
         private HelperMail helperMail;
-        public HomeController(IRepoAnimales repo, IRepoAdopciones repoAdopciones, HelperMail helperMail)
+        public HomeController(IRepoMascotas repo, IRepoAdopciones repoAdopciones, HelperMail helperMail)
         {
             this.repo = repo;
             this.repoAdopciones = repoAdopciones;

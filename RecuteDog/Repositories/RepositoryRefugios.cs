@@ -51,7 +51,7 @@ namespace RecuteDog.Repositories
             return refugio;
         }
 
-        public void AgregarRefugio(Refugio refugio)
+        public async Task AgregarRefugio(Refugio refugio)
         {
             string sql = "SP_NUEVO_REFUGIO @NOMBRE, @LOCALIDAD, @UBICACION, @IMAGEN, @VALORACION, @DESCRIPCION";
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", refugio.Nombre);
@@ -60,15 +60,15 @@ namespace RecuteDog.Repositories
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", refugio.Imagen);
             SqlParameter pamvaloracion = new SqlParameter("@VALORACION", refugio.Valoracion);
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", refugio.Descripcion);
-            this.context.Database.ExecuteSqlRaw(sql, pamnombre, pamnloc, pamubicacion, pamimagen, pamvaloracion, pamdescripcion);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamnombre, pamnloc, pamubicacion, pamimagen, pamvaloracion, pamdescripcion);
 
         }
 
-        public void BajaRefugio(int idrefugio)
+        public async Task BajaRefugio(int idrefugio)
         {
             string sql = "SP_BAJA_REFUGIO @IDREFUGIO";
             SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", idrefugio);
-            this.context.Database.ExecuteSqlRaw(sql, pamidrefugio);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidrefugio);
         }
 
         public List<Refugio> GetRefugios()
@@ -78,7 +78,7 @@ namespace RecuteDog.Repositories
             return consulta.ToList();
         }
 
-        public void ModificarDatosRefugio(Refugio refugio)
+        public async Task ModificarDatosRefugio(Refugio refugio)
         {
             string sql = "SP_ACTUALIZAR_DATOS_REFUGIO @IDREFUGIO, @NOMBRE, @LOCALIDAD, @UBICACION, @IMAGEN, @VALORACION, @DESCRIPCION";
             SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", refugio.IdRefugio);
@@ -88,7 +88,7 @@ namespace RecuteDog.Repositories
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", refugio.Imagen);
             SqlParameter pamvaloracion = new SqlParameter("@VALORACION", refugio.Valoracion);
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", refugio.Descripcion);
-            this.context.Database.ExecuteSqlRaw(sql, pamidrefugio, pamnombre, pamnloc, pamubicacion, pamimagen, pamvaloracion, pamdescripcion);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidrefugio, pamnombre, pamnloc, pamubicacion, pamimagen, pamvaloracion, pamdescripcion);
         }
     }
 }

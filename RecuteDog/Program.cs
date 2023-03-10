@@ -10,7 +10,7 @@ builder.Services.AddSession(options =>
 });
 string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
 builder.Services.AddSingleton<HelperMail>();
-builder.Services.AddTransient<IRepoAnimales,RepositoryMascotas>();
+builder.Services.AddTransient<IRepoMascotas,RepositoryMascotas>();
 builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
 builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();
 builder.Services.AddTransient<IRepoRefugios, RepositoryRefugios>();

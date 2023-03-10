@@ -6,9 +6,9 @@ namespace RecuteDog.Repositories
     {
         List<Refugio> GetRefugios();
         Refugio DetailsRefugio(int idrefugio);
-        void ModificarDatosRefugio(Refugio refugio);
-        void AgregarRefugio(Refugio refugio);
-        void BajaRefugio(int idrefugio);
+        Task ModificarDatosRefugio(Refugio refugio);
+        Task AgregarRefugio(Refugio refugio);
+        Task BajaRefugio(int idrefugio);
         
     }
 }

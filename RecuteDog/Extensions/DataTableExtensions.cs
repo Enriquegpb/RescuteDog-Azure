@@ -4,7 +4,7 @@ using System.Data;
 
 namespace RecuteDog.Extensions
 {
-    public static class HelperDataTable
+    public static class DataTableExtensions
     {
         public static DataTable GetDataTable<T>(this IList<T> list)
         {

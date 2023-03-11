@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using EFCore.BulkExtensions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
 using RecuteDog.Models;
@@ -129,6 +130,12 @@ namespace RecuteDog.Repositories
             List<Mascota> mascotasadoptadas = consulta.ToList();
             return mascotasadoptadas;
 
+        }
+
+        public async Task <List<Mascota>> SaveInformeAsync(List<Mascota> adopciones)
+        {
+            await this.context.BulkInsertAsync(adopciones);
+            return adopciones;
         }
     }
 }

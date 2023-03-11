@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using RecuteDog.Models;
@@ -92,5 +94,56 @@ namespace RecuteDog.Controllers
             this.repo.IngresoAnimal(mascota);
             return RedirectToAction("Index", "Refugios");
         }
+        /**
+         * Metodos Para las vistas
+         * 
+         */
+        public async Task<JsonResult> SaveInformeMascotas(List<Mascota> mascotas)
+        {
+            mascotas = await this.repo.SaveInformeAsync(mascotas);
+            return Json(mascotas);
+        }
+
+        public string GenerateAndDownLoadExcel(List<Mascota> mascotas)
+        {
+            var dataTable = DataTableExtensions.GetDataTable(mascotas);
+            dataTable.Columns.Remove("IDMASCOTA");
+
+            byte[] fileContents = null;
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using(ExcelPackage excelPackage = new ExcelPackage())
+            {
+                ExcelWorksheet ws = excelPackage.Workbook.Worksheets.Add("Mascotas");
+                ws.Cells["A1"].Value = "Informe De Adopciones";
+                ws.Cells["A1"].Style.Font.Bold = true;
+                ws.Cells["A1"].Style.Font.Size = 18;
+                ws.Cells["A1"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                ws.Cells["A1"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                ws.Cells["A2"].Value = "Listado de Adopciones";
+                ws.Cells["A2"].Style.Font.Bold = true;
+                ws.Cells["A2"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                ws.Cells["A2"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                /**
+                 * Cargar los datos en el informe
+                 */
+
+                ws.Cells["A3"].LoadFromDataTable(dataTable, true);
+                ws.Cells["A3:C3"].Style.Font.Bold = true;
+                ws.Cells["A3:C3"].Style.Font.Size = 14;
+                ws.Cells["A3:C3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Cells["A3:C3"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightCoral);
+                ws.Cells["A3:C3"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                ws.Cells["A3:C3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                excelPackage.Save();
+                fileContents = excelPackage.GetAsByteArray();
+            }
+            return Convert.ToBase64String(fileContents);
+
+        }
+        
     }
 }

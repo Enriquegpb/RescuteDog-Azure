@@ -3,6 +3,43 @@
 @{
     ViewData["Title"] = "InformeAdopcion";
 }
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            Init();
+          function Init(){
+                $("#btnDownLoadExcel").click(function () {
+                GenerateAndDownloadExcel();
+            });
+          }
+            function GenerateAndDownloadExcel() {
+                $.ajax({
+                    url: "../Home/GenerateAndDownLoadExcel",
+                    method: 'GET',
+                    success: function (response) {
+                        ExcelFromBase64("Informe de adopciones.xlsx", response);
+                    },
+                    error: function (response) {
+                        console.log("No se ha podido generar el informe excel");
+                    }
+                });
+
+            }
+
+            function ExcelFromBase64(fileName, bytesBase64){
+                var link = document.createElement("a");
+                link.download = fileName;
+                link.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + bytesBase64;
+
+                document.body.appendChild(link);
+
+                link.click();
+
+                document.body.removeChild(link);
+            }
+        })
+    </script>
+}
 
 <h1>Informe de Adopciones</h1>
 
@@ -48,3 +85,10 @@
 }
     </tbody>
 </table>
+<button id="btnDownLoadExcel" class="btn btn-success">Descargar</button>
+<br/>
+<div>
+    <input type="file" id="input" accept=".xls,xlsx,ods" />
+    <button id="btnSave" class="btn btn-check">Save</button>
+</div>
+

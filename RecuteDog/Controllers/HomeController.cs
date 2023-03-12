@@ -104,10 +104,11 @@ namespace RecuteDog.Controllers
             return Json(mascotas);
         }
 
-        public string GenerateAndDownLoadExcel(List<Mascota> mascotas)
+        public string GenerateAndDownLoadExcel()
         {
+            List<Mascota> mascotas = this.repo.GenerarInformeAdopciones();
             var dataTable = DataTableExtensions.GetDataTable(mascotas);
-            dataTable.Columns.Remove("IDMASCOTA");
+            //dataTable.Columns.Remove("IDMASCOTA");
 
             byte[] fileContents = null;
 
@@ -131,12 +132,12 @@ namespace RecuteDog.Controllers
                  */
 
                 ws.Cells["A3"].LoadFromDataTable(dataTable, true);
-                ws.Cells["A3:C3"].Style.Font.Bold = true;
-                ws.Cells["A3:C3"].Style.Font.Size = 14;
-                ws.Cells["A3:C3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                ws.Cells["A3:C3"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightCoral);
-                ws.Cells["A3:C3"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                ws.Cells["A3:C3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                ws.Cells["A3:L3"].Style.Font.Bold = true;
+                ws.Cells["A3:L3"].Style.Font.Size = 14;
+                ws.Cells["A3:L3"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Cells["A3:L3"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightCoral);
+                ws.Cells["A3:L3"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                ws.Cells["A3:L3"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                 excelPackage.Save();
                 fileContents = excelPackage.GetAsByteArray();

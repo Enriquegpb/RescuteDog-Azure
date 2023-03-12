@@ -132,10 +132,10 @@ namespace RecuteDog.Repositories
 
         }
 
-        public async Task <List<Mascota>> SaveInformeAsync(List<Mascota> adopciones)
-        {
-            await this.context.BulkInsertAsync(adopciones);
-            return adopciones;
-        }
+        //public async Task <List<Mascota>> SaveInformeAsync(List<Mascota> adopciones)
+        //{
+        //    await this.context.BulkInsertAsync(adopciones);
+        //    return adopciones;
+        //}
     }
 }

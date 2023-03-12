@@ -98,11 +98,12 @@ namespace RecuteDog.Controllers
          * Metodos Para las vistas
          * 
          */
-        public async Task<JsonResult> SaveInformeMascotas(List<Mascota> mascotas)
-        {
-            mascotas = await this.repo.SaveInformeAsync(mascotas);
-            return Json(mascotas);
-        }
+
+        //public async Task<JsonResult> SaveInformeMascotasAsync(List<Mascota> mascotas)
+        //{
+        //    mascotas = await this.repo.SaveInformeAsync(mascotas);
+        //    return Json(mascotas);
+        //}
 
         public string GenerateAndDownLoadExcel()
         {

@@ -10,7 +10,7 @@ namespace RecuteDog.Repositories
         List<Mascota> GenerarInformeAdopciones();
         // EL SEGUNDO METODO NOS PERMITE GUARDAR LA COLECCION DE MASCOTAS QUE HAN
         //SIDO ADOPTADAS EN UNA COLECION PASANDOLE EL INFORME GENERADO
-        Task<List<Mascota>> SaveInformeAsync(List<Mascota> adopciones);
+        //Task<List<Mascota>> SaveInformeAsync(List<Mascota> adopciones);
         Mascota DetailsMascota(int idmascota);
         Task IngresoAnimal(Mascota mascota);
         //void AdoptarMascota(int idmascota);

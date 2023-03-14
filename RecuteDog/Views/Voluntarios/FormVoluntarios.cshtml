@@ -1,8 +1,32 @@
 ﻿@model RecuteDog.Models.Voluntario
 
-@{
+@*@{
     ViewData["Title"] = "FormVoluntarios";
-}
+}*@
+    <script>
+        $(document).ready(function () {
+            getLocalidades();
+            function getLocalidades(){
+                var url = "https://servicios.ine.es/wstempus/js/ES/VALORES_VARIABLE/19?page=1"
+                $.ajax({
+                    "url": url,
+                    "method": "get",
+                    "datatype": "json",
+                    success: function(data){
+                        console.log(data);
+                        $.each(data, function(index, localidad){
+                            var option = $("<option>",{
+                                value = data.Nombre
+                            });
+                            $("#selectmunicipio").append(option); 
+                        })
+                    }
+                })
+            }
+        })
+    </script>
+
+
 @{
     List<string> refugios = ViewData["REFUGIOS"] as List<string>;
 }
@@ -36,7 +60,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Municipio" class="control-label"></label>
-                <input asp-for="Municipio" type="text" name="Municipio" class="form-control" />
+                <select name="Municipio" id="selectmunicipio">
+
+                </select>
                 <span asp-validation-for="Municipio" class="text-danger"></span>
             </div>
             <div class="form-group">

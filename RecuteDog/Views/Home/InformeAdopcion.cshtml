@@ -6,35 +6,34 @@
 @section scripts{
     <script>
         $(document).ready(function () {
+
             Init();
             function Init() {
                 $("#btnDownLoadExcel").click(function () {
                     GenerateAndDownloadExcel();
                 });
-                //$("#btnSave").click(function () {
-                //    Save();
-                //});
-
+                getLocalidades();
             }
-            //function Save() {
-            //    $.ajax({
-            //        url: "../HomeController/SaveInforme",
-            //        type: "POST",
-            //        dataType: "JSON",
-            //        success: function (data) {
-            //            var html = "";
-            //            $.each(data, function (index, dept) {
-            //                html += "<tr>";
-            //                html += "<td>" + dept.numero + "</td>";
-            //                html += "<td>" + dept.nombre + "</td>";
-            //                html += "<td>" + dept.localidad + "</td>";
-            //                html += "</tr>";
-            //            });
-            //            $("#tablaInformeAdopciones tbody").html(html);
-            //        }
 
-            //    })
-            //}
+            
+            function getLocalidades() {
+                var url = "https://servicios.ine.es/wstempus/js/ES/VALORES_VARIABLE/19?page=1"
+                $.ajax({
+                    "url": url,
+                    "method": "get",
+                    "datatype": "json",
+                    success: function (data) {
+                        console.log(data);
+                        $.each(data, function (index, localidad) {
+                            var option = $("<option>", {
+                                value = data.Nombre
+                            });
+                            $("#selectmunicipio").append(option);
+                        })
+                    }
+                })
+            }
+
             function GenerateAndDownloadExcel() {
                 $.ajax({
                     url: "../Home/GenerateAndDownLoadExcel",
@@ -62,6 +61,11 @@
             }
 
         })
+            
+        
+            
+        
+    
     </script>
     }
 

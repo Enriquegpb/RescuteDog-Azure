@@ -1,9 +1,7 @@
-﻿using EFCore.BulkExtensions;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
 using RecuteDog.Models;
-using System.Diagnostics.Metrics;
 
 namespace RecuteDog.Repositories
 {

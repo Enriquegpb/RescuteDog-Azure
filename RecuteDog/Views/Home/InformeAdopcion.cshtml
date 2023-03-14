@@ -6,32 +6,11 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-
             Init();
             function Init() {
                 $("#btnDownLoadExcel").click(function () {
                     GenerateAndDownloadExcel();
                 });
-                getLocalidades();
-            }
-
-            
-            function getLocalidades() {
-                var url = "https://servicios.ine.es/wstempus/js/ES/VALORES_VARIABLE/19?page=1"
-                $.ajax({
-                    "url": url,
-                    "method": "get",
-                    "datatype": "json",
-                    success: function (data) {
-                        console.log(data);
-                        $.each(data, function (index, localidad) {
-                            var option = $("<option>", {
-                                value = data.Nombre
-                            });
-                            $("#selectmunicipio").append(option);
-                        })
-                    }
-                })
             }
 
             function GenerateAndDownloadExcel() {
@@ -61,11 +40,6 @@
             }
 
         })
-            
-        
-            
-        
-    
     </script>
     }
 

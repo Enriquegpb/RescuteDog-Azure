@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecuteDog.Extensions;
+using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
 using System.Net.Mail;
@@ -9,9 +10,11 @@ namespace RecuteDog.Controllers
     public class LoginController : Controller
     {
         private IRepoAutentication repo;
-        public LoginController(IRepoAutentication repo)
+        private HelperPathProvider helperPath;
+        public LoginController(IRepoAutentication repo,HelperPathProvider helperPath)
         {
             this.repo = repo;
+            this.helperPath = helperPath;
         }
         public IActionResult SingUp()
         {
@@ -22,10 +25,18 @@ namespace RecuteDog.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SingUp(string username, string password, string email, string phone, string imagen, string birdthday)
+        public async Task<IActionResult> SingUp(string username, string password, string email, string phone, IFormFile imagen, string birdthday)
         {
-            await this.repo.NewUser(username, password, email, phone, imagen, birdthday);
-
+            string filename = imagen.FileName;
+            string path = this.helperPath.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
+            using(Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await imagen.CopyToAsync(stream);
+            }
+            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+           
+            //ViewData["mensaje"] = "Fichero subido a" + path;
+             await this.repo.NewUser(username, password, email, phone, pathserver, birdthday);
             return RedirectToAction("Index","Refugios");
         }
         [HttpPost]

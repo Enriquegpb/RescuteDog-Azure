@@ -9,12 +9,12 @@
 <div class="text-right">
     <a class="btn btn-info" asp-controller="Home" asp-action="NuevaMascota" style="margin-right:0px">Ingreso Mascota</a>
 </div>
-<div id="containerMascotas">
+<div id="containerMascotas" class="card-container d-flex flex-wrap justify-content-center">
     @foreach (Mascota mascota in Model)
     {
         if(mascota.Adoptado == false)
         {
-            <div class="card" style="background-color:moccasin;width:450px; margin: 0 auto">
+            <div class="card" style="background-color:moccasin;width:450px; margin: 10px auto;">
                 <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
                 <div class="card-body">
                     <h1 class="card-title">Nombre: @mascota.Nombre</h1>

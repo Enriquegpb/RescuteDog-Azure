@@ -1,23 +1,27 @@
 ﻿@model List<Refugio>
-
+@section scripts{
+    <script>        
+        $(document).ready(function(){
+            $(document).on('click', '#micajarefugio', function () {
+            var idrefugio = $(this).data('idrefugio');
+            var url = '@Url.Action("Index", "Home", new { idrefugio = "__id__" })'.replace('__id__', idrefugio);
+            window.location.href = url;
+            });
+        });
+    </script>
+}
 @if(Model != null)
 {
     @foreach(Refugio refugio in Model)
     {
-         <div id="container">
-                    <div id="portadarefugio">
-                        <img id="imagenrefugio" src="https://diario.madrid.es/wp-content/uploads/2017/04/edificio-y-jard%C2%A1n-011-1333x1000.jpg" alt="mensaje" />
-                    </div>
-                    <div id="cajainformacion">
-                        <h1>@refugio.Nombre</h1>
-                        <h2>Ubicacion:</h2>
-                        <h3>Paseo Abrantes, 54</h3>
-                        <h5>Nuestra valoracion en aspectos relacionados a rescate de animales, cuidado  y adopcion</h5>
-                        <p>Este refugio es el mas grande de la comunidad de Madrid</p>
-                        <a class="btn btn-info" asp-controller="Home" asp-action="Index" asp-route-idrefugio="@refugio.IdRefugio">Ver Animales</a>
-                        <a class="btn btn-info" asp-controller="Refugios" asp-action="AltaRefugios">Alta Refugios</a>
-                        <a class="btn btn-info" asp-controller="Refugios" asp-action="ModificarRefugio" asp-route-idrefugio="@refugio.IdRefugio">Modificar Refugios</a>
-                    </div>
-                </div>
+        <div id="micajarefugio" data-idrefugio="@refugio.IdRefugio" class="p-4 p-md-5 mb-4 rounded text-white" style="background-image:url(@refugio.Imagen); background-size:cover; cursor:pointer">
+            <div class="col-md-6 px-0">
+                <h1 class="display-4 fst-italic">@refugio.Nombre</h1>
+                <p class="lead my-3">@refugio.Descripcion</p>
+                <h5 class="display-5 fst-italic">Ubicacion</h5>
+                <p class="lead my-4">@refugio.Ubicacion, @refugio.Localidad</p>
+                <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+            </div>
+        </div>
     }
 }

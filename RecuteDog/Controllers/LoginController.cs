@@ -34,9 +34,9 @@ namespace RecuteDog.Controllers
                 await imagen.CopyToAsync(stream);
             }
             string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-           
+
             //ViewData["mensaje"] = "Fichero subido a" + path;
-             await this.repo.NewUser(username, password, email, phone, pathserver, birdthday);
+            await this.repo.NewUser(username, password, email, phone, pathserver, birdthday);
             return RedirectToAction("Index","Refugios");
         }
         [HttpPost]

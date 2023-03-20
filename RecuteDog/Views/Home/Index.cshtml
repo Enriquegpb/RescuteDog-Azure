@@ -2,13 +2,18 @@
 
 @{
     ViewData["Title"] = "Index";
+    User user = Context.Session.GetObject<User>("LOGSESSION");
 }
-<div class="text-right">
+@if(user != null  && user.Id == 1)
+{
+    <div class="text-right">
     <a class="btn btn-primary" asp-controller="Home" asp-action="InformeAdopcion" style="margin-right:0px">Generar Informe</a>
 </div>
 <div class="text-right">
     <a class="btn btn-info" asp-controller="Home" asp-action="NuevaMascota" style="margin-right:0px">Ingreso Mascota</a>
 </div>
+}
+
 <div id="containerMascotas" class="card-container d-flex flex-wrap justify-content-center">
     @foreach (Mascota mascota in Model)
     {
@@ -35,6 +40,10 @@
                     }
                 </ul>
                 <div class="card-body">
+                    @if (user != null && user.Id == 1)
+                    {
+                        <a class="btn btn-warning" asp-controller="Home" asp-action="Mofificar" asp-route-idmascota="@mascota.Id">Modificar</a>
+                    }
                     <a class="btn btn-dark" asp-controller="Home" asp-action="FormularioAdopcion" asp-route-idmascota="@mascota.Id">Adoptar</a>
                 </div>
             </div>

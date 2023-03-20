@@ -69,6 +69,11 @@ namespace RecuteDog.Repositories
     //AS
     //    UPDATE MASCOTAS SET ADOPTADO = @ESTADO WHERE IDMASCOTA = @IDMASCOTA
     //GO
+
+    //    CREATE PROCEDURE SP_ACTUALIZAR_DATOS_MASCOTA(@IDMASCOTA INT, @IDREFUGIO INT, @NOMBRE NVARCHAR(50), @EDAD FLOAT, @ALTO FLOAT , @PESO FLOAT, @DESCRIPCION NVARCHAR(1000), @IMAGEN NVARCHAR(600))
+    //AS
+    //    UPDATE MASCOTAS SET IDREFUGIO = @IDREFUGIO, NOMBRE = @NOMBRE, EDAD = @EDAD, PESO = @PESO, DESCRIPCION = @DESCRIPCION, IMAGEN = @IMAGEN WHERE IDMASCOTA = @IDMASCOTA
+    //GO
     #endregion
     public class RepositoryMascotas: IRepoMascotas
     {
@@ -128,7 +133,23 @@ namespace RecuteDog.Repositories
             List<Mascota> mascotasadoptadas = consulta.ToList();
             return mascotasadoptadas;
 
+        }            
+
+        public async Task UpdateMascotas(Mascota mascota)
+        {
+            //NO LE TENGO CREADO...
+            string sql = "SP_ACTUALIZAR_DATOS_MASCOTA  @IDMASCOTA, @IDREFUGIO, @NOMBRE, @EDAD, @ALTO, @PESO, @DESCRIPCION, @IMAGEN";
+            SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", mascota.Id);
+            SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", mascota.IdRefugio);
+            SqlParameter pamnombre = new SqlParameter("@NOMBRE", mascota.Nombre);
+            SqlParameter pamedad = new SqlParameter("@EDAD", mascota.Edad);
+            SqlParameter pamaltura = new SqlParameter("@ALTO", mascota.Alto);
+            SqlParameter pampeso= new SqlParameter("@PESO", mascota.Peso);
+            SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", mascota.Descripcion);
+            SqlParameter pamImagen = new SqlParameter("@IMAGEN", mascota.Descripcion);
+            await this.context.Database.ExecuteSqlRawAsync(sql,pamidmascota, pamidrefugio, pamnombre, pamedad, pamaltura, pampeso, pamdescripcion, pamImagen);
         }
+
 
         //public async Task <List<Mascota>> SaveInformeAsync(List<Mascota> adopciones)
         //{

@@ -16,5 +16,7 @@ namespace RecuteDog.Repositories
         //void AdoptarMascota(int idmascota);
         Task UpdateEstadoAdopcion(int idmascota, bool estado);
 
+        Task UpdateMascotas(Mascota mascota);
+
     }
 }

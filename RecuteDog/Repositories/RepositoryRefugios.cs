@@ -80,6 +80,10 @@ namespace RecuteDog.Repositories
 
         public async Task ModificarDatosRefugio(Refugio refugio)
         {
+            /**
+             * 
+             * Corregir lo de la fk
+             */
             string sql = "SP_ACTUALIZAR_DATOS_REFUGIO @IDREFUGIO, @NOMBRE, @LOCALIDAD, @UBICACION, @IMAGEN, @VALORACION, @DESCRIPCION";
             SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", refugio.IdRefugio);
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", refugio.Nombre);

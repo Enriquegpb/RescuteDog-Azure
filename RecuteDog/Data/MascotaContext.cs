@@ -12,5 +12,7 @@ namespace RecuteDog.Data
         public DbSet<Adopcion> Adopciones { get; set;}
         public DbSet<Voluntario> Voluntarios { get; set;}
         public DbSet<Refugio> Refugios { get; set;}
+        public DbSet<BlogModel> Publicaciones { get; set;}
+        public DbSet<Comentario> Comentarios { get; set;}
     }
 }

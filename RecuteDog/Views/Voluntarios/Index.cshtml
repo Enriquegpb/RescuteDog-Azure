@@ -4,29 +4,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
+@*<p>
     <a asp-controller="Voluntarios" asp-action="FormVoluntarios" class="btn btn-dark">Inscribirse</a>
-</p>
-<button>
-    Inscribirse
-</button>
+</p>*@
 @if(Model != null)
 {
     @foreach(Voluntario voluntario in Model)
     {
-        <div id="contenedorvoluntario">
-                <div id="portada">
-                <img id="imagenvoluntario" src="@Url.Content("https://localhost:7057/images/magadramon.png")" alt="voluntario">
-                </div>
-                <div id="presentacion">
-                    <h1></h1>
-                    <p>@voluntario.Mensaje</p>
-                    <h3>Refugio: @voluntario.Nombre</h3>
-                    <h3>Municipio: @voluntario.Municipio</h3>
-                </div>
+        <div class="p-2 p-md-2 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-2">
+            
+            
+                    <img src="@voluntario.Imagen" class="img-fluid float-left" alt="Imagen flotada a la izquierda">
+            
+            <div class="col-md-6">
+                <p class="text-justify lead my-3">@voluntario.Mensaje</p>
             </div>
+          
+      </div>
+    </div>
+      
     }
-    
+
 }

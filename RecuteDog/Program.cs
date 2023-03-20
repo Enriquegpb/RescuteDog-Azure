@@ -11,6 +11,8 @@ builder.Services.AddSession(options =>
 string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
 builder.Services.AddSingleton<HelperMail>();
 builder.Services.AddSingleton<HelperPathProvider>();
+builder.Services.AddTransient<IRepoBlog,RepositoryBlog>();
+builder.Services.AddTransient<IRepoComentarios,RepositoryComentarios>();
 builder.Services.AddTransient<IRepoMascotas,RepositoryMascotas>();
 builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
 builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();

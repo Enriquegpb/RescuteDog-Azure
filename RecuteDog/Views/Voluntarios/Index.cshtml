@@ -12,16 +12,12 @@
     @foreach(Voluntario voluntario in Model)
     {
         <div class="p-2 p-md-2 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-2">
-            
-            
-                    <img src="@voluntario.Imagen" class="img-fluid float-left" alt="Imagen flotada a la izquierda">
-            
-            <div class="col-md-6">
-                <p class="text-justify lead my-3">@voluntario.Mensaje</p>
-            </div>
-          
-      </div>
+            <div class="container-fluid py-2">            
+                <img src="@voluntario.Imagen" class="img-fluid float-left" alt="Imagen flotada a la izquierda">
+                <div class="col-md-6">
+                    <p class="text-justify lead my-3">@voluntario.Mensaje</p>
+                </div>
+             </div>
     </div>
       
     }

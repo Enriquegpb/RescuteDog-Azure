@@ -7,7 +7,7 @@ namespace RecuteDog.Repositories
         List<BlogModel> GetPost();
         BlogModel FindPost(int idpost);
         Task NewPost(BlogModel post);
-        Task EditPost(BlogModel post);
+        Task EditPostAsync(BlogModel post);
         Task DeletePost(int idpost);
     }
 }

@@ -15,6 +15,8 @@ namespace RecuteDog.Models
         public string Email { get; set; }
         [Column("COMENTARIO")]
         public string ComentarioDesc { get; set; }
+        [Column("FECHA")]
+        public string Fecha { get; set; }
 
     }
 }

@@ -55,7 +55,7 @@ namespace RecuteDog.Repositories
 
         public List<Comentario> GetComentarios()
         {
-            return  this.context.Comentarios.ToList();
+            return  this.context.Comentarios.OrderBy(x => x.Fecha).ToList();
         }
 
         public async Task NewComentario(Comentario comentario)

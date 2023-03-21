@@ -1,0 +1,53 @@
+﻿@model IEnumerable<RecuteDog.Models.BlogModel>
+
+@{
+    ViewData["Title"] = "Publicaciones";
+    List<Comentario> comentarios = ViewData["COMENTARIOS"] as List<Comentario>;
+}
+
+<h1>Publicaciones</h1>
+<button class="float-end">Nueva Publicacion</button>
+@if (Model != null)
+{
+    @foreach (BlogModel publicacion in Model)
+    {
+        <div class="p-2 p-md-2 mb-4 bg-light rounded-3">
+            <div class="container-fluid py-2">
+                <img src="@publicacion.Imagen" class="img-fluid float-left" alt="Imagen flotada a la izquierda">
+                <div class="col-md-6">
+                    <p class="text-justify lead my-3">@publicacion.Contenido</p>
+                </div>
+            </div>
+        </div>
+        @foreach(Comentario comentario in comentarios)
+        {
+
+            <div class="comment-list">
+                <p>@comentario.ComentarioDesc</p>
+                <h5>@comentario.Email</h5>
+                <h6>@comentario.Fecha</h6>
+            </div>
+        }
+            <div class="comments-box card">
+              <h3 class="card-header">Comentarios</h3>
+              <div class="card-body">
+                <form method="post">
+                  <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" class="form-control" id="nombre">
+                  </div>
+                  <input type="hidden" value="@DateTime.Now"/>
+                  <div class="form-group">
+                    <label for="comentario">Comentario:</label>
+                    <textarea class="form-control" id="comentario"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+                </form>
+              </div>
+            </div>
+
+        
+
+}
+
+}

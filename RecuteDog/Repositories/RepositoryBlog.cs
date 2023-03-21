@@ -10,7 +10,7 @@ namespace RecuteDog.Repositories
     #region
     //    CREATE PROCEDURE SP_GET_POST
     //AS
-    // SELECT* FROM RESCUTEBLOG ORDER BY FECHA DESC
+    // SELECT * FROM RESCUTEBLOG ORDER BY FECHA DESC
     //GO
     //    CREATE PROCEDURE SP_NEW_POST(@TITULO NVARCHAR(50), @CONTENIDO NVARCHAR(50), @IMAGEN NVARCHAR(600), @IDUSER INT, @FEHCA NVARCHAR(75))
     //AS
@@ -23,6 +23,11 @@ namespace RecuteDog.Repositories
     //AS
     //    UPDATE RESCUTEBLOG SET @TITULO = @TITULO, CONTENIDO = @CONTENIDO, IMAGEN = @IMAGEN, IDUSER = @IDUSER, FECHA = @FEHCA
     //    WHERE IDPOST = @IDPOST
+    //GO
+
+    //    CREATE PROCEDURE SP_DELETE_POST(@IDPOST INT)
+    //AS
+    // DELETE FROM RESCUTEBLOG WHERE IDPOST = @IDPOST
     //GO
     #endregion
     public class RepositoryBlog: IRepoBlog
@@ -41,7 +46,7 @@ namespace RecuteDog.Repositories
 
         }
 
-        public async Task EditPost(BlogModel post)
+        public async Task EditPostAsync(BlogModel post)
         {
             string sql = "SP_UPDATE_POST @IDPOST,@TITULO, @CONTENIDO, @IMAGEN, @IDUSER, @FEHCA";
             SqlParameter pamidpost = new SqlParameter("@IDPOST", post.IdPost);

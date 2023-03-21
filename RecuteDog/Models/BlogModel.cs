@@ -10,9 +10,9 @@ namespace RecuteDog.Models
         [Column("IDPOST")]
         public int IdPost { get; set; }
         [Column("TITULO")]
-        public int Titulo { get; set; }
+        public string Titulo { get; set; }
         [Column("CONTENIDO")]
-        public int Contenido { get; set; }
+        public string Contenido { get; set; }
         [Column("IMAGEN")]
         public string Imagen { get; set; }
         [Column("IDUSER")]

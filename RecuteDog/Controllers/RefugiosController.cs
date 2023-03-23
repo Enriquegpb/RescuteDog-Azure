@@ -44,8 +44,16 @@ namespace RecuteDog.Controllers
             return View(refugio);
         }
         [HttpPost]
-        public async Task<IActionResult> ModificarRefugio(Refugio refugio)
+        public async Task<IActionResult> ModificarRefugio(Refugio refugio, IFormFile Imagen)
         {
+            string filename = Imagen.FileName;
+            string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await Imagen.CopyToAsync(stream);
+            }
+            string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
+            refugio.Imagen = pathserver;
             await this.repo.ModificarDatosRefugio(refugio);
             return RedirectToAction("Index");
         }

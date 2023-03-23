@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    User user = Context.Session.GetObject<User>("LOGSESSION");
 }
 
 @*<p>
@@ -18,7 +19,10 @@
                     <p class="text-justify lead my-3">@voluntario.Mensaje</p>
                 </div>
              </div>
-    </div>
+             @if(user!=null && user.Id == voluntario.IdVoluntario){
+                
+            }
+        </div>
       
     }
 

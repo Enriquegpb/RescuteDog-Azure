@@ -5,9 +5,6 @@ using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
-using System.Diagnostics.Metrics;
-using System.Net;
-using System.Net.Mail;
 
 namespace RecuteDog.Controllers
 {

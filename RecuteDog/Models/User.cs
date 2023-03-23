@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecuteDog.Models
 {
-    [Table("Users")]
+    [Table("USERS_VOLUNTARIOS")]
     public class User
     {
         [Key]

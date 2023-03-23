@@ -6,11 +6,20 @@
 }
 
 <h1>Publicaciones</h1>
-<button class="float-end">Nueva Publicacion</button>
+<div class="text-right">
+    <a class="btn btn-primary" asp-controller="RescuteBlog" asp-action="NewPost" style="margin-right:0px">Alta Refugio</a>
+</div>
 @if (Model != null)
 {
     @foreach (BlogModel publicacion in Model)
     {
+                <div class="text-right">
+                    <a class="btn btn-dark" asp-controller="RescuteBlog" asp-action="EditPublicaciones" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px">Modificar</a>
+                </div> 
+                <div class="text-right">
+            <a class="btn btn-danger" asp-controller="RescuteBlog" asp-action="DeletePublicacion" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px">Eliminar</a>
+                </div>
+
         <div class="p-2 p-md-2 mb-4 bg-light rounded-3">
             <div class="container-fluid py-2">
                 <img src="@publicacion.Imagen" class="img-fluid float-left" alt="Imagen flotada a la izquierda">
@@ -45,8 +54,6 @@
                 </form>
               </div>
             </div>
-
-        
 
 }
 

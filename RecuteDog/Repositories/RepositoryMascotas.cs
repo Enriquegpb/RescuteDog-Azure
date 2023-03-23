@@ -6,7 +6,10 @@ using RecuteDog.Models;
 namespace RecuteDog.Repositories
 {
     #region PROCEDURESMASCOTAS
-
+    //    CREATE PROCEDURE BAJA_ALL_MASCOTAS_REFUIGIO(@IDREFUGIO INT)
+    //AS
+    //    DELETE FROM MASCOTAS WHERE IDREFUGIO = @IDREFUGIO
+    //GO
     //    alter PROCEDURE SP_OBTENER_MASCOTAS_REFUGIOS(@IDREFUGIO INT)
     //AS
 

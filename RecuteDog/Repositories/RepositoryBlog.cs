@@ -12,11 +12,10 @@ namespace RecuteDog.Repositories
     //AS
     // SELECT * FROM RESCUTEBLOG ORDER BY FECHA DESC
     //GO
-    //    CREATE PROCEDURE SP_NEW_POST(@TITULO NVARCHAR(50), @CONTENIDO NVARCHAR(50), @IMAGEN NVARCHAR(600), @IDUSER INT, @FEHCA NVARCHAR(75))
+    //   ALTER PROCEDURE SP_NEW_POST(@TITULO NVARCHAR(50), @CONTENIDO NVARCHAR(50), @IMAGEN NVARCHAR(600), @IDUSER INT, @FEHCA NVARCHAR(75))
     //AS
-    //    DECLARE @IDMAXPOST INT
-
-    //    SELECT @IDMAXPOST = MAX(IDPOST) FROM RESCUTEBLOG
+    //	DECLARE @IDMAXPOST INT
+    //	SELECT @IDMAXPOST = MAX(IDPOST) + 1 FROM RESCUTEBLOG
     // INSERT INTO RESCUTEBLOG VALUES(@IDMAXPOST, @TITULO, @CONTENIDO, @IMAGEN, @IDUSER, @FEHCA)
     //GO
     //    CREATE PROCEDURE SP_UPDATE_POST(@IDPOST INT, @TITULO NVARCHAR(50), @CONTENIDO NVARCHAR(50), @IMAGEN NVARCHAR(600), @IDUSER INT, @FEHCA NVARCHAR(75))
@@ -29,6 +28,11 @@ namespace RecuteDog.Repositories
     //AS
     // DELETE FROM RESCUTEBLOG WHERE IDPOST = @IDPOST
     //GO
+
+    //CREATE PROCEDURE BAJA_ALL_PUBLICACIONES(@IDUSER INT)
+    //AS
+    //    DELETE FROM COMENTARIOS WHERE @IDUSER = @IDUSER
+    //GO
     #endregion
     public class RepositoryBlog: IRepoBlog
     {
@@ -40,7 +44,7 @@ namespace RecuteDog.Repositories
 
         public async Task DeletePost(int idpost)
         {
-            string sql = "SP_DELTE_POST @IDPOST";
+            string sql = "SP_DELETE_POST @IDPOST";
             SqlParameter pamidpost = new SqlParameter("@IDPOST", idpost);
             await this.context.Database.ExecuteSqlRawAsync(sql, pamidpost);
 
@@ -78,7 +82,7 @@ namespace RecuteDog.Repositories
             SqlParameter pamcontenido = new SqlParameter("@CONTENIDO", post.Contenido);
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", post.Imagen);
             SqlParameter pamiduser = new SqlParameter("@IDUSER", post.IdUser);
-            SqlParameter pamfecha = new SqlParameter("@IDUSER", post.Fecha);
+            SqlParameter pamfecha = new SqlParameter("@FEHCA", post.Fecha);
             await this.context.Database.ExecuteSqlRawAsync(sql,pamtitulo, pamcontenido, pamimagen, pamiduser, pamfecha);  
         }
     }

@@ -2,6 +2,7 @@
 
 @*@{
     ViewData["Title"] = "FormVoluntarios";
+
 }*@
 @section scripts{
     <script>
@@ -52,7 +53,7 @@
 
 
 @{
-    List<string> refugios = ViewData["REFUGIOS"] as List<string>;
+    List<Refugio> refugios = ViewData["REFUGIOSFORM"] as List<Refugio>;
 }
 <h1>FormVoluntarios</h1>
 
@@ -96,11 +97,11 @@
             </div>
             <div class="form-group">
                 <label class="control-label">
-                    <select id="selectmunicipio" name="refugio" class="form-select">
-                    @foreach(string name in refugios)
+                    <select name="refugio" class="form-select">
+                        @foreach(Refugio refugio in refugios)
                     {
                         
-                            <option value="@name">@name</option>
+                            <option value="@refugio.IdRefugio">@refugio.Nombre</option>
                         
                     }
                     </select>

@@ -18,6 +18,7 @@ namespace RecuteDog.Controllers
         public IActionResult Index()
         {
             List<Refugio> refugios = this.repo.GetRefugios();
+            TempData["REFUGIOS"] = refugios;
             return View(refugios);
         }
         public IActionResult AltaRefugios()

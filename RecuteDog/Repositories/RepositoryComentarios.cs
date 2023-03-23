@@ -26,6 +26,12 @@ namespace RecuteDog.Repositories
 
         //    INSERT INTO COMENTARIOS VALUES(@IDCOMENTARIO, @IDPOST, @EMAIL, @COMENTARIO)
         //GO
+        //        CREATE PROCEDURE BAJA_ALL_COMENTARIOS(@IDPOST INT)
+        //AS
+        //    DELETE FROM COMENTARIOS WHERE IDPOST = @IDPOST
+        //GO
+
+
         #endregion
         private MascotaContext context;
         public RepositoryComentarios(MascotaContext context)

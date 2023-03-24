@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
@@ -9,16 +11,27 @@ namespace RecuteDog.Controllers
     {
         private IRepoRefugios repo;
         private HelperPathProvider helperPathProvider;
-        public RefugiosController(IRepoRefugios repo, HelperPathProvider helperPathProvider)
+        private IMemoryCache memoryCache;
+        public RefugiosController(IRepoRefugios repo, HelperPathProvider helperPathProvider, IMemoryCache memoryCache)
         {
             this.repo = repo;
             this.helperPathProvider = helperPathProvider;
+            this.memoryCache = memoryCache;
         }
 
         public IActionResult Index()
         {
-            List<Refugio> refugios = this.repo.GetRefugios();
-            TempData["REFUGIOS"] = refugios;
+            List<Refugio> refugios;
+            if (this.memoryCache.Get("REFUGIOS") == null)
+            {
+                refugios = new List<Refugio>();
+            }
+            else
+            {
+                refugios = this.memoryCache.Get<List<Refugio>>("REFUGIOS");
+            }
+            refugios = this.repo.GetRefugios();
+            HttpContext.Session.SetObject("REFUGIOS", refugios);
             return View(refugios);
         }
         public IActionResult AltaRefugios()

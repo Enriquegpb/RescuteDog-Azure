@@ -27,10 +27,10 @@
              </div>
              @if(user!=null && user.Id == 2){
                 <div class="text-right">
-                    <a class="btn btn-dark" asp-controller="Voluntarios" asp-action="ModificarVoluntarios" asp-route-idrefugio="@voluntario.IdVoluntario" style="margin-right:0px">Modificar Voluntario</a>
+                    <a class="btn btn-dark" asp-controller="Voluntarios" asp-action="ModificarVoluntarios" asp-route-idvoluntario="@voluntario.IdVoluntario" style="margin-right:0px">Modificar Voluntario</a>
                 </div> 
                 <div class="text-right">
-                    <a class="btn btn-danger" asp-controller="Voluntarios" asp-action="DeletePublicacion" asp-route-idrefugio="@voluntario.IdVoluntario" style="margin-right:0px">Eliminar</a>
+                    <a class="btn btn-danger" asp-controller="Voluntarios" asp-action="BajaVolntuario" asp-route-idvoluntario="@voluntario.IdVoluntario" style="margin-right:0px">Eliminar</a>
                 </div>
             }
         </div>

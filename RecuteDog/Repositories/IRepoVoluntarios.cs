@@ -6,8 +6,8 @@ namespace RecuteDog.Repositories
     {
         List<Voluntario> Getvoluntarios();
         Voluntario FindVoluntario(int idvoluntario);
-        Task NewVoluntario(Voluntario voluntario, string refugio);
-        Task ModificarDatosRefugio(Voluntario voluntario, string refugio);
+        Task NewVoluntario(Voluntario voluntario);
+        Task ModificarDatosVoluntario(Voluntario voluntario);
         Task BajaVoluntario(int idvoluntario);
     }
 }

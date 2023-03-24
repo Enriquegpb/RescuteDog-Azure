@@ -24,12 +24,10 @@ namespace RecuteDog.Controllers
 
         public IActionResult FormVoluntarios()
         {
-            List<Refugio> refugios = TempData["REFUGIOS"] as List<Refugio>;
-            ViewData["REFUGIOSFORM"] = refugios;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> FormVoluntarios(Voluntario voluntario, string refugio, IFormFile Imagen)
+        public async Task<IActionResult> FormVoluntarios(Voluntario voluntario, IFormFile Imagen)
         {
             string filename = Imagen.FileName;
             string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
@@ -39,7 +37,7 @@ namespace RecuteDog.Controllers
             }
             string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
             voluntario.Imagen = pathserver;
-            await this.repo.NewVoluntario(voluntario, refugio);
+            await this.repo.NewVoluntario(voluntario);
             return RedirectToAction("Index");
         }
 
@@ -50,15 +48,23 @@ namespace RecuteDog.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ModificarVoluntarios(Voluntario voluntario, string refugio)
+        public async Task<IActionResult> ModificarVoluntarios(Voluntario voluntario, IFormFile Imagen)
         {
-            await this.repo.ModificarDatosRefugio(voluntario, refugio);
+            string filename = Imagen.FileName;
+            string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await Imagen.CopyToAsync(stream);
+            }
+            string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
+            voluntario.Imagen = pathserver;
+            await this.repo.ModificarDatosVoluntario(voluntario);
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> BajaVolntuario(int idvolntuario)
+        public async Task<IActionResult> BajaVolntuario(int idvoluntario)
         {
-            await this.repo.BajaVoluntario(idvolntuario);
+            await this.repo.BajaVoluntario(idvoluntario);
             return RedirectToAction("Index");
         }
     }

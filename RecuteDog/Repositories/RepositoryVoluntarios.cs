@@ -8,29 +8,22 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace RecuteDog.Repositories
 {
     #region PROCEDURES VOLUNTARIOS
-    //    CREATE PROCEDURE SP_NEWVOLUNTARIO(@NOMBRE NVARCHAR(50), @MENSAJE NVARCHAR(50), @IMAGEN NVARCHAR(600), @CORREO NVARCHAR(50), @MUNICIPIO NVARCHAR(50), @FECHANAC DATE, @REFUGIO NVARCHAR(50))
-    //AS
-    //    DECLARE @IDREFUGIO INT
 
-    //    DECLARE @IDVOLUNTARIO INT
-    //    SELECT @IDVOLUNTARIO = MAX(IDVOLUNTARIO) + 1 FROM VOLUNTARIOS;
-    //    SELECT @IDREFUGIO = IDREFUGIO FROM REFUGIOS WHERE @REFUGIO = NOMBRE
 
-    //    INSERT INTO VOLUNTARIOS VALUES(@IDVOLUNTARIO, @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @IDREFUGIO)
-    //GO
+    //ALTER PROCEDURE SP_NEWVOLUNTARIO(@NOMBRE NVARCHAR(50), @MENSAJE NVARCHAR(50), @IMAGEN NVARCHAR(600), @CORREO NVARCHAR(50), @MUNICIPIO NVARCHAR(50), @FECHANAC DATE, @IDREFUGIO INT)
+    //    AS
+    //        DECLARE @IDVOLUNTARIO INT
+    //        SELECT @IDVOLUNTARIO = ISNULL(MAX(IDVOLUNTARIO), 1) + 1 FROM VOLUNTARIOS;
+
+    //INSERT INTO VOLUNTARIOS VALUES(@IDVOLUNTARIO, @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @IDREFUGIO)
+    //    GO
+
     //    CREATE PROCEDURE SP_BAJA_VOLUNTARIO(@IDVOLUNTARIO INT)AS
     //        DELETE FROM VOLUNTARIOS WHERE IDVOLUNTARIO = @IDVOLUNTARIO
     //GO
 
-    //    CREATE PROCEDURE SP_MODIFICAR_DATOS_VOLUNTARIO(@IDVOLUNTARIO INT, @NOMBRE NVARCHAR(50), @MENSAJE NVARCHAR(50), @IMAGEN NVARCHAR(600), @CORREO NVARCHAR(50), @MUNICIPIO NVARCHAR(50), @FECHANAC DATE, @REFUGIO NVARCHAR(50))
-    //AS
-    //    DECLARE @IDREFUGIO INT
-
-    //    SELECT @IDREFUGIO = IDREFUGIO FROM REFUGIOS WHERE @REFUGIO = NOMBRE
-
-    //    INSERT INTO VOLUNTARIOS VALUES(@IDVOLUNTARIO, @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @IDREFUGIO)
-
-    //    UPDATE VOLUNTARIOS SET NOMBRE = @NOMBRE, MENSAJE = @MENSAJE, IMAGEN = @IMAGEN, CORREO = @CORREO, MUNICIPIO = @MUNICIPIO, FECHA_NACIMIENTO = @FECHANAC, IDREFUGIO = @IDREFUGIO WHERE IDVOLUNTARIO = @IDVOLUNTARIO
+    //ALTER PROCEDURE SP_MODIFICAR_DATOS_VOLUNTARIO(@IDVOLUNTARIO INT, @NOMBRE NVARCHAR(50), @MENSAJE NVARCHAR(600), @IMAGEN NVARCHAR(1000),@CORREO NVARCHAR(50), @MUNICIPIO NVARCHAR(80), @FECHANAC DATE, @IDREFUGIO INT)AS
+    //    UPDATE VOLUNTARIOS SET NOMBRE =  @NOMBRE, MENSAJE = @MENSAJE, IMAGEN = @IMAGEN, CORREO = @CORREO, MUNICIPIO = @MUNICIPIO, FECHA_NACIMIENTO = @FECHANAC, IDREFUGIO = @IDREFUGIO WHERE IDVOLUNTARIO = @IDVOLUNTARIO
     //GO
 
     //    CREATE PROCEDURE SP_FIND_VOLUNTARIO(@IDVOLUNTARIO INT)
@@ -66,34 +59,33 @@ namespace RecuteDog.Repositories
 
         public List<Voluntario> Getvoluntarios()
         {
-            var consulta = from datos in this.context.Voluntarios
-                           select datos;
-            return consulta.ToList();
+            return this.context.Voluntarios.ToList();
         }
 
-        public async Task ModificarDatosRefugio(Voluntario voluntario, string refugio)
+        public async Task ModificarDatosVoluntario(Voluntario voluntario)
         {
             string sql = "SP_MODIFICAR_DATOS_VOLUNTARIO @IDVOLUNTARIO, @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @REFUGIO";
+            SqlParameter pamidvoluntario = new SqlParameter("@IDVOLUNTARIO", voluntario.IdVoluntario);
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", voluntario.Nombre);
             SqlParameter pammensaje = new SqlParameter("@MENSAJE", voluntario.Mensaje);
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", voluntario.Imagen);
             SqlParameter pamcorreo = new SqlParameter("@CORREO", voluntario.Correo);
             SqlParameter pammunicipio = new SqlParameter("@MUNICIPIO", voluntario.Municipio);
             SqlParameter pamfechanac = new SqlParameter("@FECHANAC", voluntario.Fecha_Nacimiento);
-            SqlParameter pamrefugio = new SqlParameter("@REFUGIO", refugio);
-            await this.context.Database.ExecuteSqlRawAsync(sql, pamnombre, pammensaje, pamimagen, pamcorreo, pammunicipio, pamfechanac, pamrefugio);
+            SqlParameter pamrefugio = new SqlParameter("@REFUGIO", voluntario.IdRefugio);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidvoluntario, pamnombre, pammensaje, pamimagen, pamcorreo, pammunicipio, pamfechanac, pamrefugio);
         }
 
-        public async Task NewVoluntario(Voluntario voluntario, string refugio)
+        public async Task NewVoluntario(Voluntario voluntario)
         {
-            string sql = "SP_NEWVOLUNTARIO @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @REFUGIO";
+            string sql = "SP_NEWVOLUNTARIO @NOMBRE, @MENSAJE, @IMAGEN, @CORREO, @MUNICIPIO, @FECHANAC, @IDREFUGIO";
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", voluntario.Nombre);
             SqlParameter pammensaje = new SqlParameter("@MENSAJE", voluntario.Mensaje);
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", voluntario.Imagen);
             SqlParameter pamcorreo = new SqlParameter("@CORREO", voluntario.Correo);
             SqlParameter pammunicipio = new SqlParameter("@MUNICIPIO", voluntario.Municipio);
             SqlParameter pamfechanac = new SqlParameter("@FECHANAC", voluntario.Fecha_Nacimiento);
-            SqlParameter pamrefugio = new SqlParameter("@REFUGIO", refugio);
+            SqlParameter pamrefugio = new SqlParameter("@IDREFUGIO", voluntario.IdRefugio);
             await this.context.Database.ExecuteSqlRawAsync(sql, pamnombre, pammensaje, pamimagen, pamcorreo, pammunicipio, pamfechanac, pamrefugio);
         }
 

@@ -5,14 +5,15 @@ using RecuteDog.Helpers;
 using RecuteDog.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMemoryCache();
+builder.Services.AddResponseCaching();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(15);
 });
 string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
 string connectionStringAzure = builder.Configuration.GetConnectionString("SqlAzureDatabase");
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
 builder.Services.AddAuthorization(options =>
 {
     /***
@@ -53,7 +54,7 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseResponseCaching();
 app.UseSession();
 
 app.UseMvc(route =>

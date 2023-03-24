@@ -2,6 +2,52 @@
 
 @{
     ViewData["Title"] = "ModificarVoluntarios";
+    List<Refugio> refugios =
+            Context.Session.GetObject<List<Refugio>>("REFUGIOS");
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            Init();
+            function Init() {
+                var urlpage1 = "https://servicios.ine.es/wstempus/js/ES/VALORES_VARIABLE/19?page=1";
+                var urlpage2 = "https://servicios.ine.es/wstempus/js/ES/VALORES_VARIABLE/19?page=2";
+                $.ajax({
+                    "url": urlpage1,
+                    "method": "get",
+                    "datatype": "json",
+                    success: function (data) {
+                        //console.log(data);
+                        $.each(data, function (index2, ciudad) {
+                            console.log(ciudad.Nombre);
+
+                            var option = $("<option>"
+                                , { "value": ciudad.Nombre, "text": ciudad.Nombre });
+                            $("#selectmunicipio").append(option);
+
+                        });
+                    }
+                })
+                $.ajax({
+                    "url": urlpage2,
+                    "method": "get",
+                    "datatype": "json",
+                    success: function (data) {
+                        //console.log(data);
+                        $.each(data, function (index2, ciudad) {
+                            console.log(ciudad.Nombre);
+
+                            var option = $("<option>"
+                                , { "value": ciudad.Nombre, "text": ciudad.Nombre });
+                            $("#selectmunicipio").append(option);
+
+                        });
+                    }
+                })
+            }
+
+        })
+    </script>
 }
 
 <h1>ModificarVoluntarios</h1>
@@ -10,59 +56,61 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="ModificarVoluntarios">
+        <form asp-action="ModificarVoluntarios" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdVoluntario" class="control-label"></label>
-                <input asp-for="IdVoluntario" class="form-control" />
-                <span asp-validation-for="IdVoluntario" class="text-danger"></span>
-            </div>
+            <input type="hidden" name="idvoluntario" value="@Model.IdVoluntario" />
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" name="nombre" type="text" class="form-control" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Mensaje" class="control-label"></label>
-                <input asp-for="Mensaje" class="form-control" />
+                <input asp-for="Mensaje" name="Mensaje" type="text" class="form-control" />
                 <span asp-validation-for="Mensaje" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Imagen" class="control-label"></label>
-                <input asp-for="Imagen" type="file" class="form-control" />
+                <input asp-for="Imagen" name="Imagen" type="file" class="form-control" />
                 <span asp-validation-for="Imagen" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Correo" class="control-label"></label>
-                <input asp-for="Correo" class="form-control" />
+                <input asp-for="Correo" type="text" name="Correo" class="form-control" />
                 <span asp-validation-for="Correo" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Municipio" class="control-label"></label>
-                <input asp-for="Municipio" class="form-control" />
+                <select name="Municipio" id="selectmunicipio">
+                </select>
                 <span asp-validation-for="Municipio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Fecha_Nacimiento" class="control-label"></label>
-                <input asp-for="Fecha_Nacimiento" class="form-control" />
+                <input asp-for="Fecha_Nacimiento" type="date" name="Fecha_Nacimiento" class="form-control" />
                 <span asp-validation-for="Fecha_Nacimiento" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IdRefugio" class="control-label"></label>
-                <input asp-for="IdRefugio" class="form-control" />
-                <span asp-validation-for="IdRefugio" class="text-danger"></span>
+                <label class="control-label">
+                    <select name="idrefugio" class="form-select">
+                        @foreach (Refugio refugio in refugios)
+                        {
+
+                            <option value="@refugio.IdRefugio">@refugio.Nombre</option>
+
+                        }
+                    </select>
+                </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Modificar" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
+
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

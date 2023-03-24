@@ -25,7 +25,7 @@
 {
     @foreach(Refugio refugio in Model)
     {
-        <div id="micajarefugio" data-idrefugio="@refugio.IdRefugio" class="p-4 p-md-5 mb-4 rounded text-white" style="background-image:url(@refugio.Imagen); background-size:cover; cursor:pointer">
+        <div id="micajarefugio" data-idrefugio="@refugio.IdRefugio" class="p-5 p-md-5 mb-5 rounded text-white" style="background-image:url(@refugio.Imagen); background-size:cover; cursor:pointer; height:650px">
             <div class="col-md-6 px-0">
                 <h1 class="display-4 fst-italic text-white">@refugio.Nombre</h1>
                 <p class="lead my-3">@refugio.Descripcion</p>

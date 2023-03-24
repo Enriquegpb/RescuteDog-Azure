@@ -40,7 +40,7 @@ namespace RecuteDog.Controllers
                 return View(publicacion);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateComentario(Comentario comentario)
+        public async Task<IActionResult> Publicaciones(Comentario comentario)
         {
                 await this.repoComentarios.NewComentario(comentario);
                 return RedirectToAction("Publicaciones");

@@ -18,14 +18,17 @@ namespace RecuteDog.Repositories
         //AS
         //    UPDATE COMENTARIO SET EMAIL = @EMAIL, COMENTARIO = @COMENTARIO WHERE IDCOMENTARIO = @IDCOMENTARIO
         //GO
-        //        CREATE PROCEDURE SP_NEW_COMENTARIO(@IDPOST INT, @EMAIL NVARCHAR(50), @COMENTARIO NVARCHAR(600))
+        //CREATE PROCEDURE SP_NEW_COMENTARIO(@IDPOST INT, @EMAIL NVARCHAR(50), @COMENTARIO NVARCHAR(600), @FECHA DATE)
         //AS
         //    DECLARE @IDCOMENTARIO INT
 
-        //    SELECT @IDCOMENTARIO = MAX(IDCOMENTARIO) FROM COMENTARIOS
+        //    SELECT @IDCOMENTARIO = ISNULL(MAX(IDCOMENTARIO), 0) + 1 FROM COMENTARIOS
 
-        //    INSERT INTO COMENTARIOS VALUES(@IDCOMENTARIO, @IDPOST, @EMAIL, @COMENTARIO)
+        //    INSERT INTO COMENTARIOS VALUES(@IDCOMENTARIO, @IDPOST, @EMAIL, @COMENTARIO, @FECHA)
         //GO
+
+
+        
         //        CREATE PROCEDURE BAJA_ALL_COMENTARIOS(@IDPOST INT)
         //AS
         //    DELETE FROM COMENTARIOS WHERE IDPOST = @IDPOST
@@ -69,7 +72,7 @@ namespace RecuteDog.Repositories
             string sql = "SP_NEW_COMENTARIO @IDCOMENTARIO, @IDPOST, @EMAIL, @COMENTARIO";
             SqlParameter pamidcomentario = new SqlParameter("@IDCOMENTARIO", comentario.IdComentario);
             SqlParameter pamidpost = new SqlParameter("@IDPOST", comentario.IdPost);
-            SqlParameter pamemail = new SqlParameter("@EMAIL", comentario.IdComentario);
+            SqlParameter pamemail = new SqlParameter("@EMAIL", comentario.Email);
             SqlParameter pamcomentario = new SqlParameter("@COMENTARIO", comentario.ComentarioDesc);
             await this.context.Database.ExecuteSqlRawAsync(sql, pamidcomentario, pamidpost, pamemail, pamcomentario);
         }

@@ -151,6 +151,12 @@ namespace RecuteDog.Repositories
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", mascota.Descripcion);
             SqlParameter pamImagen = new SqlParameter("@IMAGEN", mascota.Descripcion);
             await this.context.Database.ExecuteSqlRawAsync(sql,pamidmascota, pamidrefugio, pamnombre, pamedad, pamaltura, pampeso, pamdescripcion, pamImagen);
+        }  
+        public async Task BajasAllMascotasPorRefugio(int idrefugio)
+        {            
+            string sql = "BAJA_ALL_MASCOTAS_REFUIGIO @IDREFUGIO";
+            SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", idrefugio);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidrefugio);
         }
 
 

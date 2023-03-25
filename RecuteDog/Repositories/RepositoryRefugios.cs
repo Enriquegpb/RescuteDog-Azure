@@ -20,9 +20,11 @@ namespace RecuteDog.Repositories
     //    UPDATE REFUGIOS SET NOMBRE = @NOMBRE, LOCALIDAD =  @LOCALIDAD, UBICACION = @UBICACION, IMAGEN = @IMAGEN, VALORACION = @VALORACION, DESCRIPCION = @DESCRIPCION WHERE IDREFUGIO = @IDREFUGIO
     //GO
 
-    //    CREATE PROCEDURE SP_BAJA_REFUGIO(@IDREFUGIO INT)
+    //    ALTER PROCEDURE SP_BAJA_REFUGIO(@IDREFUGIO INT)
     //AS
-    // DELETE FROM REFUGIOS WHERE IDREFUGIO = @IDREFUGIO
+    //    DELETE FROM REFUGIOS WHERE IDREFUGIO = @IDREFUGIO
+
+    //    DELETE FROM VOLUNTARIOS WHERE IDREFUGIO = @IDREFUGIO
     //GO
 
     // CREATE PROCEDURE SP_DETAILS_REFUGIOS(@IDREFUGIO INT)
@@ -77,12 +79,8 @@ namespace RecuteDog.Repositories
             return consulta.ToList();
         }
 
-        public async Task ModificarDatosRefugio(Refugio refugio)
+        public async Task ModificarDatosRefugio(Refugio refugio) 
         {
-            /**
-             * 
-             * Corregir lo de la fk
-             */
             string sql = "SP_ACTUALIZAR_DATOS_REFUGIO @IDREFUGIO, @NOMBRE, @LOCALIDAD, @UBICACION, @IMAGEN, @VALORACION, @DESCRIPCION";
             SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", refugio.IdRefugio);
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", refugio.Nombre);

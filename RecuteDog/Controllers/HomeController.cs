@@ -143,6 +143,12 @@ namespace RecuteDog.Controllers
             return Convert.ToBase64String(fileContents);
 
         }
-        
+
+        public async Task<IActionResult> ActionBajasAllMascotasRefugio(int idrefugio)
+        {
+            TempData["REFUGIO"] = idrefugio;
+            await this.repo.BajasAllMascotasPorRefugio(idrefugio);
+            return RedirectToAction("DeleteRefugio", "Refugios");
+        }
     }
 }

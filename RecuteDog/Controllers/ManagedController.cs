@@ -1,19 +1,26 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
 using System.Security.Claims;
+using RecuteDog.Extensions;
+using RecuteDog.Filters;
+using Microsoft.AspNetCore.Identity;
+using System.Xml.Linq;
+using System;
+using System.Security.Principal;
 
-namespace MvcSeguridadDoctores.Controllers
+namespace RecuteDog.Controllers
 {
     public class ManagedController : Controller
     {
-        private RepositoryAutentication repo;
+        private IRepoAutentication repo;
         private HelperPathProvider helper;
 
-        public ManagedController(RepositoryAutentication repo, HelperPathProvider helper)
+        public ManagedController(IRepoAutentication repo, HelperPathProvider helper)
         {
             this.repo = repo;
             this.helper = helper;
@@ -25,10 +32,11 @@ namespace MvcSeguridadDoctores.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LogIn(string username
+        public async Task<IActionResult> LogIn(string email
             , string password)
         {
-            User usuario = null;
+            User usuario = await this.repo.ExisteEmpleado(email, password);
+            
             //await this.repo.ExisteUsuario(username, int.Parse(password));
 
             /**
@@ -48,9 +56,18 @@ namespace MvcSeguridadDoctores.Controllers
                     (new Claim(ClaimTypes.NameIdentifier, usuario.Email));
                 identity.AddClaim
                     (new Claim(ClaimTypes.Role, usuario.Id.ToString()));
-                if(usuario.Id == 1)
+                identity.AddClaim
+                    (new Claim("PHONE", usuario.Phone.ToString()));
+                identity.AddClaim
+                    (new Claim("USERNAME", usuario.Username.ToString()));
+                identity.AddClaim
+                    (new Claim("USERIMAGE", usuario.Imagen.ToString()));
+                identity.AddClaim
+                    (new Claim("BIRTHDAY", usuario.Birdthday.ToString()));
+
+                if (usuario.Id == 1)
                 {
-                    identity.AddClaim(new Claim("Administrador", "Soy el Admin"));
+                    identity.AddClaim(new Claim("ADMIN", "Soy el Admin"));
                 }
 
                 ClaimsPrincipal user = new ClaimsPrincipal(identity);
@@ -58,11 +75,11 @@ namespace MvcSeguridadDoctores.Controllers
                     (CookieAuthenticationDefaults.AuthenticationScheme
                     , user);
 
-                string controller = TempData["controller"].ToString();
-                string action = TempData["action"].ToString(); 
-                string id = TempData["id"].ToString();
-                return RedirectToAction(action, controller, new {id = id});
-                
+                //string controller = TempData["controller"].ToString();
+                //string action = TempData["action"].ToString();
+                //string id = TempData["id"].ToString();
+                return RedirectToAction("PerfilUsuario", "Managed");
+
                 //return RedirectToAction("DeleteEnfermo", "Doctores", new { id = 45678});
             }
             else
@@ -72,7 +89,7 @@ namespace MvcSeguridadDoctores.Controllers
             }
         }
 
-        public IActionResult SingIn()
+        public IActionResult SingUp()
         {
             return View();
         }
@@ -96,7 +113,64 @@ namespace MvcSeguridadDoctores.Controllers
         {
             await HttpContext.SignOutAsync
                 (CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Enfermos", "Doctores");
+            return RedirectToAction("Index", "Refugios");
+        }
+        [AuthorizeUsuarios]
+        public IActionResult PerfilUsuario()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task <IActionResult> PerfilUsuario(string username, string telefono, string email, IFormFile imagen, int iduser)
+        {
+            string filename = imagen.FileName;
+            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await imagen.CopyToAsync(stream);
+            }
+            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            await this.repo.UpdatePerfilusuario(username, telefono, email, pathserver, iduser);
+            var currentPrincipal = HttpContext.User as ClaimsPrincipal;
+            if(currentPrincipal == null)
+            {
+                return RedirectToAction("LogIn");
+            }
+            var identity = (ClaimsIdentity)currentPrincipal.Identity;
+            if (identity == null)
+            {
+                return RedirectToAction("LogIn");
+            }
+            var claimnameidentifier = currentPrincipal.FindFirst(ClaimTypes.NameIdentifier);
+            var claimname = currentPrincipal.FindFirst(ClaimTypes.Name);
+            var claimphone = currentPrincipal.Claims.FirstOrDefault(c => c.Type == "PHONE");
+            var claimusername = currentPrincipal.Claims.FirstOrDefault(c => c.Type == "USERNAME");
+            var claimimagen = currentPrincipal.Claims.FirstOrDefault(c => c.Type == "USERIMAGE");
+
+            identity.RemoveClaim(claimnameidentifier);
+            identity.RemoveClaim(claimname);
+            identity.RemoveClaim(claimphone);
+            identity.RemoveClaim(claimusername);
+            identity.RemoveClaim(claimimagen);
+
+            identity.AddClaim
+                 (new Claim("PHONE", telefono.ToString()));
+            identity.AddClaim
+                (new Claim("USERNAME", username.ToString()));
+            identity.AddClaim
+                (new Claim("USERIMAGE", pathserver.ToString()));
+            identity.AddClaim
+                    (new Claim(ClaimTypes.NameIdentifier, email));
+            identity.AddClaim
+                   (new Claim(ClaimTypes.Name, email));
+            return View();
+        }
+
+        public async Task<IActionResult>BajaUsuario(int iduser)
+        {
+            await this.repo.BajaUsuario(iduser);
+            return RedirectToAction("Index", "Refugios");
         }
         public IActionResult ErrorAcceso()
         {

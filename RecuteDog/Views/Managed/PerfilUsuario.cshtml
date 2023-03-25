@@ -1,0 +1,53 @@
+﻿@*<h1>Perfil Empleado: @Context.User.Identity.Name</h1>*@
+
+@*<ul class="list-group">
+    <li class="list-group-item">
+        Email: @Context.User.FindFirst(ClaimTypes.Name).Value
+    </li>
+    <li class="list-group-item">
+        UserName: @Context.User.FindFirstValue("USERNAME")
+    </li>
+    <li class="list-group-item">
+        Telefono Contacto: @Context.User.FindFirstValue("PHONE")
+    </li>
+</ul>*@
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@Context.User.FindFirstValue("USERIMAGE")" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title"> @Context.User.FindFirstValue("USERNAME")</h5>
+                    <p class="card-text">Correo electrónico: @Context.User.FindFirst(ClaimTypes.Name).Value</p>
+                    <p class="card-text"> Telefono @Context.User.FindFirstValue("PHONE")</p>
+                    <p class="card-text"> Fecha Nacimiento @Context.User.FindFirstValue("BIRTHDAY")</p>
+                    <a asp-action="BajaUsuario" asp-controller="Managed" class="btn btn-danger" asp-route-iduser="@Context.User.FindFirst(ClaimTypes.Role).Value">Eliminar Mi Usuario</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h2>Editar perfil</h2>
+            <form method="post" enctype="multipart/form-data">
+                <input type="hidden" name="iduser" value=" @Context.User.FindFirst(ClaimTypes.Role).Value" />
+                <div class="form-group">
+                    <label for="username">UserName:</label>
+                    <input type="text" value="@Context.User.FindFirstValue("USERNAME")" name="username" class="form-control" id="apellido" placeholder="Username">
+                </div> 
+                <div class="form-group">
+                    <label for="telefono">Telefono:</label>
+                    <input type="text" value="@Context.User.FindFirstValue("PHONE")" name="telefono" class="form-control" id="telefono" placeholder="Telefono">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" value="@Context.User.FindFirst(ClaimTypes.Name).Value" name="email" class="form-control" id="correo" placeholder="Correo electrónico">
+                </div> 
+                <div class="form-group">
+                    <label for="Imagen">Foto Perfil</label>
+                    <input type="file" name="imagen" class="form-control" id="imagen">
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+</div>

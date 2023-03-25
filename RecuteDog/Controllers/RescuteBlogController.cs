@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
+using System.Security.Claims;
 
 namespace RecuteDog.Controllers
 {
@@ -40,9 +41,11 @@ namespace RecuteDog.Controllers
                 return View(publicacion);
         }
         [HttpPost]
-        public async Task<IActionResult> Publicaciones(Comentario comentario)
+        public async Task<IActionResult> Publicaciones(int idpost, string correo, string comentario)
         {
-                await this.repoComentarios.NewComentario(comentario);
+                DateTime fechacomentario = DateTime.UtcNow;
+                int iduser = int.Parse( this.HttpContext.User.FindFirst(ClaimTypes.Role).Value);
+                await this.repoComentarios.NewComentario(idpost, correo, comentario, fechacomentario, iduser);
                 return RedirectToAction("Publicaciones");
         }
 
@@ -80,7 +83,6 @@ namespace RecuteDog.Controllers
             await this.repoBlog.EditPostAsync(blog);
             return RedirectToAction("Publicaciones");
         }
-
 
     }
 }

@@ -6,7 +6,7 @@ namespace RecuteDog.Repositories
     {
         List<Comentario> GetComentarios();
         Comentario FindComentario(int idcomentario);
-        Task NewComentario(Comentario comentario);
+        Task NewComentario(int idpost, string correo, string comentario, DateTime fechacomentario, int iduser);
         Task EditComentario(Comentario comentario);
         Task DeleteComentario(int idcomentario);
     }

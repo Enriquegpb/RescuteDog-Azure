@@ -18,17 +18,18 @@ namespace RecuteDog.Repositories
         //AS
         //    UPDATE COMENTARIO SET EMAIL = @EMAIL, COMENTARIO = @COMENTARIO WHERE IDCOMENTARIO = @IDCOMENTARIO
         //GO
-        //CREATE PROCEDURE SP_NEW_COMENTARIO(@IDPOST INT, @EMAIL NVARCHAR(50), @COMENTARIO NVARCHAR(600), @FECHA DATE)
+
+        //ALTER PROCEDURE SP_NEW_COMENTARIO_POST(@IDPOST INT, @CORREO NVARCHAR(50), @COMENTARIO NVARCHAR(600), @FECHA DATE, @IDUSER INT)
         //AS
         //    DECLARE @IDCOMENTARIO INT
 
         //    SELECT @IDCOMENTARIO = ISNULL(MAX(IDCOMENTARIO), 0) + 1 FROM COMENTARIOS
 
-        //    INSERT INTO COMENTARIOS VALUES(@IDCOMENTARIO, @IDPOST, @EMAIL, @COMENTARIO, @FECHA)
+        //    INSERT INTO COMENTARIOS VALUES(@IDCOMENTARIO, @IDPOST, @CORREO, @COMENTARIO, @FECHA, @IDUSER)
         //GO
 
 
-        
+
         //        CREATE PROCEDURE BAJA_ALL_COMENTARIOS(@IDPOST INT)
         //AS
         //    DELETE FROM COMENTARIOS WHERE IDPOST = @IDPOST
@@ -67,14 +68,15 @@ namespace RecuteDog.Repositories
             return  this.context.Comentarios.OrderBy(x => x.Fecha).ToList();
         }
 
-        public async Task NewComentario(Comentario comentario)
+        public async Task NewComentario(int idpost, string correo, string comentario, DateTime fechacomentario, int iduser)
         {
-            string sql = "SP_NEW_COMENTARIO @IDCOMENTARIO, @IDPOST, @EMAIL, @COMENTARIO";
-            SqlParameter pamidcomentario = new SqlParameter("@IDCOMENTARIO", comentario.IdComentario);
-            SqlParameter pamidpost = new SqlParameter("@IDPOST", comentario.IdPost);
-            SqlParameter pamemail = new SqlParameter("@EMAIL", comentario.Email);
-            SqlParameter pamcomentario = new SqlParameter("@COMENTARIO", comentario.ComentarioDesc);
-            await this.context.Database.ExecuteSqlRawAsync(sql, pamidcomentario, pamidpost, pamemail, pamcomentario);
+            string sql = "SP_NEW_COMENTARIO_POST @IDPOST,@CORREO,@COMENTARIO,@FECHA,@IDUSER";
+            SqlParameter pamidpost = new SqlParameter("@IDPOST", idpost);
+            SqlParameter pamemail = new SqlParameter("@CORREO", correo);
+            SqlParameter pamcomentario = new SqlParameter("@COMENTARIO", comentario);
+            SqlParameter pamfecha = new SqlParameter("@FECHA", fechacomentario);
+            SqlParameter pamiduser = new SqlParameter("@IDUSER", iduser);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidpost, pamemail, pamcomentario, pamfecha, pamiduser);
         }
     }
 }

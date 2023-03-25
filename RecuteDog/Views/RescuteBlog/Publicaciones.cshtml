@@ -30,25 +30,31 @@
         </div>
         @foreach(Comentario comentario in comentarios)
         {
+            @if(publicacion.IdPost == comentario.IdPost)
+            {
+                <div class="comment-list">
+                    <p>@comentario.ComentarioDesc</p>
+                    <h5>@comentario.Email</h5>
+                    <h6>@comentario.Fecha</h6>
+                 </div>
+                <a asp-controller="RescuteBlog" asp-action="EliminarComentario" asp-route-idcomentario="@comentario.IdComentario" class="btn btn-danger">Eliminar COMENTARIO</a>
+            }
 
-            <div class="comment-list">
-                <p>@comentario.ComentarioDesc</p>
-                <h5>@comentario.Email</h5>
-                <h6>@comentario.Fecha</h6>
-            </div>
+            
         }
             <div class="comments-box card">
               <h3 class="card-header">Comentarios</h3>
               <div class="card-body">
                 <form method="post">
+                    <input type="hidden" name="idpost" value="@publicacion.IdPost" />
                   <div class="form-group">
                     <label for="nombre">Nombre:</label>
-                    <input type="text" class="form-control" id="nombre">
+                        <input type="text" name="correo" class="form-control" id="nombre">
                   </div>
                   <input type="hidden" value="@DateTime.Now"/>
                   <div class="form-group">
                     <label for="comentario">Comentario:</label>
-                    <textarea class="form-control" id="comentario"></textarea>
+                    <textarea name="comentario" class="form-control" id="comentario"></textarea>
                   </div>
                     <button asp-controller="RescuteBlog" asp-action="Publicaciones" type="submit" class="btn btn-primary">Agregar Comentario</button>
                 </form>

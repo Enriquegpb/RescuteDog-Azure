@@ -73,7 +73,7 @@ namespace RecuteDog.Repositories
     //    UPDATE MASCOTAS SET ADOPTADO = @ESTADO WHERE IDMASCOTA = @IDMASCOTA
     //GO
 
-    //    CREATE PROCEDURE SP_ACTUALIZAR_DATOS_MASCOTA(@IDMASCOTA INT, @IDREFUGIO INT, @NOMBRE NVARCHAR(50), @EDAD FLOAT, @ALTO FLOAT , @PESO FLOAT, @DESCRIPCION NVARCHAR(1000), @IMAGEN NVARCHAR(600))
+    //CREATE PROCEDURE SP_ACTUALIZAR_DATOS_MASCOTA(@IDMASCOTA INT, @IDREFUGIO INT, @NOMBRE NVARCHAR(50), @EDAD FLOAT, @ALTO FLOAT , @PESO FLOAT, @DESCRIPCION NVARCHAR(1000), @IMAGEN NVARCHAR(600))
     //AS
     //    UPDATE MASCOTAS SET IDREFUGIO = @IDREFUGIO, NOMBRE = @NOMBRE, EDAD = @EDAD, PESO = @PESO, DESCRIPCION = @DESCRIPCION, IMAGEN = @IMAGEN WHERE IDMASCOTA = @IDMASCOTA
     //GO
@@ -142,18 +142,18 @@ namespace RecuteDog.Repositories
 
         public async Task UpdateMascotas(Mascota mascota)
         {
-            //NO LE TENGO CREADO...
-            string sql = "SP_ACTUALIZAR_DATOS_MASCOTA  @IDMASCOTA, @IDREFUGIO, @NOMBRE, @EDAD, @ALTO, @PESO, @DESCRIPCION, @IMAGEN, @ADOPTADO";
+            string sql = "SP_ACTUALIZAR_DATOS_MASCOTA  @IDMASCOTA, @IDREFUGIO, @NOMBRE, @EDAD, @ANCHO, @ALTO, @PESO, @DESCRIPCION, @IMAGEN, @PELIGROSIDAD";
             SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", mascota.Id);
             SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", mascota.IdRefugio);
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", mascota.Nombre);
             SqlParameter pamedad = new SqlParameter("@EDAD", mascota.Edad);
+            SqlParameter pamancho = new SqlParameter("@ANCHO", mascota.Ancho);
             SqlParameter pamaltura = new SqlParameter("@ALTO", mascota.Alto);
-            SqlParameter pampeso= new SqlParameter("@PESO", mascota.Peso);
+            SqlParameter pampeso= new SqlParameter("@PESO", mascota.Alto);
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", mascota.Descripcion);
-            SqlParameter pamImagen = new SqlParameter("@IMAGEN", mascota.Descripcion);
-            SqlParameter pamadoptado = new SqlParameter("@ADOPTADO", mascota.Adoptado);
-            await this.context.Database.ExecuteSqlRawAsync(sql,pamidmascota, pamidrefugio, pamnombre, pamedad, pamaltura, pampeso, pamdescripcion, pamImagen, pamadoptado);
+            SqlParameter pamImagen = new SqlParameter("@IMAGEN", mascota.Imagen);
+            SqlParameter pampeligrosidad = new SqlParameter("@PELIGROSIDAD", mascota.Peligrosidad);
+            await this.context.Database.ExecuteSqlRawAsync(sql,pamidmascota, pamidrefugio, pamnombre, pamedad, pamancho, pamaltura, pampeso, pamdescripcion, pamImagen, pampeligrosidad);
         }  
         public async Task BajasAllMascotasPorRefugio(int idrefugio)
         {            

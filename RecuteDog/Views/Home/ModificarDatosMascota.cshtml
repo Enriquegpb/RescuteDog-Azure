@@ -1,16 +1,23 @@
 ﻿@model RecuteDog.Models.Mascota
 
 @{
-    ViewData["Title"] = "NuevaMascota";
+    ViewData["Title"] = "ModificarDatosMascota";
+    List<Refugio> refugios =
+            Context.Session.GetObject<List<Refugio>>("REFUGIOS");
 }
 
-<h1>Ingresa una Nueva Mascota en este Refugio</h1>
+<h1>Actualice los datos de @Model.Nombre</h1>
+
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="NuevaMascota" method="post" enctype="multipart/form-data">
+        <form asp-action="ModificarDatosMascota" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" value="@Model.Id" type="hidden" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
                 <input asp-for="Nombre" class="form-control" />
@@ -18,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Raza" class="control-label"></label>
-                <input asp-for="Raza" class="form-control" />
+                <input asp-for="Raza" type="hidden" class="form-control" />
                 <span asp-validation-for="Raza" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -53,20 +60,26 @@
             </div>
             <div class="form-group">
                 <label asp-for="Imagen" class="control-label"></label>
-                <input asp-for="Imagen" name="Imagen" type="file" class="form-control" />
+                <input asp-for="Imagen" type="file" class="form-control" />
                 <span asp-validation-for="Imagen" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input name="adoptado" type="hidden" value="false" />
+                    <input class="form-check-input" asp-for="Adoptado" /> @Html.DisplayNameFor(model => model.Adoptado)
                 </label>
             </div>
             <div class="form-group">
-                <input asp-for="IdRefugio" name="idrefugio" type="hidden" value="@ViewData["IDREFUGIO"]" class="form-control" />
+                <label class="form-label">Selecciona Refugio</label>
+                <select name="IdRefugio" class="form-control">
+                    @foreach(Refugio refugio in refugios)
+                    {
+                        <option value="@refugio.IdRefugio">@refugio.Nombre</option>
+                    }
+                </select>
                 <span asp-validation-for="IdRefugio" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Modificar" class="btn btn-warning" />
             </div>
         </form>
     </div>
@@ -77,7 +90,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

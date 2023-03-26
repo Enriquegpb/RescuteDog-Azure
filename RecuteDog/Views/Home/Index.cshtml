@@ -12,7 +12,7 @@
             <a class="btn btn-primary" asp-controller="Home" asp-action="InformeAdopcion" style="margin-right:0px">Generar Informe</a>
         </div>
         <div class="text-right">
-            <a class="btn btn-info" asp-controller="Home" asp-action="NuevaMascota" style="margin-right:0px">Ingreso Mascota</a>
+            <a class="btn btn-info" asp-controller="Home" asp-action="NuevaMascota" asp-route-idrefugio="@ViewData["ESTEREFUGIO"]" style="margin-right:0px">Ingreso Mascota</a>
         </div>
     }   
 }
@@ -23,7 +23,7 @@
         if(mascota.Adoptado == false)
         {
             <div class="card" style="background-color:moccasin;width:450px; margin: 10px auto;">
-                <img src="@mascota.Imagen" class="card-img-top" alt="TextoAlternativo" />
+                <img src="@mascota.Imagen" style=" width:100%; height:auto" class="card-img-top" alt="TextoAlternativo" />
                 <div class="card-body">
                     <h1 class="card-title">Nombre: @mascota.Nombre</h1>
                     <p class="card-text"> Descripcion: @mascota.Descripcion</p>

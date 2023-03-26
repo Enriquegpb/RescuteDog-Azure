@@ -13,16 +13,19 @@ namespace RecuteDog.Controllers
         private IRepoMascotas repo;
         private IRepoAdopciones repoAdopciones;
         private HelperMail helperMail;
-        public HomeController(IRepoMascotas repo, IRepoAdopciones repoAdopciones, HelperMail helperMail)
+        private HelperPathProvider helper;
+        public HomeController(IRepoMascotas repo, IRepoAdopciones repoAdopciones, HelperMail helperMail, HelperPathProvider helper)
         {
             this.repo = repo;
             this.repoAdopciones = repoAdopciones;
             this.helperMail = helperMail;
+            this.helper = helper;
         }
 
         public IActionResult Index(int idrefugio)
         {
             List<Mascota> mascotas = this.repo.GetMascotas(idrefugio);
+            ViewData["ESTEREFUGIO"] = idrefugio;
             return View(mascotas);
         }
         public IActionResult FormularioAdopcion(int idmascota)
@@ -80,24 +83,42 @@ namespace RecuteDog.Controllers
 
         public IActionResult NuevaMascota(int idrefugio)
         {
-            ViewData["REFUGIO"] = idrefugio;
+            ViewData["IDREFUGIO"] = idrefugio;
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaMascota(Mascota mascota)
-        {
+        public async Task<IActionResult> NuevaMascota(Mascota mascota, IFormFile imagen)
+        {           
+            string filename = imagen.FileName;
+            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await imagen.CopyToAsync(stream);
+            }
+
+            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            mascota.Imagen = pathserver;
             await this.repo.IngresoAnimal(mascota);
             return RedirectToAction("Index", "Refugios");
         }
         public IActionResult ModificarDatosMascota(int idmascota)
         {
-            this.repo.DetailsMascota
-            return View();
+            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            return View(mascota);
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaMascota(Mascota mascota)
+        public async Task<IActionResult> ModificarDatosMascota(Mascota mascota, IFormFile imagen)
         {
-            await this.repo.IngresoAnimal(mascota);
+            string filename = imagen.FileName;
+            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
+            using (Stream stream = new FileStream(path, FileMode.Create))
+            {
+                await imagen.CopyToAsync(stream);
+            }
+            
+            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            mascota.Imagen = pathserver;
+            await this.repo.UpdateMascotas(mascota);
             return RedirectToAction("Index", "Refugios");
         }
         /**

@@ -5,6 +5,7 @@ using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using RecuteDog.Models;
 using RecuteDog.Repositories;
+using System.Security.Claims;
 
 namespace RecuteDog.Controllers
 {
@@ -36,7 +37,7 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task <IActionResult> FormularioAdopcion(int idmascota, string para, string asunto, string mensaje)
         {
-            User user = HttpContext.Session.GetObject<User>("LOGSESSION");
+
             Mascota mascota = this.repo.DetailsMascota(idmascota);
 
             /*
@@ -59,7 +60,7 @@ namespace RecuteDog.Controllers
              * mensajería para utilizarlo en toda la app
              */
 
-            await this.repoAdopciones.NuevaAdopcion(idmascota, user.Id);
+            await this.repoAdopciones.NuevaAdopcion(idmascota, int.Parse( this.HttpContext.User.FindFirst(ClaimTypes.Role).Value));
             //NECESITO UN METODO EN MASCOTAS PARA ACTUALIZAR EL ESTADO DE LA MASCOTA A TRUE O FALSE            
             mascota.Adoptado = true;
             await this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
@@ -96,8 +97,8 @@ namespace RecuteDog.Controllers
                 await imagen.CopyToAsync(stream);
             }
 
-            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            mascota.Imagen = pathserver;
+            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            mascota.Imagen = filename;
             await this.repo.IngresoAnimal(mascota);
             return RedirectToAction("Index", "Refugios");
         }
@@ -116,8 +117,8 @@ namespace RecuteDog.Controllers
                 await imagen.CopyToAsync(stream);
             }
             
-            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            mascota.Imagen = pathserver;
+            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            mascota.Imagen = filename;
             await this.repo.UpdateMascotas(mascota);
             return RedirectToAction("Index", "Refugios");
         }

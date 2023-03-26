@@ -47,8 +47,8 @@ namespace RecuteDog.Controllers
             {
                 await Imagen.CopyToAsync(stream);
             }
-            string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            refugio.Imagen = pathserver;
+            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
+            refugio.Imagen = filename;
             await this.repo.AgregarRefugio(refugio);
             return RedirectToAction("Index");
         }
@@ -66,8 +66,8 @@ namespace RecuteDog.Controllers
             {
                 await Imagen.CopyToAsync(stream);
             }
-            string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            refugio.Imagen = pathserver;
+            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
+            refugio.Imagen = filename;
             await this.repo.ModificarDatosRefugio(refugio);
             return RedirectToAction("Index");
         }

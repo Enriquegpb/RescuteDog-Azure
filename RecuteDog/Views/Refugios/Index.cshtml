@@ -26,8 +26,12 @@
 {
     @foreach(Refugio refugio in Model)
     {
-        <div id="micajarefugio" data-idrefugio="@refugio.IdRefugio" class="p-5 p-md-5 mb-5 rounded text-white" style="background-image:url(@refugio.Imagen); background-size:cover; cursor:pointer; height:650px">
+        <div id="micajarefugio" data-idrefugio="@refugio.IdRefugio" class="p-5 p-md-5 mb-5 rounded text-white" style="background-image: url('@Url.Content("~/images/"+ refugio.Imagen)'); background-size:cover; cursor:pointer; height:650px">
             <div class="col-md-6 px-0">
+                @for (int i = 0; i <= refugio.Valoracion; i++)
+                {
+                    <img src="~/images/valoracion.svg" style="width:48px; height:auto" />
+                }
                 <h1 class="display-4 fst-italic text-white">@refugio.Nombre</h1>
                 <p class="lead my-3">@refugio.Descripcion</p>
                 <h5 class="display-5 fst-italic">Ubicacion</h5>

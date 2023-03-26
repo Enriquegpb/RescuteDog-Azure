@@ -35,8 +35,8 @@ namespace RecuteDog.Controllers
             {
                 await Imagen.CopyToAsync(stream);
             }
-            string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            voluntario.Imagen = pathserver;
+            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
+            voluntario.Imagen = filename;
             await this.repo.NewVoluntario(voluntario);
             return RedirectToAction("Index");
         }
@@ -56,8 +56,8 @@ namespace RecuteDog.Controllers
             {
                 await Imagen.CopyToAsync(stream);
             }
-            string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            voluntario.Imagen = pathserver;
+            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
+            voluntario.Imagen = filename;
             await this.repo.ModificarDatosVoluntario(voluntario);
             return RedirectToAction("Index");
         }

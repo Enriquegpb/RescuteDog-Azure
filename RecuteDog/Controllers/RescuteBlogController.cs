@@ -83,6 +83,9 @@ namespace RecuteDog.Controllers
             await this.repoBlog.EditPostAsync(blog);
             return RedirectToAction("Publicaciones");
         }
-
+        /**
+         * Que falta lo de las imagenes!!
+         * 
+         */
     }
 }

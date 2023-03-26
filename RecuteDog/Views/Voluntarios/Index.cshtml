@@ -6,16 +6,12 @@
     List<Refugio> refugios =
             Context.Session.GetObject<List<Refugio>>("REFUGIOS");
 }
-
-@*<p>
-    <a asp-controller="Voluntarios" asp-action="FormVoluntarios" class="btn btn-dark">Inscribirse</a>
-</p>*@
  
 @if (Context.User.Identity.IsAuthenticated == true)
 {
      <div class="text-right">
          <a class="btn btn-dark" asp-controller="Voluntarios" asp-action="FormVoluntarios" style="margin-right:0px">Nuevo Voluntario</a>
-      </div>    
+     </div>    
 }
 
 @if(Model != null)

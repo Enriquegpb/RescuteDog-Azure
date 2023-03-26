@@ -3,21 +3,37 @@
     <head>
         <link rel="stylesheet" href="~/css/bootstrap.min.css" />
         <meta name="author" content="Enrique García-Palacios Blasco" />
+        <link rel="shortcut icon" href="~/images/faviconRescuteDog.ico" />
         <meta charset="utf-8" />
     </head>
     <body>
         <header>
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color:burlywood">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">LOGO</a>
+                @if (Context.User.Identity.IsAuthenticated == true)
+                {
+                    @if (int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value) == 1)
+                    {
+                        <a class="navbar-brand" asp-controller="Managed" asp-action="PerfilUsuario"><img class="rounded-circle" style="width:48px; height:auto" src="@Context.User.FindFirstValue("USERIMAGE")" /></a>
+                    }else{
+                        <a class="navbar-brand" href="#">
+                            <img src="~/images/RescuteDogIcon.svg" class="rounded-circle" href="#"/>
+                        </a>
+                    }
+
+                }
+                
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="collapsibleNavbar">
                         <ul class="navbar-nav">
+                            @if (Context.User.Identity.IsAuthenticated == true)
+                        {
                             <li class="nav-item">
                                 <a asp-controller="Managed" asp-action="LogOut"><img src="~/images/logout.svg" style="width:48px; height:auto" /></a>
-                            </li> 
+                            </li>
+                        }
                             <li class="nav-item">
                                 <a asp-controller="Managed" asp-action="SingUp" class="nav-link">Registrarse</a>
                             </li>
@@ -32,7 +48,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" asp-controller="Voluntarios" asp-action="Index">Voluntarios</a></li>
                                     <li><a class="dropdown-item" asp-controller="RescuteBlog" asp-action="Publicaciones">RescuteBlog</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Managed" asp-action="PerfilUsuario">Perfil</a></li>
+                                    <li></li>
                                 </ul>
                             </li>
                         </ul>

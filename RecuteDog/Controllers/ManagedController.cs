@@ -102,10 +102,10 @@ namespace RecuteDog.Controllers
             {
                 await imagen.CopyToAsync(stream);
             }
-            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
 
             //ViewData["mensaje"] = "Fichero subido a" + path;
-            await this.repo.NewUser(username, password, email, phone, pathserver, birdthday);
+            await this.repo.NewUser(username, password, email, phone, filename, birdthday);
             return RedirectToAction("Index", "Refugios");
         }
 
@@ -130,8 +130,8 @@ namespace RecuteDog.Controllers
             {
                 await imagen.CopyToAsync(stream);
             }
-            string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            await this.repo.UpdatePerfilusuario(username, telefono, email, pathserver, iduser);
+            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
+            await this.repo.UpdatePerfilusuario(username, telefono, email, filename, iduser);
             var currentPrincipal = HttpContext.User as ClaimsPrincipal;
             if(currentPrincipal == null)
             {
@@ -159,7 +159,7 @@ namespace RecuteDog.Controllers
             identity.AddClaim
                 (new Claim("USERNAME", username.ToString()));
             identity.AddClaim
-                (new Claim("USERIMAGE", pathserver.ToString()));
+                (new Claim("USERIMAGE", filename.ToString()));
             identity.AddClaim
                     (new Claim(ClaimTypes.NameIdentifier, email));
             identity.AddClaim

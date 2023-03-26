@@ -18,23 +18,31 @@
             })
      </script>
  }
- 
-<h1>Publicaciones</h1>
-<div class="text-right">
-    <a class="btn btn-primary" asp-controller="RescuteBlog" asp-action="NewPost" style="margin-right:0px">Alta Refugio</a>
-</div>
+@if (Context.User.Identity.IsAuthenticated == true)
+{
+        <div class="text-right">
+             <a class="btn btn-primary" asp-controller="RescuteBlog" asp-action="NewPost" style="margin-right:0px"><img src="~/images/agregarboton.svg" style="width:48px; height:auto" /></a>
+        </div>
+}
+
 @if (Model != null)
 {
     @foreach (BlogModel publicacion in Model)
     {
+        @if (Context.User.Identity.IsAuthenticated == true)
+        {
+            @if (int.Parse( Context.User.FindFirst(ClaimTypes.Role).Value) == publicacion.IdUser)
+            {
                 <div class="text-right">
-                    <a class="btn btn-dark" asp-controller="RescuteBlog" asp-action="EditPublicaciones" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px">Modificar</a>
-                </div> 
-                <div class="text-right">
-                    <a class="btn btn-danger" asp-controller="RescuteBlog" asp-action="DeletePublicacion" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px">Eliminar</a>
-                </div>
-
+                <a asp-controller="RescuteBlog" asp-action="DeletePublicacion" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px"><img src="~/images/rubish.svg" style="width:48px; height:auto" /></a>
+            </div>
+            <div class="text-right">
+                <a class="btn btn-dark" asp-controller="RescuteBlog" asp-action="EditPublicaciones" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px; background-color:white"><img src="~/images/penciledit.svg" style="width:48px; height:auto" /></a>
+            </div>
+            }   
+        }
         <div class="p-3 p-md-4 mb-5 bg-light rounded-3  h-50">
+           
             <div class="container-fluid py-2">
                 <img src="@publicacion.Imagen" class="img-fluid float-left" alt="Imagen flotada a la izquierda">
                 <div class="col-md-6">
@@ -51,14 +59,20 @@
                     <h5>@comentario.Email</h5>
                     <h6>@comentario.Fecha</h6>
                  </div>
-                <button class="btn btn-warning" id="btnmodificar@comentario.IdComentario" data-idcomentario="@comentario.IdComentario">Edit</button>
-                <div id="@("formeditcomentario" + comentario.IdComentario)"></div>
-                <a asp-controller="RescuteBlog" asp-action="EliminarComentario" asp-route-idcomentario="@comentario.IdComentario" class="btn btn-danger">Eliminar COMENTARIO</a>
+                @if (Context.User.Identity.IsAuthenticated == true)
+                {
+                    @if (int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value) == publicacion.IdUser)
+                    {
+                        <button style="border:none; background-color:white" id="btnmodificar@comentario.IdComentario" data-idcomentario="@comentario.IdComentario"><img src="~/images/penciledit.svg" style="width:48px; height:auto;" /></button>
+                        <div id="@("formeditcomentario" + comentario.IdComentario)"></div>
+                        <a asp-controller="RescuteBlog" asp-action="EliminarComentario" asp-route-idcomentario="@comentario.IdComentario"><img src="~/images/rubish.svg" style="width:48px; height:auto" /></a>
+                    }
+                }
             }
 
             
         }
-            <div class="comments-box card">
+            <div class="comments-box card" style="margin-top:15px">
               <h3 class="card-header">Comentarios</h3>
               <div class="card-body">
                 <form method="post">

@@ -78,17 +78,26 @@ namespace RecuteDog.Controllers
             return RedirectToAction("Index","Refugios");
         }
 
-        public IActionResult NuevaMascota()
+        public IActionResult NuevaMascota(int idrefugio)
         {
-            /**
-             * Aqui necesitaría un metodo para recuperar el id del refugio de la mascota
-             */
+            ViewData["REFUGIO"] = idrefugio;
             return View();
         }
         [HttpPost]
-        public IActionResult NuevaMascota(Mascota mascota)
+        public async Task<IActionResult> NuevaMascota(Mascota mascota)
         {
-            this.repo.IngresoAnimal(mascota);
+            await this.repo.IngresoAnimal(mascota);
+            return RedirectToAction("Index", "Refugios");
+        }
+        public IActionResult ModificarDatosMascota(int idmascota)
+        {
+            this.repo.DetailsMascota
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> NuevaMascota(Mascota mascota)
+        {
+            await this.repo.IngresoAnimal(mascota);
             return RedirectToAction("Index", "Refugios");
         }
         /**

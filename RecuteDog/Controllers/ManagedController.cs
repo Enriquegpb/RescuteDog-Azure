@@ -78,7 +78,7 @@ namespace RecuteDog.Controllers
                 //string controller = TempData["controller"].ToString();
                 //string action = TempData["action"].ToString();
                 //string id = TempData["id"].ToString();
-                return RedirectToAction("PerfilUsuario", "Managed");
+                return RedirectToAction("Index", "Refugios");
 
                 //return RedirectToAction("DeleteEnfermo", "Doctores", new { id = 45678});
             }

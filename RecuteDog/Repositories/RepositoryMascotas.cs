@@ -34,14 +34,14 @@ namespace RecuteDog.Repositories
     //    DELETE FROM MASCOTAS WHERE ID = @ID
     //GO
 
-    //    CREATE PROCEDURE SP_INGRESO_MASCOTA_RESCATADA(@NOMBRE NVARCHAR(50), @RAZA NVARCHAR(50), @EDAD INT, @ANCHO FLOAT, @ALTO FLOAT, @PESO FLOAT, @DESCRIPCION NVARCHAR(200), @PELIGROSIDAD BIT, @IMAGEN NVARCHAR(600))
+    //CREATE PROCEDURE SP_INGRESO_MASCOTA_RESCATADA(@NOMBRE NVARCHAR(50), @RAZA NVARCHAR(50), @EDAD INT, @ANCHO FLOAT, @ALTO FLOAT, @PESO FLOAT, @DESCRIPCION NVARCHAR(200), @PELIGROSIDAD BIT, @IMAGEN NVARCHAR(600), @ADOPTADO BIT, @IDREFUGIO INT)
     //AS
 
     //    DECLARE @ID INT
 
-    //    SELECT @ID = MAX(ID) FROM MASCOTAS --AUTOINCREMENTO
+    //    SELECT @ID = ISNULL(MAX(IDMASCOTA), 0) + 1 FROM MASCOTAS --AUTOINCREMENTO
 
-    //    INSERT INTO MASCOTAS VALUES(@ID, @NOMBRE, @RAZA, @EDAD, @ANCHO, @ALTO, @PESO, @DESCRIPCION, @PELIGROSIDAD, @IMAGEN)
+    //    INSERT INTO MASCOTAS VALUES(@ID, @NOMBRE, @RAZA, @EDAD, @ANCHO, @ALTO, @PESO, @DESCRIPCION, @PELIGROSIDAD, @IMAGEN, @ADOPTADO, @IDREFUGIO)
     //GO
 
     //CREATE PROCEDURE SP_DETALLES_MASCOTA(@ID INT)
@@ -115,8 +115,8 @@ namespace RecuteDog.Repositories
 
         public async Task IngresoAnimal(Mascota mascota)
         {
-            string sql = "SP_INGRESO_MASCOTA_RESCATADA";
-            SqlParameter pamidanimal = new SqlParameter("@ID", mascota.Id);
+            string sql = "SP_INGRESO_MASCOTA_RESCATADA @NOMBRE, @RAZA, @EDAD, @ANCHO, @ALTO, @PESO, @DESCRIPCION, @PELIGROSIDAD, @IMAGEN, @ADOPTADO, @IDREFUGIO";
+            //SqlParameter pamidanimal = new SqlParameter("@ID", mascota.Id);
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", mascota.Nombre);
             SqlParameter pamraza = new SqlParameter("@RAZA", mascota.Raza);
             SqlParameter pamedad = new SqlParameter("@EDAD", mascota.Edad);
@@ -126,7 +126,9 @@ namespace RecuteDog.Repositories
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", mascota.Descripcion);
             SqlParameter pampeligrosidad = new SqlParameter("@PELIGROSIDAD", mascota.Peligrosidad);
             SqlParameter pamimagen = new SqlParameter("@IMAGEN", mascota.Imagen);
-            await this.context.Database.ExecuteSqlRawAsync(sql, pamidanimal, pamnombre, pamraza, pamedad, pamancho, pamalto, pampeso, pamdescripcion, pampeligrosidad, pamimagen);
+            SqlParameter pamadoptado = new SqlParameter("@ADOPTADO", mascota.Adoptado);
+            SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", mascota.IdRefugio);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamnombre, pamraza, pamedad, pamancho, pamalto, pampeso, pamdescripcion, pampeligrosidad, pamimagen, pamadoptado, pamidrefugio);
         }
 
         public List<Mascota> GenerarInformeAdopciones()
@@ -141,7 +143,7 @@ namespace RecuteDog.Repositories
         public async Task UpdateMascotas(Mascota mascota)
         {
             //NO LE TENGO CREADO...
-            string sql = "SP_ACTUALIZAR_DATOS_MASCOTA  @IDMASCOTA, @IDREFUGIO, @NOMBRE, @EDAD, @ALTO, @PESO, @DESCRIPCION, @IMAGEN";
+            string sql = "SP_ACTUALIZAR_DATOS_MASCOTA  @IDMASCOTA, @IDREFUGIO, @NOMBRE, @EDAD, @ALTO, @PESO, @DESCRIPCION, @IMAGEN, @ADOPTADO";
             SqlParameter pamidmascota = new SqlParameter("@IDMASCOTA", mascota.Id);
             SqlParameter pamidrefugio = new SqlParameter("@IDREFUGIO", mascota.IdRefugio);
             SqlParameter pamnombre = new SqlParameter("@NOMBRE", mascota.Nombre);
@@ -150,7 +152,8 @@ namespace RecuteDog.Repositories
             SqlParameter pampeso= new SqlParameter("@PESO", mascota.Peso);
             SqlParameter pamdescripcion = new SqlParameter("@DESCRIPCION", mascota.Descripcion);
             SqlParameter pamImagen = new SqlParameter("@IMAGEN", mascota.Descripcion);
-            await this.context.Database.ExecuteSqlRawAsync(sql,pamidmascota, pamidrefugio, pamnombre, pamedad, pamaltura, pampeso, pamdescripcion, pamImagen);
+            SqlParameter pamadoptado = new SqlParameter("@ADOPTADO", mascota.Adoptado);
+            await this.context.Database.ExecuteSqlRawAsync(sql,pamidmascota, pamidrefugio, pamnombre, pamedad, pamaltura, pampeso, pamdescripcion, pamImagen, pamadoptado);
         }  
         public async Task BajasAllMascotasPorRefugio(int idrefugio)
         {            

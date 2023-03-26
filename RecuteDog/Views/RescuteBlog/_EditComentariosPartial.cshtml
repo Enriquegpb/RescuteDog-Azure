@@ -1,0 +1,30 @@
+﻿@section scripts{
+    <script>
+        $("#formedit").submit(function(e){
+            e.preventDefult();
+                    $.post($(this).attr("action"), $(this).serialize(), function (result) {
+                window.location.href = "/RescuteBlog/Publicaciones";
+        });
+        })
+    </script>
+}
+@model Comentario 
+<div class="comments-box card">
+              <h3 class="card-header">Comentarios</h3>
+              <div class="card-body">
+        <form method="post" id="formedit" action="@Url.Action("_EditComentariosPartial")">
+                    <input type="hidden" name="IdPost" value="@Model.IdPost" />
+                    <input type="hidden" name="IdComentario" value="@Model.IdComentario" />
+                    <input type="hidden" name="IdUser" value="@Model.IdUser" />
+                  <div class="form-group">
+                        <input type="hidden" value="@Model.Email" name="Email" class="form-control" id="nombre">
+                  </div>
+                  <input type="hidden" name="Fecha" value="@DateTime.Now"/>
+                  <div class="form-group">
+                    <label for="comentario">Comentario:</label>
+                    <textarea name="ComentarioDesc" class="form-control" id="comentario">@Model.ComentarioDesc</textarea>
+                  </div>
+                    <button type="submit" class="btn btn-warning">Editar Comentario</button>
+                </form>
+              </div>
+            </div>

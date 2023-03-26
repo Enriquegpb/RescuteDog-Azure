@@ -14,10 +14,11 @@ namespace RecuteDog.Repositories
         //AS
         //    DELETE FROM COMENTARIOS WHERE IDCOMENTARIO = @IDCOMENTARIO
         //GO
-        //        CREATE PROCEDURE SP_UPDATE_COMENTARIO(@IDCOMENTARIO INT, @EMAIL NVARCHAR(50), @COMENTARIO NVARCHAR(600))
+        //ALTER PROCEDURE SP_UPDATE_COMENTARIO(@IDCOMENTARIO INT, @COMENTARIO NVARCHAR(600))
         //AS
-        //    UPDATE COMENTARIO SET EMAIL = @EMAIL, COMENTARIO = @COMENTARIO WHERE IDCOMENTARIO = @IDCOMENTARIO
+        //    UPDATE COMENTARIOS SET COMENTARIOTEXT = @COMENTARIO WHERE IDCOMENTARIO = @IDCOMENTARIO
         //GO
+
 
         //ALTER PROCEDURE SP_NEW_COMENTARIO_POST(@IDPOST INT, @CORREO NVARCHAR(50), @COMENTARIO NVARCHAR(600), @FECHA DATE, @IDUSER INT)
         //AS
@@ -51,11 +52,10 @@ namespace RecuteDog.Repositories
 
         public async Task EditComentario(Comentario comentario)
         {
-            string sql = "SP_UPDATE_COMENTARIO @IDCOMENTARIO, @EMAIL, @COMENTARIO";
+            string sql = "SP_UPDATE_COMENTARIO @IDCOMENTARIO, @COMENTARIO";
             SqlParameter pamidcomentario = new SqlParameter("@IDCOMENTARIO", comentario.IdComentario);
-            SqlParameter pamemail = new SqlParameter("@EMAIL", comentario.IdComentario);
             SqlParameter pamcomentario = new SqlParameter("@COMENTARIO", comentario.ComentarioDesc);
-            await this.context.Database.ExecuteSqlRawAsync(sql, pamidcomentario, pamemail, pamcomentario);
+            await this.context.Database.ExecuteSqlRawAsync(sql, pamidcomentario, pamcomentario);
         }
 
         public Comentario FindComentario(int idcomentario)

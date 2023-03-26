@@ -4,7 +4,21 @@
     ViewData["Title"] = "Publicaciones";
     List<Comentario> comentarios = ViewData["COMENTARIOS"] as List<Comentario>;
 }
-
+@section scripts {
+     <script>
+        $(document).ready(function() {           
+            $(".btn.btn-warning").click(function() {
+                var idcomentario = $(this).data("idcomentario");
+                var url = "/RescuteBlog/_EditComentariosPartial?idcomentario=" + idcomentario
+                var cajaedicion = "formeditcomentario" + idcomentario
+                $.get(url, function (data) {
+                    $("#"+cajaedicion).html(data);
+                });
+            })
+            })
+     </script>
+ }
+ 
 <h1>Publicaciones</h1>
 <div class="text-right">
     <a class="btn btn-primary" asp-controller="RescuteBlog" asp-action="NewPost" style="margin-right:0px">Alta Refugio</a>
@@ -37,6 +51,8 @@
                     <h5>@comentario.Email</h5>
                     <h6>@comentario.Fecha</h6>
                  </div>
+                <button class="btn btn-warning" id="btnmodificar@comentario.IdComentario" data-idcomentario="@comentario.IdComentario">Edit</button>
+                <div id="@("formeditcomentario" + comentario.IdComentario)"></div>
                 <a asp-controller="RescuteBlog" asp-action="EliminarComentario" asp-route-idcomentario="@comentario.IdComentario" class="btn btn-danger">Eliminar COMENTARIO</a>
             }
 

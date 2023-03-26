@@ -15,13 +15,13 @@ namespace RecuteDog.Controllers
             this.repoComentarios = repoComentarios;
         }
 
-        public IActionResult EditComentario(int idcomentario)
+        public IActionResult _EditComentariosPartial(int idcomentario)
         {
             Comentario comentario = this.repoComentarios.FindComentario(idcomentario);
-            return View(comentario);
+            return PartialView("_EditComentariosPartial", comentario);
         }
-
-        public async Task<IActionResult> EditComentario(Comentario comentario)
+        [HttpPost]
+        public async Task<IActionResult> _EditComentariosPartial(Comentario comentario)
         {
             await this.repoComentarios.EditComentario(comentario);
             return RedirectToAction("Publicaciones");

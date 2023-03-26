@@ -13,7 +13,7 @@ namespace RecuteDog.Models
         public int IdPost { get; set; }
         [Column("EMAIL")]
         public string Email { get; set; }
-        [Column("COMENTARIO")]
+        [Column("COMENTARIOTEXT")]
         public string ComentarioDesc { get; set; }
         [Column("FECHA")]
         public string Fecha { get; set; }

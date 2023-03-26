@@ -48,11 +48,24 @@ namespace RecuteDog.Controllers
             /**
              * Configuracion del correo
              */
-
+            string peligroso = "";
+            if(mascota.Peligrosidad == false)
+            {
+                peligroso = "<p style='color:green'>No Peligroso>";
+            }
+            else
+            {
+                peligroso = "<p style='color:red'>Peligroso>";
+            }
 
             asunto = "Has adoptado a " + mascota.Nombre;
             para = "rescutedogkw@gmail.com";
-            mensaje = "Gracias por la solicitud de adopcion de" + mascota.Nombre + " Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion";
+            mensaje = "Gracias por la solicitud de adopcion de" + mascota.Nombre + " Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion" +
+                "recuerde que los datos de este perro son los siguientes" +
+                "Edad: " + mascota.Edad + " Dimesiones" +
+                " Alto: " + mascota.Alto + " Anchura:" + mascota.Ancho + " Peso:" + mascota.Peso + "" +
+                "" + peligroso + "";
+
 
             await this.helperMail.SendMailAsync(para, asunto, mensaje);
             /**

@@ -51,11 +51,11 @@ namespace RecuteDog.Controllers
             string peligroso = "";
             if(mascota.Peligrosidad == false)
             {
-                peligroso = "<p style='color:green'>No Peligroso>";
+                peligroso = "<p style='color:green'>No Peligroso</p>";
             }
             else
             {
-                peligroso = "<p style='color:red'>Peligroso>";
+                peligroso = "<p style='color:red'>Peligroso</p>";
             }
 
             asunto = "Has adoptado a " + mascota.Nombre;

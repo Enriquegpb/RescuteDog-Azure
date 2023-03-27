@@ -6,8 +6,8 @@
 }
 @section scripts {
      <script>
-        $(document).ready(function() {           
-            $(".btn.btn-warning").click(function() {
+        $(document).ready(function() {
+            $(".float-end.bg-white").click(function () {
                 var idcomentario = $(this).data("idcomentario");
                 var url = "/RescuteBlog/_EditComentariosPartial?idcomentario=" + idcomentario
                 var cajaedicion = "formeditcomentario" + idcomentario
@@ -35,11 +35,11 @@
             @if (int.Parse( Context.User.FindFirst(ClaimTypes.Role).Value) == publicacion.IdUser)
             {
                 <div class="float-end">
-                <a asp-controller="RescuteBlog" asp-action="DeletePublicacion" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px"><img src="~/images/rubish.svg" style="width:24px; height:auto" /></a>
-            </div>
-            <div class="float-end">
-                <a class="btn btn-dark" asp-controller="RescuteBlog" asp-action="EditPublicaciones" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px; background-color:white; border:none"><img src="~/images/penciledit.svg" style="width:24px; height:auto;" /></a>
-            </div>
+                     <a asp-controller="RescuteBlog" asp-action="DeletePublicacion" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px"><img src="~/images/rubish.svg" style="width:24px; height:auto" /></a>
+                 </div>
+                <div class="float-end">
+                    <a class="btn btn-dark" asp-controller="RescuteBlog" asp-action="EditPublicaciones" asp-route-idpost="@publicacion.IdPost" style="margin-right:0px; background-color:white; border:none"><img src="~/images/penciledit.svg" style="width:24px; height:auto;" /></a>
+                </div>
             }   
         }
             <div class="container-fluid py-2">
@@ -55,11 +55,11 @@
             {
                 @if (Context.User.Identity.IsAuthenticated == true && int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value) == comentario.IdUser)
                 {
-                    @if (int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value) == publicacion.IdUser)
+                    @if (int.Parse(Context.User.FindFirst(ClaimTypes.Role).Value) == comentario.IdUser)
                     {
-                        <button class="float-end" style="border:none; background-color:white;border:none" id="btnmodificar@comentario.IdComentario" data-idcomentario="@comentario.IdComentario"><img src="~/images/penciledit.svg" style="width:48px; height:auto;" /></button>
-                        <div id="@("formeditcomentario" + comentario.IdComentario)"></div>
-                        <a class="float-end" asp-controller="RescuteBlog" asp-action="EliminarComentario" asp-route-idcomentario="@comentario.IdComentario"><img src="~/images/rubish.svg" style="width:48px; height:auto" /></a>
+                       <button class="float-end bg-white" style="border:none; border:none" id="'btnmodificar'@comentario.IdComentario" data-idcomentario="@comentario.IdComentario"><img src="~/images/penciledit.svg" style="width:48px; height:auto;" /></button>
+                    <div id="@("formeditcomentario" + comentario.IdComentario)"></div>
+                    <a class="float-end" asp-controller="RescuteBlog" asp-action="EliminarComentario" asp-route-idcomentario="@comentario.IdComentario"><img src="~/images/rubish.svg" style="width:48px; height:auto" /></a>
                     }
                 }
                 <div class="comment-list">

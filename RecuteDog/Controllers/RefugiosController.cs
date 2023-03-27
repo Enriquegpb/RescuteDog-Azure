@@ -74,7 +74,7 @@ namespace RecuteDog.Controllers
 
         public async Task<IActionResult> DeleteRefugio()
         {
-            int idrefugio = int.Parse( TempData["REFUGIO"].ToString());
+            int idrefugio = int.Parse(TempData["REFUGIO"].ToString());
             await this.repo.BajaRefugio(idrefugio);
             return RedirectToAction("Index");
         }

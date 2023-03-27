@@ -59,7 +59,7 @@ namespace RecuteDog.Controllers
             }
 
             asunto = "Has adoptado a " + mascota.Nombre;
-            para = "rescutedogkw@gmail.com";
+            para = "rdog49903@gmail.com";
             mensaje = "Gracias por la solicitud de adopcion de" + mascota.Nombre + " Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion" +
                 "recuerde que los datos de este perro son los siguientes" +
                 "Edad: " + mascota.Edad + " Dimesiones" +

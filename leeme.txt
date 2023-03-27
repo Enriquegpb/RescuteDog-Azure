@@ -1,0 +1,6 @@
+USUARIOS
+
+1->Administrador correo: admin@gmail.com password: 1234
+
+2-> cliente 	correo:user@gmail.com password: 1234
+

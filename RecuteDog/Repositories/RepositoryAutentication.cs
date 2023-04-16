@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
 using RecuteDog.Helpers;
-using RecuteDog.Models;
+using NugetRescuteDog.Models;
 
 namespace RecuteDog.Repositories
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RecuteDog.Models;
+using NugetRescuteDog.Models;
 
 namespace RecuteDog.Data
 {

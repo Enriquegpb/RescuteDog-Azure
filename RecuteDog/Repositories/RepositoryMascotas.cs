@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
-using RecuteDog.Models;
+using NugetRescuteDog.Models;
 
 namespace RecuteDog.Repositories
 {

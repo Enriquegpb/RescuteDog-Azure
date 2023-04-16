@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RecuteDog.Helpers;
-using RecuteDog.Models;
+using NugetRescuteDog.Models;
 using RecuteDog.Repositories;
 using System.Security.Claims;
 using RecuteDog.Extensions;

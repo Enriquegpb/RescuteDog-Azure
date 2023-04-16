@@ -1,4 +1,4 @@
-﻿using RecuteDog.Models;
+﻿using NugetRescuteDog.Models;
 using System.Net;
 using System.Net.Mail;
 

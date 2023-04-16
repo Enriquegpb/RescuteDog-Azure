@@ -3,7 +3,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using RecuteDog.Extensions;
 using RecuteDog.Helpers;
-using RecuteDog.Models;
+using NugetRescuteDog.Models;
 using RecuteDog.Repositories;
 using System.Security.Claims;
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using RecuteDog.Data;
-using RecuteDog.Models;
+using NugetRescuteDog.Models;
 using System.Collections.Generic;
 
 namespace RecuteDog.Repositories

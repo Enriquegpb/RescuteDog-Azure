@@ -1,4 +1,4 @@
-﻿using RecuteDog.Models;
+﻿using NugetRescuteDog.Models;
 
 namespace RecuteDog.Repositories
 {

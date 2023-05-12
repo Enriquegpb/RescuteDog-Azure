@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NugetRescuteDog.Models;
 using RecuteDog.Repositories;
+using RecuteDog.Services;
 using System.Security.Claims;
 
 namespace RecuteDog.Controllers
@@ -9,35 +10,41 @@ namespace RecuteDog.Controllers
     {
         private IRepoBlog repoBlog;
         private IRepoComentarios repoComentarios;
-        public RescuteBlogController(IRepoBlog repoBlog, IRepoComentarios repoComentarios)
+        private ServiceApiRescuteDog service;
+        public RescuteBlogController(IRepoBlog repoBlog, IRepoComentarios repoComentarios, ServiceApiRescuteDog service)
         {
             this.repoBlog = repoBlog;
             this.repoComentarios = repoComentarios;
+            this.service = service;
         }
 
-        public IActionResult _EditComentariosPartial(int idcomentario)
+        public async Task<IActionResult> _EditComentariosPartial(int idcomentario)
         {
-            Comentario comentario = this.repoComentarios.FindComentario(idcomentario);
+            Comentario comentario = await this.service.FindComentarioAsync(idcomentario);
             return PartialView("_EditComentariosPartial", comentario);
         }
         [HttpPost]
         public async Task<IActionResult> _EditComentariosPartial(Comentario comentario)
         {
-            await this.repoComentarios.EditComentario(comentario);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.EditComentarioAsync(comentario, token);
             return RedirectToAction("Publicaciones");
         }
 
         public async Task<IActionResult> EliminarComentario(int idcomentario)
         {
-            await this.repoComentarios.DeleteComentario(idcomentario);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.DeleteComentarioAsync(idcomentario, token);
             return RedirectToAction("Publicaciones");
         }
 
         
-        public IActionResult CreateComentario(int idpost)
+        public async Task<IActionResult> CreateComentario(int idpost)
         {
             
-                BlogModel publicacion = this.repoBlog.FindPost(idpost);
+                BlogModel publicacion = await this.service.FindPublicacionAsync(idpost);
                 return View(publicacion);
         }
         [HttpPost]
@@ -45,19 +52,23 @@ namespace RecuteDog.Controllers
         {
                 DateTime fechacomentario = DateTime.UtcNow;
                 int iduser = int.Parse( this.HttpContext.User.FindFirst(ClaimTypes.Role).Value);
-                await this.repoComentarios.NewComentario(idpost, correo, comentario, fechacomentario, iduser);
+            string token =
+            HttpContext.Session.GetString("token");
+            await this.service.NewComentarioAsync(idpost, correo, comentario, fechacomentario, iduser, token);
                 return RedirectToAction("Publicaciones");
         }
 
         public async Task<IActionResult> DeletePublicacion(int idpost)
         {
-            await this.repoBlog.DeletePost(idpost);
+            string token =
+           HttpContext.Session.GetString("token");
+            await this.service.DeleteComentarioAsync(idpost, token);
             return RedirectToAction("Publicaciones");
         }
-        public IActionResult Publicaciones()
+        public async Task<IActionResult> Publicaciones()
         {
-            List<BlogModel> publicaciones = this.repoBlog.GetPost();
-            List<Comentario> comentarios = this.repoComentarios.GetComentarios();
+            List<BlogModel> publicaciones = await this.service.GetPublicacionesAsync();
+            List<Comentario> comentarios = await this.service.GetComentariosAsync();
             ViewData["COMENTARIOS"] = comentarios;
             return View(publicaciones);
         }
@@ -69,18 +80,22 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> NewPost(BlogModel model)
         {
-            await this.repoBlog.NewPost(model);
+            string token =
+                HttpContext.Session.GetString("token");
+            await this.service.NewBlogAsync(model, token);
             return RedirectToAction("Publicaciones");
         }
-        public IActionResult EditPublicaciones(int idpost)
+        public async Task<IActionResult> EditPublicaciones(int idpost)
         {
-            BlogModel publicacion = this.repoBlog.FindPost(idpost);
+            BlogModel publicacion = await this.service.FindPublicacionAsync(idpost);
             return View(publicacion);
         }
         [HttpPost]
         public async Task<IActionResult> EditPublicaciones(BlogModel blog)
         {
-            await this.repoBlog.EditPostAsync(blog);
+            string token =
+           HttpContext.Session.GetString("token");
+            await this.service.EditBlogAsync(blog, token);
             return RedirectToAction("Publicaciones");
         }
         /**

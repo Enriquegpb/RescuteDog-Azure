@@ -4,6 +4,7 @@ using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using RecuteDog.Repositories;
+using RecuteDog.Services;
 
 namespace RecuteDog.Controllers
 {
@@ -12,14 +13,16 @@ namespace RecuteDog.Controllers
         private IRepoRefugios repo;
         private HelperPathProvider helperPathProvider;
         private IMemoryCache memoryCache;
-        public RefugiosController(IRepoRefugios repo, HelperPathProvider helperPathProvider, IMemoryCache memoryCache)
+        private ServiceApiRescuteDog service;
+        public RefugiosController(IRepoRefugios repo, HelperPathProvider helperPathProvider, IMemoryCache memoryCache, ServiceApiRescuteDog service)
         {
             this.repo = repo;
             this.helperPathProvider = helperPathProvider;
             this.memoryCache = memoryCache;
+            this.service = service;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             List<Refugio> refugios;
             if (this.memoryCache.Get("REFUGIOS") == null)
@@ -30,7 +33,7 @@ namespace RecuteDog.Controllers
             {
                 refugios = this.memoryCache.Get<List<Refugio>>("REFUGIOS");
             }
-            refugios = this.repo.GetRefugios();
+            refugios = await this.service.GetRefugiosAsync();
             HttpContext.Session.SetObject("REFUGIOS", refugios);
             return View(refugios);
         }
@@ -49,12 +52,14 @@ namespace RecuteDog.Controllers
             }
             //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
             refugio.Imagen = filename;
-            await this.repo.AgregarRefugio(refugio);
+            string token =
+                HttpContext.Session.GetString("token");
+            await this.service.NewRefugioAsync(refugio, token);
             return RedirectToAction("Index");
         }
-        public IActionResult ModificarRefugio(int idrefugio)
+        public async Task<IActionResult> ModificarRefugio(int idrefugio)
         {
-            Refugio refugio = this.repo.DetailsRefugio(idrefugio);
+            Refugio refugio =  await this.service.FindRefugioAsync(idrefugio);
             return View(refugio);
         }
         [HttpPost]
@@ -68,14 +73,18 @@ namespace RecuteDog.Controllers
             }
             //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
             refugio.Imagen = filename;
-            await this.repo.ModificarDatosRefugio(refugio);
+            string token =
+               HttpContext.Session.GetString("token");
+            await this.service.UpdateRefugioAsync(refugio, token);
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> DeleteRefugio()
         {
             int idrefugio = int.Parse(TempData["REFUGIO"].ToString());
-            await this.repo.BajaRefugio(idrefugio);
+            string token =
+              HttpContext.Session.GetString("token");
+            await this.service.DeleteRefugiosAsync(idrefugio, token);
             return RedirectToAction("Index");
         }
 

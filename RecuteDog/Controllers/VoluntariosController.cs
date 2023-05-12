@@ -2,6 +2,7 @@
 using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using RecuteDog.Repositories;
+using RecuteDog.Services;
 
 namespace RecuteDog.Controllers
 {
@@ -9,16 +10,18 @@ namespace RecuteDog.Controllers
     {
         private IRepoVoluntarios repo;
         private HelperPathProvider helperPathProvider;
-        public VoluntariosController(IRepoVoluntarios repo, HelperPathProvider helperPathProvider)
+        private ServiceApiRescuteDog service;
+        public VoluntariosController(IRepoVoluntarios repo, HelperPathProvider helperPathProvider, ServiceApiRescuteDog service)
         {
             this.repo = repo;
             this.helperPathProvider = helperPathProvider;
+            this.service = service;
             
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Voluntario> voluntarios = this.repo.Getvoluntarios();
+            List<Voluntario> voluntarios = await this.service.GetVoluntariosAsync();
             return View(voluntarios);
         }
 
@@ -37,13 +40,15 @@ namespace RecuteDog.Controllers
             }
             //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
             voluntario.Imagen = filename;
-            await this.repo.NewVoluntario(voluntario);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.NewVoluntarioAsync(voluntario, token);
             return RedirectToAction("Index");
         }
 
-        public IActionResult ModificarVoluntarios(int idvoluntario)
+        public async Task<IActionResult> ModificarVoluntarios(int idvoluntario)
         {
-            Voluntario voluntario = this.repo.FindVoluntario(idvoluntario);
+            Voluntario voluntario = await this.service.FindVoluntarioAsync(idvoluntario);
             return View(voluntario);
         }
 
@@ -58,13 +63,17 @@ namespace RecuteDog.Controllers
             }
             //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
             voluntario.Imagen = filename;
-            await this.repo.ModificarDatosVoluntario(voluntario);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.UpdateVoluntarioAsync(voluntario, token);
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> BajaVolntuario(int idvoluntario)
         {
-            await this.repo.BajaVoluntario(idvoluntario);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.DeleteVoluntarioAsync(idvoluntario, token);
             return RedirectToAction("Index");
         }
     }

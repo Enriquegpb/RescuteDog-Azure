@@ -6,6 +6,7 @@ using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using RecuteDog.Repositories;
 using System.Security.Claims;
+using RecuteDog.Services;
 
 namespace RecuteDog.Controllers
 {
@@ -15,23 +16,26 @@ namespace RecuteDog.Controllers
         private IRepoAdopciones repoAdopciones;
         private HelperMail helperMail;
         private HelperPathProvider helper;
-        public HomeController(IRepoMascotas repo, IRepoAdopciones repoAdopciones, HelperMail helperMail, HelperPathProvider helper)
+        private ServiceApiRescuteDog service;
+        public HomeController(IRepoMascotas repo, IRepoAdopciones repoAdopciones, HelperMail helperMail, HelperPathProvider helper, ServiceApiRescuteDog service)
         {
             this.repo = repo;
             this.repoAdopciones = repoAdopciones;
             this.helperMail = helperMail;
             this.helper = helper;
+            this.service = service;
         }
 
-        public IActionResult Index(int idrefugio)
+        public async Task<IActionResult> Index(int idrefugio)
         {
-            List<Mascota> mascotas = this.repo.GetMascotas(idrefugio);
+            List<Mascota> mascotas = await this.service.GetMascotasAsync(idrefugio);
             ViewData["ESTEREFUGIO"] = idrefugio;
             return View(mascotas);
         }
-        public IActionResult FormularioAdopcion(int idmascota)
+
+        public async Task<IActionResult> FormularioAdopcion(int idmascota)
         {
-            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            Mascota mascota = await this.service.FindMascotaAsync(idmascota);
             return View(mascota);
         }
         [HttpPost]
@@ -72,17 +76,18 @@ namespace RecuteDog.Controllers
              * Ahora el siguiente paso es crear el servicio de 
              * mensajería para utilizarlo en toda la app
              */
-
-            await this.repoAdopciones.NuevaAdopcion(idmascota, int.Parse( this.HttpContext.User.FindFirst(ClaimTypes.Role).Value));
+            string token =
+               HttpContext.Session.GetString("token");
+            await this.service.NewAdopcionAsync(idmascota, int.Parse( this.HttpContext.User.FindFirst(ClaimTypes.Role).Value), token);
             //NECESITO UN METODO EN MASCOTAS PARA ACTUALIZAR EL ESTADO DE LA MASCOTA A TRUE O FALSE            
             mascota.Adoptado = true;
             await this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
             return RedirectToAction("Index", "Refugios");
         }
 
-        public IActionResult InformeAdopcion()
+        public async Task<IActionResult> InformeAdopcion()
         {
-            List<Mascota> mascotasinforme = this.repo.GenerarInformeAdopciones();
+            List<Mascota> mascotasinforme = await this.service.GenerarInformeAdopciones();
             return View(mascotasinforme);
         }
         [HttpPost]
@@ -93,6 +98,11 @@ namespace RecuteDog.Controllers
             mascota.Adoptado = false;
             await this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);
             return RedirectToAction("Index","Refugios");
+
+            /**
+             * 
+             * Falta cambiar servicio
+             */
         }
 
         public IActionResult NuevaMascota(int idrefugio)
@@ -112,12 +122,14 @@ namespace RecuteDog.Controllers
 
             //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
             mascota.Imagen = filename;
-            await this.repo.IngresoAnimal(mascota);
+            string token =
+               HttpContext.Session.GetString("token");
+            await this.service.NewMascotaAsync(mascota, token);
             return RedirectToAction("Index", "Refugios");
         }
-        public IActionResult ModificarDatosMascota(int idmascota)
+        public async Task<IActionResult> ModificarDatosMascota(int idmascota)
         {
-            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            Mascota mascota = await this.service.FindMascotaAsync(idmascota);
             return View(mascota);
         }
         [HttpPost]
@@ -132,9 +144,18 @@ namespace RecuteDog.Controllers
             
             //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
             mascota.Imagen = filename;
-            await this.repo.UpdateMascotas(mascota);
+            string token =
+              HttpContext.Session.GetString("token");
+            await this.service.UpdateMascotaAsync(mascota, token);
             return RedirectToAction("Index", "Refugios");
         }
+        public async Task<IActionResult> ActionBajasAllMascotasRefugio(int idrefugio)
+        {
+            TempData["REFUGIO"] = idrefugio;
+            await this.repo.BajasAllMascotasPorRefugio(idrefugio);
+            return RedirectToAction("DeleteRefugio", "Refugios");
+        }
+
         /**
          * Metodos Para las vistas
          * 
@@ -188,11 +209,6 @@ namespace RecuteDog.Controllers
 
         }
 
-        public async Task<IActionResult> ActionBajasAllMascotasRefugio(int idrefugio)
-        {
-            TempData["REFUGIO"] = idrefugio;
-            await this.repo.BajasAllMascotasPorRefugio(idrefugio);
-            return RedirectToAction("DeleteRefugio", "Refugios");
-        }
+        
     }
 }

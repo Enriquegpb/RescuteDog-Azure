@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RecuteDog.Data;
 using RecuteDog.Helpers;
 using RecuteDog.Repositories;
+using RecuteDog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
@@ -48,6 +49,7 @@ builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
 builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();
 builder.Services.AddTransient<IRepoRefugios, RepositoryRefugios>();
 builder.Services.AddTransient<IRepoAdopciones, RepositoryAdopciones>();
+builder.Services.AddTransient<ServiceApiRescuteDog>();
 builder.Services.AddDbContext<MascotaContext>
     (options => options.UseSqlServer(connectionStringAzure));
 

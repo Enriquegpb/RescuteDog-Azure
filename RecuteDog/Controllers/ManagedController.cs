@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Xml.Linq;
 using System;
 using System.Security.Principal;
+using RecuteDog.Services;
 
 namespace RecuteDog.Controllers
 {
@@ -19,11 +20,13 @@ namespace RecuteDog.Controllers
     {
         private IRepoAutentication repo;
         private HelperPathProvider helper;
+        private ServiceApiRescuteDog service;
 
-        public ManagedController(IRepoAutentication repo, HelperPathProvider helper)
+        public ManagedController(IRepoAutentication repo, HelperPathProvider helper, ServiceApiRescuteDog service)
         {
             this.repo = repo;
             this.helper = helper;
+            this.service = service;
         }
 
         public IActionResult LogIn()
@@ -35,21 +38,19 @@ namespace RecuteDog.Controllers
         public async Task<IActionResult> LogIn(string email
             , string password)
         {
-            User usuario = await this.repo.ExisteEmpleado(email, password);
-            
-            //await this.repo.ExisteUsuario(username, int.Parse(password));
-
-            /**
-             * 
-             * Falta este metodo
-             */
-
-            if (usuario != null)
+            string token =
+               await this.service.GetTokenAsync(email, password);
+            if (token == null)
             {
+                ViewData["MENSAJE"] = "Usuario/Password incorrectos";
+            }
+            else
+            {
+                User usuario = await this.repo.ExisteEmpleado(email, password);
                 ClaimsIdentity identity =
-               new ClaimsIdentity
-               (CookieAuthenticationDefaults.AuthenticationScheme
-               , ClaimTypes.Name, ClaimTypes.Role);
+              new ClaimsIdentity
+              (CookieAuthenticationDefaults.AuthenticationScheme
+              , ClaimTypes.Name, ClaimTypes.Role);
                 identity.AddClaim
                     (new Claim(ClaimTypes.Name, usuario.Email));
                 identity.AddClaim
@@ -82,11 +83,14 @@ namespace RecuteDog.Controllers
 
                 //return RedirectToAction("DeleteEnfermo", "Doctores", new { id = 45678});
             }
-            else
-            {
-                ViewData["MENSAJE"] = "Usuario/Password incorrectos";
-                return View();
-            }
+            return View();
+            //await this.repo.ExisteUsuario(username, int.Parse(password));
+
+            /**
+             * 
+             * Falta este metodo
+             */
+
         }
 
         public IActionResult SingUp()

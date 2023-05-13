@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using RecuteDog.Services;
 
@@ -7,18 +6,25 @@ namespace RecuteDog.Controllers
 {
     public class VoluntariosController : Controller
     {
-        private HelperPathProvider helperPathProvider;
         private ServiceApiRescuteDog service;
-        public VoluntariosController(HelperPathProvider helperPathProvider, ServiceApiRescuteDog service)
+        private ServiceBlobRescuteDog serviceblob;
+        private string containerName;
+        public VoluntariosController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, IConfiguration configuration)
         {
-            this.helperPathProvider = helperPathProvider;
             this.service = service;
-            
+            this.serviceblob = serviceBlob;
+            this.containerName =
+                 configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
         }
 
         public async Task<IActionResult> Index()
         {
             List<Voluntario> voluntarios = await this.service.GetVoluntariosAsync();
+            foreach (Voluntario voluntario in voluntarios)
+            {
+                string blobname = voluntario.Imagen;
+                voluntario.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+            }
             return View(voluntarios);
         }
 
@@ -29,14 +35,16 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> FormVoluntarios(Voluntario voluntario, IFormFile Imagen)
         {
-            string filename = Imagen.FileName;
-            string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await Imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            voluntario.Imagen = filename;
+
+            voluntario.Imagen = blobName;
             string token =
              HttpContext.Session.GetString("token");
             await this.service.NewVoluntarioAsync(voluntario, token);
@@ -52,14 +60,16 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> ModificarVoluntarios(Voluntario voluntario, IFormFile Imagen)
         {
-            string filename = Imagen.FileName;
-            string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await Imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            voluntario.Imagen = filename;
+
+            voluntario.Imagen = blobName;
             string token =
              HttpContext.Session.GetString("token");
             await this.service.UpdateVoluntarioAsync(voluntario, token);

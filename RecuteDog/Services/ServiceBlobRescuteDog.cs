@@ -53,5 +53,12 @@ namespace RecuteDog.Services
                 this.client.GetBlobContainerClient(containerName);
             await containerClient.UploadBlobAsync(blobName, stream);
         }
+
+        public async Task<bool> BlobExistsAsync(string containerName,string blobName)
+        {
+            BlobContainerClient container = this.client.GetBlobContainerClient(containerName);
+            BlobClient blob = container.GetBlobClient(blobName);
+            return await blob.ExistsAsync();
+        }
     }
 }

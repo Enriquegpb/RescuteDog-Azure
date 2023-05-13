@@ -9,15 +9,18 @@ namespace RecuteDog.Controllers
 {
     public class RefugiosController : Controller
     {
-        private HelperPathProvider helperPathProvider;
         private IMemoryCache memoryCache;
         private ServiceApiRescuteDog service;
-        public RefugiosController(HelperPathProvider helperPathProvider, IMemoryCache memoryCache, ServiceApiRescuteDog service)
+        private ServiceBlobRescuteDog serviceBlob;
+        private string containerName;
+        public RefugiosController(IMemoryCache memoryCache, ServiceApiRescuteDog service, IConfiguration configuration, ServiceBlobRescuteDog serviceBlob)
         {
             
-            this.helperPathProvider = helperPathProvider;
             this.memoryCache = memoryCache;
             this.service = service;
+            this.serviceBlob = serviceBlob;
+            this.containerName =
+                 configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
         }
 
         public async Task<IActionResult> Index()
@@ -32,6 +35,11 @@ namespace RecuteDog.Controllers
                 refugios = this.memoryCache.Get<List<Refugio>>("REFUGIOS");
             }
             refugios = await this.service.GetRefugiosAsync();
+            foreach (Refugio refugio in refugios)
+            {
+                string blobname = refugio.Imagen;
+                refugio.Imagen = await this.serviceBlob.GetBlobUriAsync(this.containerName, blobname);
+            }
             HttpContext.Session.SetObject("REFUGIOS", refugios);
             return View(refugios);
         }
@@ -42,14 +50,16 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task <IActionResult> AltaRefugios(Refugio refugio, IFormFile Imagen)
         {
-            string filename = Imagen.FileName;
-            string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using(Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceBlob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await Imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceBlob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            refugio.Imagen = filename;
+              
+            refugio.Imagen = blobName;
             string token =
                 HttpContext.Session.GetString("token");
             await this.service.NewRefugioAsync(refugio, token);
@@ -63,14 +73,16 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> ModificarRefugio(Refugio refugio, IFormFile Imagen)
         {
-            string filename = Imagen.FileName;
-            string path = this.helperPathProvider.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if(await this.serviceBlob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await Imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceBlob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            //string pathserver = "https://localhost:7057/images/" + Imagen.FileName;
-            refugio.Imagen = filename;
+          
+            refugio.Imagen = blobName;
             string token =
                HttpContext.Session.GetString("token");
             await this.service.UpdateRefugioAsync(refugio, token);

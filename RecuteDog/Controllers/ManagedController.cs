@@ -12,13 +12,15 @@ namespace RecuteDog.Controllers
     public class ManagedController : Controller
     {
         
-        private HelperPathProvider helper;
         private ServiceApiRescuteDog service;
+        private ServiceBlobRescuteDog serviceblob;
+        private string containerName;
 
-        public ManagedController(HelperPathProvider helper, ServiceApiRescuteDog service)
+        public ManagedController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, IConfiguration configuration)
         {
-            this.helper = helper;
             this.service = service;
+            this.containerName = configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
+            this.serviceblob = serviceBlob;
         }
 
         public IActionResult LogIn()
@@ -38,6 +40,7 @@ namespace RecuteDog.Controllers
             }
             else
             {
+                HttpContext.Session.SetString("token", token);
                 User usuario = await this.service.GetPerfilUsuarioAsync(token);
                 ClaimsIdentity identity =
               new ClaimsIdentity
@@ -90,18 +93,18 @@ namespace RecuteDog.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> SingUp(string username, string password, string email, string phone, IFormFile imagen, string birdthday)
+        public async Task<IActionResult> SingUp(string username, string password, string email, string phone, IFormFile Imagen, string birdthday)
         {
-            string filename = imagen.FileName;
-            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
 
-            //ViewData["mensaje"] = "Fichero subido a" + path;
-            await this.service.NewUsuarioAsync(username, password, email, phone, filename, birdthday);
+            await this.service.NewUsuarioAsync(username, password, email, phone, blobName, birdthday);
             return RedirectToAction("Index", "Refugios");
         }
 
@@ -118,18 +121,20 @@ namespace RecuteDog.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> PerfilUsuario(string username, string telefono, string email, IFormFile imagen, int iduser)
+        public async Task <IActionResult> PerfilUsuario(string username, string telefono, string email, IFormFile Imagen, int iduser)
         {
             string token =
                HttpContext.Session.GetString("token");
-            string filename = imagen.FileName;
-            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            await this.service.UpdateUsuarioAsync(username, telefono, email, filename, iduser, token);
+
+            await this.service.UpdateUsuarioAsync(username, telefono, email, blobName, iduser, token);
             var currentPrincipal = HttpContext.User as ClaimsPrincipal;
             if(currentPrincipal == null)
             {
@@ -157,7 +162,7 @@ namespace RecuteDog.Controllers
             identity.AddClaim
                 (new Claim("USERNAME", username.ToString()));
             identity.AddClaim
-                (new Claim("USERIMAGE", filename.ToString()));
+                (new Claim("USERIMAGE", blobName.ToString()));
             identity.AddClaim
                     (new Claim(ClaimTypes.NameIdentifier, email));
             identity.AddClaim

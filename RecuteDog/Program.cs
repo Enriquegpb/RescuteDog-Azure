@@ -1,8 +1,11 @@
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using RecuteDog.Helpers;
 using RecuteDog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddMemoryCache();
 builder.Services.AddResponseCaching();
@@ -35,10 +38,13 @@ builder.Services.AddAuthentication(options =>
         config.AccessDeniedPath = "/Managed/ErrorAccesos";
     }
     );
-
+string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
+BlobServiceClient blobServiceClient =
+    new BlobServiceClient(azureKeys);
+builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
 builder.Services.AddSingleton<HelperMail>();
-builder.Services.AddSingleton<HelperPathProvider>();
 builder.Services.AddTransient<ServiceApiRescuteDog>();
+builder.Services.AddTransient<ServiceBlobRescuteDog>();
 
 
 builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false).AddSessionStateTempDataProvider();

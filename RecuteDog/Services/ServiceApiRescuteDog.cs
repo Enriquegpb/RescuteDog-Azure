@@ -3,9 +3,6 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using NugetRescuteDog.Models;
-using RecuteDog.Models;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Primitives;
 
 namespace RecuteDog.Services
 {
@@ -144,7 +141,7 @@ namespace RecuteDog.Services
         {
             using (HttpClient client = new HttpClient())
             {
-
+                string peticion = this.UrlApiRescuteBlog + request;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
@@ -259,7 +256,7 @@ namespace RecuteDog.Services
                 StringContent content =
                     new StringContent(jsonRefugio, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PostAsync(request, content);
+                    await client.PutAsync(request, content);
             }
         }
 
@@ -270,6 +267,8 @@ namespace RecuteDog.Services
                 string request = "/api/refugios/" + idvoluntario;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add
+              ("Authorization", "bearer " + token);
                 HttpResponseMessage response =
                     await client.DeleteAsync(request);
             }
@@ -301,13 +300,15 @@ namespace RecuteDog.Services
             return mascotas;
         }
 
-        public async Task FullBajaMascotasRufugio(int idrefugio)
+        public async Task FullBajaMascotasRufugio(int idrefugio, string token)
         {
             using (HttpClient client = new HttpClient())
             {
                 string request = "/api/mascotas/" + idrefugio;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add
+                ("Authorization", "bearer " + token);
                 HttpResponseMessage response =
                     await client.DeleteAsync(request);
             }
@@ -530,7 +531,7 @@ namespace RecuteDog.Services
                    IdPost = post.IdPost,
                    Imagen = post.Imagen,
                    Contenido = post.Contenido,
-                   Fecha = post.Fecha,
+                   Fecha = DateTime.UtcNow.ToString("dd - MM - yyyy"),
                    IdUser = post.IdUser,
                    Titulo = post.Titulo
 
@@ -581,6 +582,8 @@ namespace RecuteDog.Services
                 string request = "/api/blog/" + idblog;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Add
+            ("Authorization", "bearer " + token);
                 HttpResponseMessage response =
                     await client.DeleteAsync(request);
             }
@@ -593,7 +596,7 @@ namespace RecuteDog.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                string request = "/api/adopciones/nuevadopcion/"+idmascota+"/"+iduser;
+                string request = "/api/adopciones/nuevaadopcion/"+idmascota+"/"+iduser;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);

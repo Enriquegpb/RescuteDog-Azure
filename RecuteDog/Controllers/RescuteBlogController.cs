@@ -8,10 +8,16 @@ namespace RecuteDog.Controllers
     public class RescuteBlogController : Controller
     {
         private ServiceApiRescuteDog service;
-        public RescuteBlogController(ServiceApiRescuteDog service)
+        private ServiceBlobRescuteDog serviceblob;
+        private string containerName;
+        public RescuteBlogController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceblob, IConfiguration configuration)
         {
-            
+
             this.service = service;
+            this.serviceblob = serviceblob;
+            this.containerName =
+                 configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
+
         }
 
         public async Task<IActionResult> _EditComentariosPartial(int idcomentario)
@@ -41,7 +47,9 @@ namespace RecuteDog.Controllers
         {
             
                 BlogModel publicacion = await this.service.FindPublicacionAsync(idpost);
-                return View(publicacion);
+            string blobname = publicacion.Imagen;
+            publicacion.Imagen = blobname + await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+            return View(publicacion);
         }
         [HttpPost]
         public async Task<IActionResult> Publicaciones(int idpost, string correo, string comentario)
@@ -58,12 +66,17 @@ namespace RecuteDog.Controllers
         {
             string token =
            HttpContext.Session.GetString("token");
-            await this.service.DeleteComentarioAsync(idpost, token);
+            await this.service.DeletePublicacionAsync(idpost, token);
             return RedirectToAction("Publicaciones");
         }
         public async Task<IActionResult> Publicaciones()
         {
             List<BlogModel> publicaciones = await this.service.GetPublicacionesAsync();
+            foreach (BlogModel publicacion in publicaciones)
+            {
+                string blobname = publicacion.Imagen;
+                publicacion.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+            }
             List<Comentario> comentarios = await this.service.GetComentariosAsync();
             ViewData["COMENTARIOS"] = comentarios;
             return View(publicaciones);
@@ -74,11 +87,21 @@ namespace RecuteDog.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> NewPost(BlogModel model)
+        public async Task<IActionResult> NewPost(BlogModel model, IFormFile Imagen)
         {
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
+            {
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
+            }
+            model.Imagen = blobName;
             string token =
                 HttpContext.Session.GetString("token");
             await this.service.NewBlogAsync(model, token);
+
             return RedirectToAction("Publicaciones");
         }
         public async Task<IActionResult> EditPublicaciones(int idpost)
@@ -91,6 +114,7 @@ namespace RecuteDog.Controllers
         {
             string token =
            HttpContext.Session.GetString("token");
+
             await this.service.EditBlogAsync(blog, token);
             return RedirectToAction("Publicaciones");
         }

@@ -6,25 +6,34 @@ using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using System.Security.Claims;
 using RecuteDog.Services;
+using RecuteDog.Filters;
 
 namespace RecuteDog.Controllers
 {
     public class HomeController : Controller
     {
         private HelperMail helperMail;
-        private HelperPathProvider helper;
         private ServiceApiRescuteDog service;
-        public HomeController( HelperMail helperMail, HelperPathProvider helper, ServiceApiRescuteDog service)
+        private ServiceBlobRescuteDog serviceblob;
+        private string containerName;
+        public HomeController( HelperMail helperMail, ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, IConfiguration configuration)
         {
             
             this.helperMail = helperMail;
-            this.helper = helper;
             this.service = service;
+            this.serviceblob = serviceBlob;
+            this.containerName =
+                 configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
         }
 
         public async Task<IActionResult> Index(int idrefugio)
         {
             List<Mascota> mascotas = await this.service.GetMascotasAsync(idrefugio);
+            foreach (Mascota mascota in mascotas)
+            {
+                string blobname = mascota.Imagen;
+                mascota.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+            }
             ViewData["ESTEREFUGIO"] = idrefugio;
             return View(mascotas);
         }
@@ -32,9 +41,12 @@ namespace RecuteDog.Controllers
         public async Task<IActionResult> FormularioAdopcion(int idmascota)
         {
             Mascota mascota = await this.service.FindMascotaAsync(idmascota);
+            string blobname = mascota.Imagen;
+            mascota.Imagen = blobname + await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
             return View(mascota);
         }
         [HttpPost]
+        [AuthorizeUsuarios]
         public async Task <IActionResult> FormularioAdopcion(int idmascota, string para, string asunto, string mensaje)
         {
 
@@ -86,9 +98,16 @@ namespace RecuteDog.Controllers
         {
             string token =
               HttpContext.Session.GetString("token");
+
             List<Mascota> mascotasinforme = await this.service.GenerarInformeAdopcionesAsync(token);
+            foreach (Mascota mascota in mascotasinforme)
+            {
+                string blobname = mascota.Imagen;
+                mascota.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+            }
             return View(mascotasinforme);
         }
+
         [HttpPost]
         public async Task<IActionResult> InformeAdopcion(int idmascota)
         {
@@ -109,17 +128,17 @@ namespace RecuteDog.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaMascota(Mascota mascota, IFormFile imagen)
+        public async Task<IActionResult> NuevaMascota(Mascota mascota, IFormFile Imagen)
         {           
-            string filename = imagen.FileName;
-            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-
-            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            mascota.Imagen = filename;
+            mascota.Imagen = blobName;
             string token =
                HttpContext.Session.GetString("token");
             await this.service.NewMascotaAsync(mascota, token);
@@ -131,26 +150,29 @@ namespace RecuteDog.Controllers
             return View(mascota);
         }
         [HttpPost]
-        public async Task<IActionResult> ModificarDatosMascota(Mascota mascota, IFormFile imagen)
+        public async Task<IActionResult> ModificarDatosMascota(Mascota mascota, IFormFile Imagen)
         {
-            string filename = imagen.FileName;
-            string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
-            using (Stream stream = new FileStream(path, FileMode.Create))
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
-                await imagen.CopyToAsync(stream);
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
             }
-            
-            //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            mascota.Imagen = filename;
+            mascota.Imagen = blobName;
             string token =
               HttpContext.Session.GetString("token");
             await this.service.UpdateMascotaAsync(mascota, token);
             return RedirectToAction("Index", "Refugios");
         }
+
         public async Task<IActionResult> ActionBajasAllMascotasRefugio(int idrefugio)
         {
             TempData["REFUGIO"] = idrefugio;
-            await this.service.FullBajaMascotasRufugio(idrefugio);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.FullBajaMascotasRufugio(idrefugio, token);
             return RedirectToAction("DeleteRefugio", "Refugios");
         }
 

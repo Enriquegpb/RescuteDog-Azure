@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using System.Security.Claims;
 using RecuteDog.Filters;
@@ -57,7 +56,7 @@ namespace RecuteDog.Controllers
                 identity.AddClaim
                     (new Claim("USERNAME", usuario.Username.ToString()));
                 identity.AddClaim
-                    (new Claim("USERIMAGE", usuario.Imagen.ToString()));
+                    (new Claim("USERIMAGE", await this.serviceblob.GetBlobUriAsync(this.containerName, usuario.Imagen)));
                 identity.AddClaim
                     (new Claim("BIRTHDAY", usuario.Birdthday.ToString()));
 
@@ -162,7 +161,7 @@ namespace RecuteDog.Controllers
             identity.AddClaim
                 (new Claim("USERNAME", username.ToString()));
             identity.AddClaim
-                (new Claim("USERIMAGE", blobName.ToString()));
+                    (new Claim("USERIMAGE", await this.serviceblob.GetBlobUriAsync(this.containerName, blobName)));
             identity.AddClaim
                     (new Claim(ClaimTypes.NameIdentifier, email));
             identity.AddClaim
@@ -175,7 +174,7 @@ namespace RecuteDog.Controllers
             string token =
              HttpContext.Session.GetString("token");
             await this.service.BajaUsuarioAsync(iduser, token);
-            return RedirectToAction("Index", "Refugios");
+            return RedirectToAction("LogOut", "Managed");
         }
         public IActionResult ErrorAcceso()
         {

@@ -1,6 +1,5 @@
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using RecuteDog.Helpers;
 using RecuteDog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,9 +41,9 @@ string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAcco
 BlobServiceClient blobServiceClient =
     new BlobServiceClient(azureKeys);
 builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
-builder.Services.AddSingleton<HelperMail>();
 builder.Services.AddTransient<ServiceApiRescuteDog>();
 builder.Services.AddTransient<ServiceBlobRescuteDog>();
+builder.Services.AddTransient<ServiceLogicApps>();
 
 
 builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false).AddSessionStateTempDataProvider();

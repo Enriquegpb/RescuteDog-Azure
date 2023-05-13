@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using RecuteDog.Extensions;
-using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
 using RecuteDog.Services;
 

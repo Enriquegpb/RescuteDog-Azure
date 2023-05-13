@@ -110,17 +110,23 @@ namespace RecuteDog.Controllers
             return View(publicacion);
         }
         [HttpPost]
-        public async Task<IActionResult> EditPublicaciones(BlogModel blog)
+        public async Task<IActionResult> EditPublicaciones(BlogModel blog, IFormFile Imagen)
         {
             string token =
            HttpContext.Session.GetString("token");
 
+            string blobName = Imagen.FileName;
+            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
+            {
+                using (Stream stream = Imagen.OpenReadStream())
+                {
+                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                }
+            }
+            blog.Imagen = blobName;
+
             await this.service.EditBlogAsync(blog, token);
             return RedirectToAction("Publicaciones");
         }
-        /**
-         * Que falta lo de las imagenes!!
-         * 
-         */
     }
 }

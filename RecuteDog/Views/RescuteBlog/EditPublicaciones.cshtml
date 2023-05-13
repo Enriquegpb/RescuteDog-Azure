@@ -10,34 +10,18 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditPublicaciones">
+        <form asp-action="EditPublicaciones" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdPost" class="control-label"></label>
-                <input asp-for="IdPost" class="form-control" />
-                <span asp-validation-for="IdPost" class="text-danger"></span>
-            </div>
+            <input type="hidden" value="@Model.IdPost" name="idpost" />
             <div class="form-group">
                 <label asp-for="Titulo" class="control-label"></label>
                 <input asp-for="Titulo" class="form-control" />
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Contenido" class="control-label"></label>
-                <input asp-for="Contenido" class="form-control" />
-                <textarea name="Contenido" class="form-control">@Model.Contenido</textarea>
-                <span asp-validation-for="Contenido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Imagen" class="control-label"></label>
-                <input asp-for="Imagen" class="form-control" />
-                <span asp-validation-for="Imagen" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdUser" class="control-label"></label>
-                <input asp-for="IdUser" class="form-control" />
-                <span asp-validation-for="IdUser" class="text-danger"></span>
-            </div>
+            <label>Introduzca Contenido</label>
+            <textarea name="Contenido" class="form-control">@Model.Contenido</textarea>
+            <input type="file" name="Imagen" class="form-control" />
+           <input type="hidden" name="iduser" value="@Model.IdUser" />
             <div class="form-group">
                 <label asp-for="Fecha" class="control-label"></label>
                 <input asp-for="Fecha" class="form-control" />

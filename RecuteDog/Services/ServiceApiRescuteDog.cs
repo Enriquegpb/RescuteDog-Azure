@@ -62,26 +62,15 @@ namespace RecuteDog.Services
 
             using (HttpClient client = new HttpClient())
             {
-                string request = "/api/auth/updateperfilusuario";
+                string request = "/api/auth/updateperfilusuario/"+ username+ "/"+ telefono + "/"+email+"/"+imagen+"/"+iduser;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
                 client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
-
-                User user = new User
-                {
-                    Id = iduser,
-                    Username = username,
-                    Imagen = imagen,
-                    Email = email,
-                    Phone = telefono,
-                };
-                string jsonRefugio =
-                    JsonConvert.SerializeObject(user);
-                StringContent content =
-                    new StringContent(jsonRefugio, Encoding.UTF8, "application/json");
+                
+               
                 HttpResponseMessage response =
-                    await client.PutAsync(request, content);
+                    await client.PutAsync(request, null);
             }
         }
 
@@ -571,7 +560,7 @@ namespace RecuteDog.Services
                 StringContent content =
                     new StringContent(jsonBlog, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
-                    await client.PostAsync(request, content);
+                    await client.PutAsync(request, content);
             }
         }
 

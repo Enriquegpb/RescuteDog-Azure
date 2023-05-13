@@ -12,18 +12,18 @@ namespace RecuteDog.Controllers
 {
     public class HomeController : Controller
     {
-        private HelperMail helperMail;
+        
         private ServiceApiRescuteDog service;
         private ServiceBlobRescuteDog serviceblob;
         private string containerName;
-        public HomeController( HelperMail helperMail, ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, IConfiguration configuration)
+        private ServiceLogicApps serviceLogicApps;
+        public HomeController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, ServiceLogicApps serviceLogic, IConfiguration configuration)
         {
-            
-            this.helperMail = helperMail;
             this.service = service;
             this.serviceblob = serviceBlob;
             this.containerName =
                  configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
+            this.serviceLogicApps = serviceLogic;
         }
 
         public async Task<IActionResult> Index(int idrefugio)
@@ -60,8 +60,8 @@ namespace RecuteDog.Controllers
             /**
              * Configuracion del correo
              */
-            string peligroso = "";
-            if(mascota.Peligrosidad == false)
+            string peligroso;
+            if (mascota.Peligrosidad == false)
             {
                 peligroso = "<p style='color:green'>No Peligroso</p>";
             }
@@ -71,7 +71,7 @@ namespace RecuteDog.Controllers
             }
 
             asunto = "Has adoptado a " + mascota.Nombre;
-            para = "rdog49903@gmail.com";
+            para = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             mensaje = "Gracias por la solicitud de adopcion de" + mascota.Nombre + " Estudiaremos el caso y procederemos lo antes posible al siguente paso del proceso de adopcion" +
                 "recuerde que los datos de este perro son los siguientes" +
                 "Edad: " + mascota.Edad + " Dimesiones" +
@@ -79,7 +79,7 @@ namespace RecuteDog.Controllers
                 "" + peligroso + "";
 
 
-            await this.helperMail.SendMailAsync(para, asunto, mensaje);
+            await this.serviceLogicApps.SendMailAsync(para, asunto, mensaje);
             /**
              * Ahora el siguiente paso es crear el servicio de 
              * mensajería para utilizarlo en toda la app

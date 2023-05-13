@@ -13,7 +13,7 @@
                 @if (Context.User.Identity.IsAuthenticated == true)
                 {
                     
-                        <a class="navbar-brand" asp-controller="Managed" asp-action="PerfilUsuario"><img class="rounded-circle" style="width:48px; height:auto" src="~/images/@Context.User.FindFirstValue("USERIMAGE")" /></a>                    
+                        <a class="navbar-brand" asp-controller="Managed" asp-action="PerfilUsuario"><img class="rounded-circle" style="width:48px; height:auto" src="@Context.User.FindFirstValue("USERIMAGE")" /></a>                    
                 }else{
                     <a class="navbar-brand" href="#">
                         <img src="~/images/RescuteDogIcon.svg" class="rounded-circle" href="#" />

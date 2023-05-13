@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NugetRescuteDog.Models;
-using RecuteDog.Repositories;
 using RecuteDog.Services;
 using System.Security.Claims;
 

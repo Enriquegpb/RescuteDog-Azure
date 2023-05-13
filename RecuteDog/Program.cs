@@ -1,8 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
-using RecuteDog.Data;
 using RecuteDog.Helpers;
-using RecuteDog.Repositories;
 using RecuteDog.Services;
 
 var builder = WebApplication.CreateBuilder(args);

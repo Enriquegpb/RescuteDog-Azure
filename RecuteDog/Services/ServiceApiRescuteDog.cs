@@ -24,7 +24,7 @@ namespace RecuteDog.Services
 
         public async Task<User> GetPerfilUsuarioAsync(string token)
         {
-            string request = "/api/cubos/getperfilusuario";
+            string request = "/api/auth/getperfilusuario";
             User usuario =
                 await this.CallApiAsync<User>(request, token);
             return usuario;

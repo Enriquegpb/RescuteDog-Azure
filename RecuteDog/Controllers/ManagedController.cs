@@ -1,17 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
-using RecuteDog.Repositories;
 using System.Security.Claims;
-using RecuteDog.Extensions;
 using RecuteDog.Filters;
-using Microsoft.AspNetCore.Identity;
-using System.Xml.Linq;
-using System;
-using System.Security.Principal;
 using RecuteDog.Services;
 
 namespace RecuteDog.Controllers

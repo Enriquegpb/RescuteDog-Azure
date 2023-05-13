@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
-using RecuteDog.Repositories;
 using RecuteDog.Services;
 
 namespace RecuteDog.Controllers

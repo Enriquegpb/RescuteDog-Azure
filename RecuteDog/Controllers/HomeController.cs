@@ -4,7 +4,6 @@ using OfficeOpenXml.Style;
 using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
-using RecuteDog.Repositories;
 using System.Security.Claims;
 using RecuteDog.Services;
 

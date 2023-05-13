@@ -3,7 +3,6 @@ using Microsoft.Extensions.Caching.Memory;
 using RecuteDog.Extensions;
 using RecuteDog.Helpers;
 using NugetRescuteDog.Models;
-using RecuteDog.Repositories;
 using RecuteDog.Services;
 
 namespace RecuteDog.Controllers

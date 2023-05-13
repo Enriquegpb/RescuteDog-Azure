@@ -12,15 +12,12 @@ namespace RecuteDog.Controllers
 {
     public class HomeController : Controller
     {
-        private IRepoMascotas repo;
-        private IRepoAdopciones repoAdopciones;
         private HelperMail helperMail;
         private HelperPathProvider helper;
         private ServiceApiRescuteDog service;
-        public HomeController(IRepoMascotas repo, IRepoAdopciones repoAdopciones, HelperMail helperMail, HelperPathProvider helper, ServiceApiRescuteDog service)
+        public HomeController( HelperMail helperMail, HelperPathProvider helper, ServiceApiRescuteDog service)
         {
-            this.repo = repo;
-            this.repoAdopciones = repoAdopciones;
+            
             this.helperMail = helperMail;
             this.helper = helper;
             this.service = service;
@@ -42,7 +39,7 @@ namespace RecuteDog.Controllers
         public async Task <IActionResult> FormularioAdopcion(int idmascota, string para, string asunto, string mensaje)
         {
 
-            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            Mascota mascota = await this.service.FindMascotaAsync(idmascota);
 
             /*
              * Creacion del correo
@@ -81,28 +78,30 @@ namespace RecuteDog.Controllers
             await this.service.NewAdopcionAsync(idmascota, int.Parse( this.HttpContext.User.FindFirst(ClaimTypes.Role).Value), token);
             //NECESITO UN METODO EN MASCOTAS PARA ACTUALIZAR EL ESTADO DE LA MASCOTA A TRUE O FALSE            
             mascota.Adoptado = true;
-            await this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
+
+            await this.service.UpdateEstadoAdopcionAsync(idmascota, mascota.Adoptado, token);/**El objetivo de buscar a la mascota es para asegurarse de pasar el estaod que corresponde a esa mascota en concreto, para modificar su estado de adopcion**/
             return RedirectToAction("Index", "Refugios");
         }
 
         public async Task<IActionResult> InformeAdopcion()
         {
-            List<Mascota> mascotasinforme = await this.service.GenerarInformeAdopciones();
+            string token =
+              HttpContext.Session.GetString("token");
+            List<Mascota> mascotasinforme = await this.service.GenerarInformeAdopcionesAsync(token);
             return View(mascotasinforme);
         }
         [HttpPost]
         public async Task<IActionResult> InformeAdopcion(int idmascota)
         {
-            await this.repoAdopciones.DevolverAnimalAlRefugio(idmascota);
-            Mascota mascota = this.repo.DetailsMascota(idmascota);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.DevolverAnimalAlRefugioAsync(idmascota,token);
+            Mascota mascota = await this.service.FindMascotaAsync(idmascota);
             mascota.Adoptado = false;
-            await this.repo.UpdateEstadoAdopcion(idmascota, mascota.Adoptado);
+
+            await this.service.UpdateEstadoAdopcionAsync(idmascota, mascota.Adoptado, token);
             return RedirectToAction("Index","Refugios");
 
-            /**
-             * 
-             * Falta cambiar servicio
-             */
         }
 
         public IActionResult NuevaMascota(int idrefugio)
@@ -152,7 +151,7 @@ namespace RecuteDog.Controllers
         public async Task<IActionResult> ActionBajasAllMascotasRefugio(int idrefugio)
         {
             TempData["REFUGIO"] = idrefugio;
-            await this.repo.BajasAllMascotasPorRefugio(idrefugio);
+            await this.service.FullBajaMascotasRufugio(idrefugio);
             return RedirectToAction("DeleteRefugio", "Refugios");
         }
 
@@ -167,9 +166,11 @@ namespace RecuteDog.Controllers
         //    return Json(mascotas);
         //}
 
-        public string GenerateAndDownLoadExcel()
+        public async Task<string> GenerateAndDownLoadExcel()
         {
-            List<Mascota> mascotas = this.repo.GenerarInformeAdopciones();
+            string token =
+              HttpContext.Session.GetString("token");
+            List<Mascota> mascotas = await this.service.GenerarInformeAdopcionesAsync(token);
             var dataTable = DataTableExtensions.GetDataTable(mascotas);
             //dataTable.Columns.Remove("IDMASCOTA");
 

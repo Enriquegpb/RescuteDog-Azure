@@ -18,13 +18,12 @@ namespace RecuteDog.Controllers
 {
     public class ManagedController : Controller
     {
-        private IRepoAutentication repo;
+        
         private HelperPathProvider helper;
         private ServiceApiRescuteDog service;
 
-        public ManagedController(IRepoAutentication repo, HelperPathProvider helper, ServiceApiRescuteDog service)
+        public ManagedController(HelperPathProvider helper, ServiceApiRescuteDog service)
         {
-            this.repo = repo;
             this.helper = helper;
             this.service = service;
         }
@@ -46,7 +45,7 @@ namespace RecuteDog.Controllers
             }
             else
             {
-                User usuario = await this.repo.ExisteEmpleado(email, password);
+                User usuario = await this.service.GetPerfilUsuarioAsync(token);
                 ClaimsIdentity identity =
               new ClaimsIdentity
               (CookieAuthenticationDefaults.AuthenticationScheme
@@ -109,7 +108,7 @@ namespace RecuteDog.Controllers
             //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
 
             //ViewData["mensaje"] = "Fichero subido a" + path;
-            await this.repo.NewUser(username, password, email, phone, filename, birdthday);
+            await this.service.NewUsuarioAsync(username, password, email, phone, filename, birdthday);
             return RedirectToAction("Index", "Refugios");
         }
 
@@ -128,6 +127,8 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task <IActionResult> PerfilUsuario(string username, string telefono, string email, IFormFile imagen, int iduser)
         {
+            string token =
+               HttpContext.Session.GetString("token");
             string filename = imagen.FileName;
             string path = this.helper.MapPath(filename, Folders.Images);//¿AQUI DEBERIA PONER EL STRING DE IMAGEN???
             using (Stream stream = new FileStream(path, FileMode.Create))
@@ -135,7 +136,7 @@ namespace RecuteDog.Controllers
                 await imagen.CopyToAsync(stream);
             }
             //string pathserver = "https://localhost:7057/images/" + imagen.FileName;
-            await this.repo.UpdatePerfilusuario(username, telefono, email, filename, iduser);
+            await this.service.UpdateUsuarioAsync(username, telefono, email, filename, iduser, token);
             var currentPrincipal = HttpContext.User as ClaimsPrincipal;
             if(currentPrincipal == null)
             {
@@ -173,7 +174,9 @@ namespace RecuteDog.Controllers
 
         public async Task<IActionResult>BajaUsuario(int iduser)
         {
-            await this.repo.BajaUsuario(iduser);
+            string token =
+             HttpContext.Session.GetString("token");
+            await this.service.BajaUsuarioAsync(iduser, token);
             return RedirectToAction("Index", "Refugios");
         }
         public IActionResult ErrorAcceso()

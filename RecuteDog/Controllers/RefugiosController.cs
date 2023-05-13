@@ -10,13 +10,12 @@ namespace RecuteDog.Controllers
 {
     public class RefugiosController : Controller
     {
-        private IRepoRefugios repo;
         private HelperPathProvider helperPathProvider;
         private IMemoryCache memoryCache;
         private ServiceApiRescuteDog service;
-        public RefugiosController(IRepoRefugios repo, HelperPathProvider helperPathProvider, IMemoryCache memoryCache, ServiceApiRescuteDog service)
+        public RefugiosController(HelperPathProvider helperPathProvider, IMemoryCache memoryCache, ServiceApiRescuteDog service)
         {
-            this.repo = repo;
+            
             this.helperPathProvider = helperPathProvider;
             this.memoryCache = memoryCache;
             this.service = service;

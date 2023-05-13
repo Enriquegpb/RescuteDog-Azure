@@ -30,7 +30,7 @@ namespace RecuteDog.Services
             return usuario;
         }
 
-        public async Task NewUsuarioAsync(User usuario, string token)
+        public async Task NewUsuarioAsync(string username, string password, string email, string phone, string imagen, string cumple)
         {
 
             using (HttpClient client = new HttpClient())
@@ -39,21 +39,17 @@ namespace RecuteDog.Services
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
-                client.DefaultRequestHeaders.Add
-              ("Authorization", "bearer " + token);
 
 
                 User user = new User
                 {
-                    Id = usuario.Id,
-                    Username = usuario.Username,
-                    Imagen = usuario.Imagen,
-                    Birdthday = usuario.Birdthday,
-                    Contrasena = usuario.Contrasena,
-                    Email = usuario.Email,
-                    Password = usuario.Password,
-                    Phone = usuario.Phone,
-                    Salt = usuario.Salt
+                    Id = 0,
+                    Username = username,
+                    Imagen = imagen,
+                    Birdthday = cumple,
+                    Contrasena = password,
+                    Email = email,
+                    Phone = phone,
                 };
                 string jsonRefugio =
                     JsonConvert.SerializeObject(user);
@@ -61,6 +57,49 @@ namespace RecuteDog.Services
                     new StringContent(jsonRefugio, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
                     await client.PostAsync(request, content);
+            }
+        
+        
+        }public async Task UpdateUsuarioAsync(string username, string telefono, string email, string imagen, int iduser, string token)
+        {
+
+            using (HttpClient client = new HttpClient())
+            {
+                string request = "/api/auth/updateperfilusuario";
+                client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add("Authorization", "bearer " + token);
+
+                User user = new User
+                {
+                    Id = iduser,
+                    Username = username,
+                    Imagen = imagen,
+                    Email = email,
+                    Phone = telefono,
+                };
+                string jsonRefugio =
+                    JsonConvert.SerializeObject(user);
+                StringContent content =
+                    new StringContent(jsonRefugio, Encoding.UTF8, "application/json");
+                HttpResponseMessage response =
+                    await client.PutAsync(request, content);
+            }
+        }
+
+        public async Task BajaUsuarioAsync(int idusuario, string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string request = "/api/auth/" + idusuario;
+                client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add
+             ("Authorization", "bearer " + token);
+                HttpResponseMessage response =
+                    await client.DeleteAsync(request);
             }
         }
 
@@ -247,11 +286,11 @@ namespace RecuteDog.Services
                 await this.CallApiAsync<List<Mascota>>(request);
             return mascotas;
         } 
-        public async Task<List<Mascota>> GenerarInformeAdopciones(/*REVISAR APLICAR SEGURIDAD*/)
+        public async Task<List<Mascota>> GenerarInformeAdopcionesAsync(string token)
         {
             string request = "/api/mascotas/";
             List<Mascota> mascotas =
-                await this.CallApiAsync<List<Mascota>>(request);
+                await this.CallApiAsync<List<Mascota>>(request, token);
             return mascotas;
         }
         public async Task<Mascota> FindMascotaAsync(int idmascota)
@@ -262,7 +301,7 @@ namespace RecuteDog.Services
             return mascotas;
         }
 
-        public async Task DeleteMascotaJuegoAsync(int idrefugio)
+        public async Task FullBajaMascotasRufugio(int idrefugio)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -306,6 +345,22 @@ namespace RecuteDog.Services
                     new StringContent(jsonVideoJuego, Encoding.UTF8, "application/json");
                 HttpResponseMessage response =
                     await client.PutAsync(request, content);
+            }
+        }
+        public async Task UpdateEstadoAdopcionAsync(int idmascota, bool estado, string token)
+        {
+
+            using (HttpClient client = new HttpClient())
+            {
+                string request = "/api/mascotas/updateestadoadopcion/"+idmascota+"/"+estado;
+                client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add
+           ("Authorization", "bearer " + token);
+
+                HttpResponseMessage response =
+                    await client.PutAsync(request, null);
             }
         }
 
@@ -538,7 +593,7 @@ namespace RecuteDog.Services
         {
             using (HttpClient client = new HttpClient())
             {
-                string request = "/api/nuevadopcion/"+idmascota+"/"+iduser;
+                string request = "/api/adopciones/nuevadopcion/"+idmascota+"/"+iduser;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(this.Header);
@@ -549,6 +604,23 @@ namespace RecuteDog.Services
                     await client.PostAsync(request, null);
             }
         }
+
+        public async Task DevolverAnimalAlRefugioAsync(int idadopcion, string token)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string request = "/api/adopciones/" + idadopcion;
+                client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add
+              ("Authorization", "bearer " + token);
+                HttpResponseMessage response =
+                    await client.DeleteAsync(request);
+            }
+        }
+
+
 
         /**
          * Servicios COMENTARIOS
@@ -633,6 +705,9 @@ namespace RecuteDog.Services
                 string request = "/api/comentarios/" + idcomentario;
                 client.BaseAddress = new Uri(this.UrlApiRescuteBlog);
                 client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(this.Header);
+                client.DefaultRequestHeaders.Add
+              ("Authorization", "bearer " + token);
                 HttpResponseMessage response =
                     await client.DeleteAsync(request);
             }

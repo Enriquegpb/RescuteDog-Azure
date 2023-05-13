@@ -8,12 +8,10 @@ namespace RecuteDog.Controllers
 {
     public class VoluntariosController : Controller
     {
-        private IRepoVoluntarios repo;
         private HelperPathProvider helperPathProvider;
         private ServiceApiRescuteDog service;
-        public VoluntariosController(IRepoVoluntarios repo, HelperPathProvider helperPathProvider, ServiceApiRescuteDog service)
+        public VoluntariosController(HelperPathProvider helperPathProvider, ServiceApiRescuteDog service)
         {
-            this.repo = repo;
             this.helperPathProvider = helperPathProvider;
             this.service = service;
             

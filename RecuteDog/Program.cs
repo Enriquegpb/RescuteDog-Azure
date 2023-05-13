@@ -13,8 +13,7 @@ builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(15);
 });
-string connectionString = builder.Configuration.GetConnectionString("SqlPanimales");
-string connectionStringAzure = builder.Configuration.GetConnectionString("SqlAzureDatabase");
+
 builder.Services.AddAuthorization(options =>
 {
     /***
@@ -42,16 +41,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSingleton<HelperMail>();
 builder.Services.AddSingleton<HelperPathProvider>();
-builder.Services.AddTransient<IRepoBlog,RepositoryBlog>();
-builder.Services.AddTransient<IRepoComentarios,RepositoryComentarios>();
-builder.Services.AddTransient<IRepoMascotas,RepositoryMascotas>();
-builder.Services.AddTransient<IRepoAutentication,RepositoryAutentication>();
-builder.Services.AddTransient<IRepoVoluntarios,RepositoryVoluntarios>();
-builder.Services.AddTransient<IRepoRefugios, RepositoryRefugios>();
-builder.Services.AddTransient<IRepoAdopciones, RepositoryAdopciones>();
 builder.Services.AddTransient<ServiceApiRescuteDog>();
-builder.Services.AddDbContext<MascotaContext>
-    (options => options.UseSqlServer(connectionStringAzure));
+
 
 builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false).AddSessionStateTempDataProvider();
 var app = builder.Build();

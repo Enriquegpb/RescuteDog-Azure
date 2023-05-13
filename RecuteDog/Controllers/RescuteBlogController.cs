@@ -8,13 +8,10 @@ namespace RecuteDog.Controllers
 {
     public class RescuteBlogController : Controller
     {
-        private IRepoBlog repoBlog;
-        private IRepoComentarios repoComentarios;
         private ServiceApiRescuteDog service;
-        public RescuteBlogController(IRepoBlog repoBlog, IRepoComentarios repoComentarios, ServiceApiRescuteDog service)
+        public RescuteBlogController(ServiceApiRescuteDog service)
         {
-            this.repoBlog = repoBlog;
-            this.repoComentarios = repoComentarios;
+            
             this.service = service;
         }
 

@@ -1,8 +1,11 @@
+using Azure.Security.KeyVault.Secrets;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Azure;
 using RecuteDog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDistributedMemoryCache();
@@ -37,7 +40,17 @@ builder.Services.AddAuthentication(options =>
         config.AccessDeniedPath = "/Managed/ErrorAccesos";
     }
     );
-string azureKeys = builder.Configuration.GetValue<string>("AzureKeys:StorageAccount");
+builder.Services.AddAzureClients(factory =>
+{
+    factory.AddSecretClient(builder.Configuration.GetSection("KeyVault"));
+});
+//DEBEMOS RECUPERAR, DE FORMA EXPLICITA EL SECRETCLIENT INYECTADO
+SecretClient secretClient =
+    builder.Services.BuildServiceProvider().GetService<SecretClient>();
+KeyVaultSecret keyVaultSecretStorage = await
+    secretClient.GetSecretAsync("StorageAccount");
+
+string azureKeys = keyVaultSecretStorage.Value /*builder.Configuration.GetValue<string>("AzureKeys:StorageAccount")*/;
 BlobServiceClient blobServiceClient =
     new BlobServiceClient(azureKeys);
 builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);

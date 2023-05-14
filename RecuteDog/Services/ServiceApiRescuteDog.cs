@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using NugetRescuteDog.Models;
+using Azure.Security.KeyVault.Secrets;
 
 namespace RecuteDog.Services
 {
@@ -10,10 +11,16 @@ namespace RecuteDog.Services
     {
         private MediaTypeWithQualityHeaderValue Header;
         private string UrlApiRescuteBlog;
-        public ServiceApiRescuteDog(IConfiguration configuration)
+        
+
+        public ServiceApiRescuteDog(SecretClient SecretClient)
         {
-            this.UrlApiRescuteBlog =
-                configuration.GetValue<string>("ApiUrls:ApiRescuteDog");
+            KeyVaultSecret secret = SecretClient.GetSecretAsync("ApiRescuteDog").Result.Value;
+            string apiKey =
+                secret.Value;
+
+            this.UrlApiRescuteBlog = apiKey;
+                //configuration.GetValue<string>("ApiUrls:ApiRescuteDog");
             this.Header =
                 new MediaTypeWithQualityHeaderValue("application/json");
 

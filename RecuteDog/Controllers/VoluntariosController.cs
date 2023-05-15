@@ -9,12 +9,14 @@ namespace RecuteDog.Controllers
         private ServiceApiRescuteDog service;
         private ServiceBlobRescuteDog serviceblob;
         private string containerName;
-        public VoluntariosController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, IConfiguration configuration)
+        private ServiceCatastro serviceCatastro;
+        public VoluntariosController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, IConfiguration configuration, ServiceCatastro serviceCatastro)
         {
             this.service = service;
             this.serviceblob = serviceBlob;
             this.containerName =
                  configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
+            this.serviceCatastro = serviceCatastro;
         }
 
         public async Task<IActionResult> Index()
@@ -28,10 +30,19 @@ namespace RecuteDog.Controllers
             return View(voluntarios);
         }
 
-        public IActionResult FormVoluntarios()
+        public async Task<IActionResult> FormVoluntarios()
         {
+            List<Provincia> provincias = await this.serviceCatastro.GetProvinciasAsync();
+            ViewData["PROVINCIAS"] = provincias;
             return View();
         }
+        //public async Task<ActionResult> ObtenerMunicipiosProvincia(string provincia)
+        //{
+        //    List<string> municipios =
+        //        await this.serviceCatastro.GetMunicipiosAsync(provincia);
+        //    return Json(municipios, JsonRequestBehavior.AllowGet);
+
+        //}
         [HttpPost]
         public async Task<IActionResult> FormVoluntarios(Voluntario voluntario, IFormFile Imagen)
         {

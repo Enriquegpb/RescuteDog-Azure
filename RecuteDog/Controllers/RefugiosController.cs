@@ -11,13 +11,15 @@ namespace RecuteDog.Controllers
         private IMemoryCache memoryCache;
         private ServiceApiRescuteDog service;
         private ServiceBlobRescuteDog serviceBlob;
+        private ServiceCatastro serviceCatastro ;
         private string containerName;
-        public RefugiosController(IMemoryCache memoryCache, ServiceApiRescuteDog service, IConfiguration configuration, ServiceBlobRescuteDog serviceBlob)
+        public RefugiosController(IMemoryCache memoryCache, ServiceApiRescuteDog service, IConfiguration configuration, ServiceBlobRescuteDog serviceBlob, ServiceCatastro serviceCatastro)
         {
             
             this.memoryCache = memoryCache;
             this.service = service;
             this.serviceBlob = serviceBlob;
+            this.serviceCatastro= serviceCatastro;
             this.containerName =
                  configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
         }
@@ -42,8 +44,10 @@ namespace RecuteDog.Controllers
             HttpContext.Session.SetObject("REFUGIOS", refugios);
             return View(refugios);
         }
-        public IActionResult AltaRefugios()
+        public async Task<IActionResult> AltaRefugios()
         {
+            List<Provincia> provincias = await this.serviceCatastro.GetProvinciasAsync();
+            ViewData["PROVINCIAS"] = provincias;
             return View();
         }
         [HttpPost]

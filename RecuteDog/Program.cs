@@ -3,6 +3,7 @@ using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Azure;
 using RecuteDog.Services;
+using ServiceReference1;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,8 @@ builder.Services.AddTransient<BlobServiceClient>(x => blobServiceClient);
 builder.Services.AddTransient<ServiceApiRescuteDog>();
 builder.Services.AddTransient<ServiceBlobRescuteDog>();
 builder.Services.AddTransient<ServiceLogicApps>();
+builder.Services.AddTransient<ServiceCatastro>();
+builder.Services.AddTransient<CallejerodelasedeelectrónicadelcatastroSoapClient>();
 
 
 builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false).AddSessionStateTempDataProvider();

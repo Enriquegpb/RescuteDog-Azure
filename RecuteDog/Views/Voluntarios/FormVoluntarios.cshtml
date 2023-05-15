@@ -51,6 +51,8 @@
     ViewData["Title"] = "FormVoluntarios";
     List<Refugio> refugios =
             Context.Session.GetObject<List<Refugio>>("REFUGIOS");
+            List<Provincia> provincias =
+           ViewData["PROVINCIAS"] as List<Provincia>;
 }
 <h1>FormVoluntarios</h1>
 
@@ -83,7 +85,10 @@
             <div class="form-group">
                 <label asp-for="Municipio" class="control-label"></label>
                 <select name="Municipio" id="selectmunicipio">
-
+                    @foreach(Provincia p in provincias)
+                    {
+                        <option>@p.Nombre</option>
+                    }
                 </select>
                 <span asp-validation-for="Municipio" class="text-danger"></span>
             </div>

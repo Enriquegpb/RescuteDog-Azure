@@ -17,7 +17,7 @@ namespace RecuteDog.Controllers
         
         private ServiceApiRescuteDog service;
         private ServiceBlobRescuteDog serviceblob;
-        private string containerName;
+        private string containerPrivateName;
         private ServiceLogicApps serviceLogicApps;
         private TelemetryClient telemetryClient;
         public HomeController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, ServiceLogicApps serviceLogic, IConfiguration configuration,  TelemetryClient telemetryClient)
@@ -25,8 +25,9 @@ namespace RecuteDog.Controllers
             this.service = service;
             this.serviceblob = serviceBlob;
             this.telemetryClient = telemetryClient;
-            this.containerName =
-                 configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
+            
+            this.containerPrivateName =
+                 configuration.GetValue<string>("BlobContainers:rescuteDogUserImages");
             this.serviceLogicApps = serviceLogic;
         }
 
@@ -36,7 +37,7 @@ namespace RecuteDog.Controllers
             foreach (Mascota mascota in mascotas)
             {
                 string blobname = mascota.Imagen;
-                mascota.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+                mascota.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerPrivateName, blobname);
             }
             ViewData["ESTEREFUGIO"] = idrefugio;
             return View(mascotas);
@@ -46,7 +47,7 @@ namespace RecuteDog.Controllers
         {
             Mascota mascota = await this.service.FindMascotaAsync(idmascota);
             string blobname = mascota.Imagen;
-            mascota.Imagen = blobname + await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+            mascota.Imagen = blobname + await this.serviceblob.GetBlobUriAsync(this.containerPrivateName, blobname);
             return View(mascota);
         }
         [HttpPost]
@@ -141,7 +142,7 @@ namespace RecuteDog.Controllers
             foreach (Mascota mascota in mascotasinforme)
             {
                 string blobname = mascota.Imagen;
-                mascota.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerName, blobname);
+                mascota.Imagen = await this.serviceblob.GetBlobUriAsync(this.containerPrivateName, blobname);
             }
             return View(mascotasinforme);
         }
@@ -196,11 +197,11 @@ namespace RecuteDog.Controllers
 
 
             string blobName = Imagen.FileName;
-            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
+            if (await this.serviceblob.BlobExistsAsync(this.containerPrivateName, blobName) == false)
             {
                 using (Stream stream = Imagen.OpenReadStream())
                 {
-                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                    await this.serviceblob.UploadBlobAsync(this.containerPrivateName, blobName, stream);
                 }
             }
             mascota.Imagen = blobName;
@@ -242,11 +243,11 @@ namespace RecuteDog.Controllers
             TraceTelemetry traza = new TraceTelemetry(mensajeseguimiento, level);
             this.telemetryClient.TrackTrace(traza);
             string blobName = Imagen.FileName;
-            if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
+            if (await this.serviceblob.BlobExistsAsync(this.containerPrivateName, blobName) == false)
             {
                 using (Stream stream = Imagen.OpenReadStream())
                 {
-                    await this.serviceblob.UploadBlobAsync(this.containerName, blobName, stream);
+                    await this.serviceblob.UploadBlobAsync(this.containerPrivateName, blobName, stream);
                 }
             }
             mascota.Imagen = blobName;

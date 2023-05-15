@@ -1,7 +1,6 @@
 ﻿using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs.Specialized;
 using Azure.Storage.Sas;
 
 namespace RecuteDog.Services
@@ -14,24 +13,33 @@ namespace RecuteDog.Services
         {
             this.client = client;
         }
-        //public async Task<List<BlobModel>> GetBlobsAsync(string containerName)
-        //{
-        //    BlobContainerClient containerClient =
-        //        this.client.GetBlobContainerClient(containerName);
-        //    List<BlobModel> blobModels = new List<BlobModel>();
-        //    await foreach (BlobItem item in containerClient.GetBlobsAsync())
-        //    {
-        //        BlobClient blobClient =
-        //            containerClient.GetBlobClient(item.Name);
-        //        BlobModel model = new BlobModel();
-        //        model.Nombre = item.Name;
-        //        model.Contenedor = containerName;
-        //        model.Url = blobClient.Uri.AbsoluteUri;
-        //        blobModels.Add(model);
-        //    }
-        //    return blobModels;
-        //}
 
+        
+
+
+
+        public string GenerateSasUrl(string containerName, string blobName)
+        {
+            BlobContainerClient containerClient = this.client.GetBlobContainerClient(containerName);
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            
+            BlobSasBuilder sasBuilder = new BlobSasBuilder()
+            {
+                BlobContainerName = containerName,
+                BlobName = blobName,
+                Resource = "b",
+                ExpiresOn = DateTime.UtcNow.AddHours(1),
+                Protocol = SasProtocol.Https,
+                
+            };
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            Uri sasUri = blobClient.GenerateSasUri(sasBuilder);
+
+            return sasUri.ToString();
+        }
+
+       
         public async Task<string> GetBlobUriAsync(string container, string blobName)
         {
             BlobContainerClient containerClient = this.client.GetBlobContainerClient(container);
@@ -62,9 +70,5 @@ namespace RecuteDog.Services
             BlobClient blob = container.GetBlobClient(blobName);
             return await blob.ExistsAsync();
         }
-
-
-       
-
     }
 }

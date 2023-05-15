@@ -15,7 +15,7 @@ namespace RecuteDog.Controllers
         private ServiceBlobRescuteDog serviceBlob;
         private ServiceCatastro serviceCatastro ;
         private string containerName;
-        private TelemetryClient telemetryClient
+        private TelemetryClient telemetryClient;
         public RefugiosController(IMemoryCache memoryCache, ServiceApiRescuteDog service, IConfiguration configuration, ServiceBlobRescuteDog serviceBlob, ServiceCatastro serviceCatastro, TelemetryClient telemetryClient)
         {
             
@@ -57,6 +57,20 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task <IActionResult> AltaRefugios(Refugio refugio, IFormFile Imagen)
         {
+            /**
+            * 
+            * Aplicamos telemetria para realizar un 
+            * analisis de los datos de los refugios que 
+            * se dan de alta en la app
+            */
+
+            this.telemetryClient.TrackEvent("AltasRefugios");
+
+            MetricTelemetry metric = new MetricTelemetry();
+            metric.Name = "Refugios";
+            metric.Properties.Add("localidades", refugio.Localidad);
+            this.telemetryClient.TrackMetric(metric);
+
             string blobName = Imagen.FileName;
             if (await this.serviceBlob.BlobExistsAsync(this.containerName, blobName) == false)
             {
@@ -66,20 +80,7 @@ namespace RecuteDog.Controllers
                 }
             }
 
-            /**
-             * 
-             * Aplicamos telemetria para realizar un 
-             * analisis de los datos de los refugios que 
-             * se dan de alta en la app
-             */
-
-            this.telemetryClient.TrackEvent("AltasRefugios");
-
-            MetricTelemetry metric = new MetricTelemetry();
-            metric.Name = "Refugios";
-            metric.Properties.Add("localidades", refugio.Localidad);
-            this.telemetryClient.TrackMetric(metric);
-
+           
 
             refugio.Imagen = blobName;
             string token =
@@ -95,6 +96,11 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> ModificarRefugio(Refugio refugio, IFormFile Imagen)
         {
+            MetricTelemetry metric = new MetricTelemetry();
+            metric.Name = "Refugios";
+            metric.Properties.Add("localidades", refugio.Localidad);
+            this.telemetryClient.TrackMetric(metric);
+
             string blobName = Imagen.FileName;
             if(await this.serviceBlob.BlobExistsAsync(this.containerName, blobName) == false)
             {
@@ -103,6 +109,7 @@ namespace RecuteDog.Controllers
                     await this.serviceBlob.UploadBlobAsync(this.containerName, blobName, stream);
                 }
             }
+
           
             refugio.Imagen = blobName;
             string token =

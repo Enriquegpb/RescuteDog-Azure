@@ -56,7 +56,7 @@ namespace RecuteDog.Controllers
                 identity.AddClaim
                     (new Claim("USERNAME", usuario.Username.ToString()));
                 identity.AddClaim
-                    (new Claim("USERIMAGE", await this.serviceblob.GetBlobUriAsync(this.containerName, usuario.Imagen)));
+                    (new Claim("USERIMAGE",  this.serviceblob.GenerateSasUrl(this.containerName, usuario.Imagen)));
                 identity.AddClaim
                     (new Claim("BIRTHDAY", usuario.Birdthday.ToString()));
 
@@ -161,7 +161,7 @@ namespace RecuteDog.Controllers
             identity.AddClaim
                 (new Claim("USERNAME", username.ToString()));
             identity.AddClaim
-                    (new Claim("USERIMAGE", await this.serviceblob.GetBlobUriAsync(this.containerName, blobName)));
+                    (new Claim("USERIMAGE", this.serviceblob.GenerateSasUrl(this.containerName, blobName)));
             identity.AddClaim
                     (new Claim(ClaimTypes.NameIdentifier, email));
             identity.AddClaim

@@ -7,6 +7,8 @@ using NugetRescuteDog.Models;
 using System.Security.Claims;
 using RecuteDog.Services;
 using RecuteDog.Filters;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace RecuteDog.Controllers
 {
@@ -17,10 +19,12 @@ namespace RecuteDog.Controllers
         private ServiceBlobRescuteDog serviceblob;
         private string containerName;
         private ServiceLogicApps serviceLogicApps;
-        public HomeController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, ServiceLogicApps serviceLogic, IConfiguration configuration)
+        private TelemetryClient telemetryClient;
+        public HomeController(ServiceApiRescuteDog service, ServiceBlobRescuteDog serviceBlob, ServiceLogicApps serviceLogic, IConfiguration configuration,  TelemetryClient telemetryClient)
         {
             this.service = service;
             this.serviceblob = serviceBlob;
+            this.telemetryClient = telemetryClient;
             this.containerName =
                  configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
             this.serviceLogicApps = serviceLogic;
@@ -51,6 +55,40 @@ namespace RecuteDog.Controllers
         {
 
             Mascota mascota = await this.service.FindMascotaAsync(idmascota);
+
+            /**
+           * 
+           * Aplicamos telemetria para analizar qué
+           * animales peligrosos o no se adoptan
+           * Realizando un seguimiento
+           * por nivel de seguridad
+           */
+
+            this.telemetryClient.TrackEvent("PerrosAdoptado");
+
+            MetricTelemetry metric = new MetricTelemetry();
+            metric.Name = "Perro";
+            metric.Properties.Add("peligrosidad", mascota.Peligrosidad.ToString());
+            metric.Properties.Add("raza", mascota.Raza);
+            this.telemetryClient.TrackMetric(metric);
+
+
+            string mensajeseguimiento = "";
+            SeverityLevel level;
+            if (mascota.Peligrosidad == true)
+            {
+                level = SeverityLevel.Critical;
+                mensajeseguimiento = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value + " Ha adoptado una mascota peligrosa";
+            }
+            else
+            {
+                level = SeverityLevel.Information;
+                mensajeseguimiento = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value + " Ha adoptado una mascota, que no está clasificada como peligrosa";
+            }
+          
+            TraceTelemetry traza = new TraceTelemetry(mensajeseguimiento, level);
+            this.telemetryClient.TrackTrace(traza);
+
 
             /*
              * Creacion del correo
@@ -129,7 +167,34 @@ namespace RecuteDog.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> NuevaMascota(Mascota mascota, IFormFile Imagen)
-        {           
+        {
+
+            this.telemetryClient.TrackEvent("PerrosAlta");
+
+            MetricTelemetry metric = new MetricTelemetry();
+            metric.Name = "Perro";
+            metric.Properties.Add("peligrosidad", mascota.Peligrosidad.ToString());
+            metric.Properties.Add("raza", mascota.Raza);
+            this.telemetryClient.TrackMetric(metric);
+
+
+            string mensajeseguimiento = "";
+            SeverityLevel level;
+            if (mascota.Peligrosidad == true)
+            {
+                level = SeverityLevel.Critical;
+                mensajeseguimiento = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value + " Ha registrado una mascota peligrosa este refugio";
+            }
+            else
+            {
+                level = SeverityLevel.Information;
+                mensajeseguimiento = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value + " Ha adoptado una mascota, que no está clasificada como peligrosa, en este refugio";
+            }
+
+            TraceTelemetry traza = new TraceTelemetry(mensajeseguimiento, level);
+            this.telemetryClient.TrackTrace(traza);
+
+
             string blobName = Imagen.FileName;
             if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {
@@ -152,6 +217,30 @@ namespace RecuteDog.Controllers
         [HttpPost]
         public async Task<IActionResult> ModificarDatosMascota(Mascota mascota, IFormFile Imagen)
         {
+            this.telemetryClient.TrackEvent("PerrosAlta");
+
+            MetricTelemetry metric = new MetricTelemetry();
+            metric.Name = "Perro";
+            metric.Properties.Add("peligrosidad", mascota.Peligrosidad.ToString());
+            metric.Properties.Add("raza", mascota.Raza);
+            this.telemetryClient.TrackMetric(metric);
+
+
+            string mensajeseguimiento = "";
+            SeverityLevel level;
+            if (mascota.Peligrosidad == true)
+            {
+                level = SeverityLevel.Critical;
+                mensajeseguimiento = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value + " Ha registrado una mascota peligrosa este refugio";
+            }
+            else
+            {
+                level = SeverityLevel.Information;
+                mensajeseguimiento = this.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value + " Ha adoptado una mascota, que no está clasificada como peligrosa, en este refugio";
+            }
+
+            TraceTelemetry traza = new TraceTelemetry(mensajeseguimiento, level);
+            this.telemetryClient.TrackTrace(traza);
             string blobName = Imagen.FileName;
             if (await this.serviceblob.BlobExistsAsync(this.containerName, blobName) == false)
             {

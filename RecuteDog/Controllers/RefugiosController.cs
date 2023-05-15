@@ -3,6 +3,8 @@ using Microsoft.Extensions.Caching.Memory;
 using RecuteDog.Extensions;
 using NugetRescuteDog.Models;
 using RecuteDog.Services;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace RecuteDog.Controllers
 {
@@ -13,13 +15,15 @@ namespace RecuteDog.Controllers
         private ServiceBlobRescuteDog serviceBlob;
         private ServiceCatastro serviceCatastro ;
         private string containerName;
-        public RefugiosController(IMemoryCache memoryCache, ServiceApiRescuteDog service, IConfiguration configuration, ServiceBlobRescuteDog serviceBlob, ServiceCatastro serviceCatastro)
+        private TelemetryClient telemetryClient
+        public RefugiosController(IMemoryCache memoryCache, ServiceApiRescuteDog service, IConfiguration configuration, ServiceBlobRescuteDog serviceBlob, ServiceCatastro serviceCatastro, TelemetryClient telemetryClient)
         {
             
             this.memoryCache = memoryCache;
             this.service = service;
             this.serviceBlob = serviceBlob;
             this.serviceCatastro= serviceCatastro;
+            this.telemetryClient = telemetryClient;
             this.containerName =
                  configuration.GetValue<string>("BlobContainers:rescuteDogContainerName");
         }
@@ -61,7 +65,22 @@ namespace RecuteDog.Controllers
                     await this.serviceBlob.UploadBlobAsync(this.containerName, blobName, stream);
                 }
             }
-              
+
+            /**
+             * 
+             * Aplicamos telemetria para realizar un 
+             * analisis de los datos de los refugios que 
+             * se dan de alta en la app
+             */
+
+            this.telemetryClient.TrackEvent("AltasRefugios");
+
+            MetricTelemetry metric = new MetricTelemetry();
+            metric.Name = "Refugios";
+            metric.Properties.Add("localidades", refugio.Localidad);
+            this.telemetryClient.TrackMetric(metric);
+
+
             refugio.Imagen = blobName;
             string token =
                 HttpContext.Session.GetString("token");

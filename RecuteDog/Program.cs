@@ -63,6 +63,7 @@ builder.Services.AddTransient<CallejerodelasedeelectrónicadelcatastroSoapClient>
 
 
 builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false).AddSessionStateTempDataProvider();
+builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
 var app = builder.Build();
 app.UseStaticFiles();
 

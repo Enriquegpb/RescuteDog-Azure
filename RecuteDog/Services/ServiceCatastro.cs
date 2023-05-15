@@ -1,5 +1,4 @@
-﻿
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using System.Xml;
 using NugetRescuteDog.Models;
 using ServiceReference1;

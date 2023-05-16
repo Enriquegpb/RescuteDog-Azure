@@ -68,6 +68,8 @@ namespace RecuteDog.Controllers
 
             MetricTelemetry metric = new MetricTelemetry();
             metric.Name = "Refugios";
+            metric.Sum = 1;
+            metric.Timestamp = DateTime.Now;
             metric.Properties.Add("localidades", refugio.Localidad);
             this.telemetryClient.TrackMetric(metric);
 
@@ -98,6 +100,8 @@ namespace RecuteDog.Controllers
         {
             MetricTelemetry metric = new MetricTelemetry();
             metric.Name = "Refugios";
+            metric.Sum = 1;
+            metric.Timestamp = DateTime.Now;
             metric.Properties.Add("localidades", refugio.Localidad);
             this.telemetryClient.TrackMetric(metric);
 

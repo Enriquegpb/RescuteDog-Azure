@@ -68,6 +68,8 @@ namespace RecuteDog.Controllers
 
             MetricTelemetry metric = new MetricTelemetry();
             metric.Name = "Perro";
+            metric.Sum = 1;
+            metric.Timestamp = DateTime.Now;
             metric.Properties.Add("peligrosidad", mascota.Peligrosidad.ToString());
             metric.Properties.Add("raza", mascota.Raza);
             this.telemetryClient.TrackMetric(metric);
@@ -173,6 +175,8 @@ namespace RecuteDog.Controllers
 
             MetricTelemetry metric = new MetricTelemetry();
             metric.Name = "Perro";
+            metric.Sum = 1;
+            metric.Timestamp = DateTime.Now;
             metric.Properties.Add("peligrosidad", mascota.Peligrosidad.ToString());
             metric.Properties.Add("raza", mascota.Raza);
             this.telemetryClient.TrackMetric(metric);
@@ -221,6 +225,8 @@ namespace RecuteDog.Controllers
 
             MetricTelemetry metric = new MetricTelemetry();
             metric.Name = "Perro";
+            metric.Sum = 1;
+            metric.Timestamp = DateTime.Now;
             metric.Properties.Add("peligrosidad", mascota.Peligrosidad.ToString());
             metric.Properties.Add("raza", mascota.Raza);
             this.telemetryClient.TrackMetric(metric);
